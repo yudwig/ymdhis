@@ -2,7 +2,7 @@
   "name": "ymdhis",
   "version": "0.0.1",
   "description": "Minimal JavaScript date functions library",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/yudwig/ymdhis/issues"
   },
-  "homepage": "https://github.com/yudwig/ymdhis#readme"
+  "homepage": "https://github.com/yudwig/ymdhis#readme",
+  "devDependencies": {
+    "typescript": "^4.8.2",
+    "webpack": "^5.74.0"
+  }
 }
