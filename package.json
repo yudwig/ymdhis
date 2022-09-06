@@ -1,0 +1,22 @@
+{
+  "name": "ymdhis",
+  "version": "0.0.1",
+  "description": "Minimal JavaScript date functions library",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yudwig/ymdhis.git"
+  },
+  "keywords": [
+    "date"
+  ],
+  "author": "yudwig",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yudwig/ymdhis/issues"
+  },
+  "homepage": "https://github.com/yudwig/ymdhis#readme"
+}
