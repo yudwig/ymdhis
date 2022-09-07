@@ -1,3 +1,8 @@
+# build
+lib/
+esm/
+umd/
+
 # packages
 node_modules/
 
