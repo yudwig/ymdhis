@@ -26,112 +26,63 @@ class Ymdhis {
         this.dateTimeSeparator = props.dateTimeSeparator || " ";
     }
 
-    init() {
-    }
+    get year() { return; }
+    get month() { return; }
+    get day() { return; }
+    get dow() { return; }
+    get hour() { return; }
+    get minute() { return; }
+    get second() { return; }
+    get ymd() { return; }
+    get ymdhi() { return; }
+    get ymdw() { return; }
+    get wymd() { return; }
+    get dmy() { return; }
+    get dm() { return; }
+    get mdy() { return; }
+    get md() { return; }
+    get hi() { return; }
+    get his() { return; }
+    get hia() { return; }
+    get hisa() { return; }
+    get ahi() { return; }
+    get ahis() { return; }
+    get number() { return; }
+    get iso9075() { return; }
+    get iso8601() { return; }
+    get rfc3339() { return; }
 
-    get year() {
-        return;
-    }
-    get month() {
-        return;
-    }
-    get day() {
-        return;
-    }
-    get dow() {
-        return;
-    }
-    get hour() {
-        return;
-    }
-    get minute() {
-        return;
-    }
-    get second() {
-        return;
-    }
-    get ymd() {
-        return;
-    }
-    get ymdhi() {
-        return;
-    }
-    get hi() {
-        return;
-    }
-    get his() {
-        return;
-    }
-    get number() {
-        return;
-    }
-    get iso9075() {
-        return;
-    }
-    get iso8601() {
-        return;
-    }
-    get rfc3339() {
-        return;
-    }
-
-    separateDate() {
-    }
-
-    separateTime() {
-    }
-
-    separateDateTime() {
-    }
-
-    noPaddingDate() {
-    }
-
-    toString() {
-    }
-
-    afterYears() {
-    }
-
-    afterMonths() {
-    }
-
-    afterDays() {
-    }
-
-    afterWeeks() {
-    }
-
-    afterHours() {
-    }
-
-    afterMinutes() {
-    }
-
-    afterSeconds() {
-    }
-
-    beforeYears() {
-    }
-
-    beforeMonths() {
-    }
-
-    beforeDays() {
-    }
-
-    beforeWeeks() {
-    }
-
-    beforeHours() {
-    }
-
-    beforeMinutes() {
-    }
-
-    beforeSeconds() {
-    }
-
+    afterYears() {}
+    afterMonths() {}
+    afterWeeks() {}
+    afterDays() {}
+    afterHours() {}
+    afterMinutes() {}
+    afterSeconds() {}
+    beforeYears() {}
+    beforeMonths() {}
+    beforeWeeks() {}
+    beforeDays() {}
+    beforeHours() {}
+    beforeMinutes() {}
+    beforeSeconds() {}
+    separateDateBy() {}
+    separateTimeBy() {}
+    separateDateTimeBy() {}
+    separateItemsBy() {}
+    encloseDowIn() {}
+    noPaddingDate() {}
+    noPaddingTime() {}
+    noPaddingHours() {}
+    noPaddingMinutes() {}
+    noPaddingSeconds() {}
+    initDate() {}
+    ampmAs() {}
+    dowAs() {}
+    monthsAs() {}
+    datesAs() {}
+    yearAsTwoDigits() {}
+    toString() {}
 }
 
 function ymdhis(date: Date = new Date()): Ymdhis {
