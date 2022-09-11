@@ -2,28 +2,61 @@ interface Props {
 
     date: Date
 
-    dateSeparator?: string
+    separators?: Separators
 
-    timeSeparator?: string
+    notations?: Notations
+}
 
-    dateTimeSeparator?: string
+interface Separators {
+    year: string,
+    month: string,
+    day: string,
+    dateTime: string,
+    hour: string,
+    minute: string,
+    second: string
+}
+
+interface Notations {
+    am: string,
+    pm: string,
+    dow: string[],
+    months: string[],
+    dates: string[],
+    isYearAsTwoDigits: boolean
 }
 
 class Ymdhis {
 
-    private date: Date;
+    readonly date: Date;
 
-    private dateSeparator: string;
+    private separators: Separators = {
+        dateTime: "",
+        day: "",
+        hour: "",
+        minute: "",
+        month: "",
+        second: "",
+        year: ""
+    }
 
-    private timeSeparator: string;
-
-    private dateTimeSeparator: string;
+    private notations: Notations = {
+        am: "AM",
+        pm: "PM",
+        dow: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        months: [],
+        dates: [],
+        isYearAsTwoDigits: false
+    }
 
     constructor(props: Props) {
-        this.date = props.date;
-        this.dateSeparator = props.dateSeparator || "-";
-        this.timeSeparator = props.timeSeparator || ":";
-        this.dateTimeSeparator = props.dateTimeSeparator || " ";
+        this.date = new Date(props.date.getTime());
+        if (typeof props.notations !== "undefined") {
+            this.notations = Object.assign({}, props.notations);
+        }
+        if (typeof props.separators !== "undefined") {
+            this.separators = Object.assign({}, props.separators);
+        }
     }
 
     get year() { return; }
@@ -76,13 +109,40 @@ class Ymdhis {
     noPaddingHours() {}
     noPaddingMinutes() {}
     noPaddingSeconds() {}
-    initDate() {}
     ampmAs() {}
-    dowAs() {}
+
+    dowAs(dow: string[]): Ymdhis {
+        return this.cloneWithUpdateNotations({dow: dow})
+    }
+
     monthsAs() {}
     datesAs() {}
     yearAsTwoDigits() {}
     toString() {}
+
+    initDate(date: Date) {
+        return new Ymdhis({
+            date: date,
+            notations: this.notations,
+            separators: this.separators
+        })
+    }
+
+    private cloneWithUpdateNotations(notations: Partial<Notations>): Ymdhis {
+        return new Ymdhis({
+            date: this.date,
+            notations: Object.assign(this.notations, notations),
+            separators: this.separators
+        })
+    }
+
+    private cloneWithUpdateSeparators(separators: Partial<Separators>): Ymdhis {
+        return new Ymdhis({
+            date: this.date,
+            notations: this.notations,
+            separators: Object.assign(this.separators, separators)
+        })
+    }
 }
 
 function ymdhis(date: Date = new Date()): Ymdhis {
