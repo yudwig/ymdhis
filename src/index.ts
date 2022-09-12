@@ -1,10 +1,8 @@
 interface Props {
-
     date: Date
-
     separators?: Separators
-
     notations?: Notations
+    digits?: Digits
 }
 
 interface Separators {
@@ -15,15 +13,24 @@ interface Separators {
     hour: string,
     minute: string,
     second: string
+    dow: [string, string]
 }
 
 interface Notations {
     am: string,
     pm: string,
-    dow: string[],
     months: string[],
     dates: string[],
-    isYearAsTwoDigits: boolean
+    dow: string[],
+}
+
+interface Digits {
+    isYearAsFourDigits: boolean
+    isMonthAsTwoDigits: boolean
+    isDayAsTwoDigits: boolean
+    isHourAsTwoDigits: boolean
+    isMinuteAsTwoDigits: boolean
+    isSecondAsTwoDigits: boolean
 }
 
 class Ymdhis {
@@ -31,22 +38,31 @@ class Ymdhis {
     readonly date: Date;
 
     private separators: Separators = {
-        dateTime: "",
-        day: "",
-        hour: "",
-        minute: "",
-        month: "",
-        second: "",
-        year: ""
+        year: "-",
+        month: "-",
+        day: "-",
+        dateTime: " ",
+        hour: ":",
+        minute: ":",
+        second: ":",
+        dow: [" (", ")"],
     }
 
     private notations: Notations = {
         am: "AM",
         pm: "PM",
-        dow: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
         months: [],
         dates: [],
-        isYearAsTwoDigits: false
+        dow: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    }
+
+    private digits: Digits = {
+        isYearAsFourDigits: true,
+        isMonthAsTwoDigits: true,
+        isDayAsTwoDigits: true,
+        isHourAsTwoDigits: true,
+        isMinuteAsTwoDigits: true,
+        isSecondAsTwoDigits: true,
     }
 
     constructor(props: Props) {
@@ -56,6 +72,9 @@ class Ymdhis {
         }
         if (typeof props.separators !== "undefined") {
             this.separators = Object.assign({}, props.separators);
+        }
+        if (typeof props.digits !== "undefined") {
+            this.digits = Object.assign({}, props.digits);
         }
     }
 
@@ -105,6 +124,8 @@ class Ymdhis {
     separateItemsBy() {}
     encloseDowIn() {}
     noPaddingDate() {}
+    noPaddingMonth() {}
+    noPaddingDay() {}
     noPaddingTime() {}
     noPaddingHours() {}
     noPaddingMinutes() {}
@@ -118,13 +139,15 @@ class Ymdhis {
     monthsAs() {}
     datesAs() {}
     yearAsTwoDigits() {}
+    setDateReference() {}
     toString() {}
 
     initDate(date: Date) {
         return new Ymdhis({
             date: date,
             notations: this.notations,
-            separators: this.separators
+            separators: this.separators,
+            digits: this.digits
         })
     }
 
@@ -132,7 +155,8 @@ class Ymdhis {
         return new Ymdhis({
             date: this.date,
             notations: Object.assign(this.notations, notations),
-            separators: this.separators
+            separators: this.separators,
+            digits: this.digits
         })
     }
 
@@ -140,7 +164,17 @@ class Ymdhis {
         return new Ymdhis({
             date: this.date,
             notations: this.notations,
-            separators: Object.assign(this.separators, separators)
+            separators: Object.assign(this.separators, separators),
+            digits: this.digits
+        })
+    }
+
+    private cloneWithUpdateDigits(separators: Partial<Digits>): Ymdhis {
+        return new Ymdhis({
+            date: this.date,
+            notations: this.notations,
+            separators: Object.assign(this.separators, separators),
+            digits: this.digits
         })
     }
 }
