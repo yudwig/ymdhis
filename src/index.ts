@@ -1,62 +1,60 @@
 interface Props {
     date: Date
-    separators?: Separators
-    notations?: Notations
-    digits?: Digits
+    options?: Options
 }
 
-interface Separators {
-    year: string,
-    month: string,
-    day: string,
-    dateTime: string,
-    hour: string,
-    minute: string,
-    second: string
-    dow: [string, string]
-}
+interface Options {
 
-interface Notations {
-    am: string,
-    pm: string,
-    months: string[],
-    dates: string[],
-    dow: string[],
-}
+    // Separators
+    yearSeparator: string;
+    monthSeparator: string;
+    daySeparator: string;
+    dateTimeSeparator: string;
+    hourSeparator: string;
+    minuteSeparator: string;
+    secondSeparator: string;
+    dowSeparators: [string, string];
 
-interface Digits {
-    isYearAsFourDigits: boolean
-    isMonthAsTwoDigits: boolean
-    isDayAsTwoDigits: boolean
-    isHourAsTwoDigits: boolean
-    isMinuteAsTwoDigits: boolean
-    isSecondAsTwoDigits: boolean
+    // Notations
+    amNotation: string;
+    pmNotation: string;
+    monthNotations: string[];
+    dateNotations: string[];
+    dowNotations: string[];
+
+    // Digits
+    isYearAsFourDigits: boolean;
+    isMonthAsTwoDigits: boolean;
+    isDayAsTwoDigits: boolean;
+    isHourAsTwoDigits: boolean;
+    isMinuteAsTwoDigits: boolean;
+    isSecondAsTwoDigits: boolean;
 }
 
 class Ymdhis {
 
     readonly date: Date;
 
-    private separators: Separators = {
-        year: "-",
-        month: "-",
-        day: "-",
-        dateTime: " ",
-        hour: ":",
-        minute: ":",
-        second: ":",
-        dow: [" (", ")"],
-    }
+    private options: Options = {
 
-    private notations: Notations = {
-        am: "AM",
-        pm: "PM",
-        months: [],
-        dates: [],
-        dow: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-    }
+        // Separators
+        yearSeparator: "-",
+        monthSeparator: "-",
+        daySeparator: "-",
+        dateTimeSeparator: " ",
+        hourSeparator: ":",
+        minuteSeparator: ":",
+        secondSeparator: ":",
+        dowSeparators: [" (", ")"],
 
-    private digits: Digits = {
+        // Notations
+        amNotation: "AM",
+        pmNotation: "PM",
+        monthNotations: [],
+        dateNotations: [],
+        dowNotations: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+
+        // Digits
         isYearAsFourDigits: true,
         isMonthAsTwoDigits: true,
         isDayAsTwoDigits: true,
@@ -67,14 +65,8 @@ class Ymdhis {
 
     constructor(props: Props) {
         this.date = new Date(props.date.getTime());
-        if (typeof props.notations !== "undefined") {
-            this.notations = Object.assign({}, props.notations);
-        }
-        if (typeof props.separators !== "undefined") {
-            this.separators = Object.assign({}, props.separators);
-        }
-        if (typeof props.digits !== "undefined") {
-            this.digits = Object.assign({}, props.digits);
+        if (typeof props.options !== "undefined") {
+            this.options = Object.assign({}, props.options);
         }
     }
 
@@ -132,8 +124,8 @@ class Ymdhis {
     noPaddingSeconds() {}
     ampmAs() {}
 
-    dowAs(dow: string[]): Ymdhis {
-        return this.cloneWithUpdateNotations({dow: dow})
+    dowAs(dowList: string[]): Ymdhis {
+        return this.cloneWithOptions({dowNotations: dowList})
     }
 
     monthsAs() {}
@@ -145,36 +137,14 @@ class Ymdhis {
     initDate(date: Date) {
         return new Ymdhis({
             date: date,
-            notations: this.notations,
-            separators: this.separators,
-            digits: this.digits
+            options: this.options
         })
     }
 
-    private cloneWithUpdateNotations(notations: Partial<Notations>): Ymdhis {
+    private cloneWithOptions(options: Partial<Options>): Ymdhis {
         return new Ymdhis({
             date: this.date,
-            notations: Object.assign(this.notations, notations),
-            separators: this.separators,
-            digits: this.digits
-        })
-    }
-
-    private cloneWithUpdateSeparators(separators: Partial<Separators>): Ymdhis {
-        return new Ymdhis({
-            date: this.date,
-            notations: this.notations,
-            separators: Object.assign(this.separators, separators),
-            digits: this.digits
-        })
-    }
-
-    private cloneWithUpdateDigits(separators: Partial<Digits>): Ymdhis {
-        return new Ymdhis({
-            date: this.date,
-            notations: this.notations,
-            separators: Object.assign(this.separators, separators),
-            digits: this.digits
+            options: Object.assign(this.options, options)
         })
     }
 }
