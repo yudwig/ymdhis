@@ -9,7 +9,7 @@
     "umd"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "build": "tsc -p tsconfig.cjs.json & tsc -p tsconfig.esm.json & webpack"
   },
   "repository": {
