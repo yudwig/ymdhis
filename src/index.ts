@@ -99,7 +99,16 @@ class Ymdhis {
     get second() {
         return this.date.getSeconds();
     }
-    
+
+    get ampm() { return; }
+    get y() { return; }
+    get m() { return; }
+    get d() { return; }
+    get h() { return; }
+    get i() { return; }
+    get s() { return; }
+    get w() { return; }
+    get a() { return; }
     get ymd() { return; }
     get ymdhi() { return; }
     get ymdw() { return; }
