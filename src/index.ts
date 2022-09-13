@@ -131,7 +131,6 @@ class Ymdhis {
     monthsAs() {}
     datesAs() {}
     yearAsTwoDigits() {}
-    setDateReference() {}
     toString() {}
 
     initDate(date: Date) {
