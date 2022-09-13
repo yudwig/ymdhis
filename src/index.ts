@@ -24,6 +24,7 @@ interface Options {
 
     // Digits
     isYearAsFourDigits: boolean;
+    isEnablePaddingYear: boolean;
     isMonthAsTwoDigits: boolean;
     isDayAsTwoDigits: boolean;
     isHourAsTwoDigits: boolean;
@@ -56,6 +57,7 @@ class Ymdhis {
 
         // Digits
         isYearAsFourDigits: true,
+        isEnablePaddingYear: true,
         isMonthAsTwoDigits: true,
         isDayAsTwoDigits: true,
         isHourAsTwoDigits: true,
@@ -115,6 +117,7 @@ class Ymdhis {
     separateDateTimeBy() {}
     separateItemsBy() {}
     encloseDowIn() {}
+    noPaddingYear() {}
     noPaddingDate() {}
     noPaddingMonth() {}
     noPaddingDay() {}
