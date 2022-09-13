@@ -181,8 +181,6 @@ class Ymdhis {
     }
 }
 
-function ymdhis(date: Date = new Date()): Ymdhis {
+export function ymdhis(date: Date = new Date()): Ymdhis {
     return new Ymdhis({date: date});
 }
-
-export default ymdhis;
