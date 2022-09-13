@@ -72,13 +72,34 @@ class Ymdhis {
         }
     }
 
-    get year() { return; }
-    get month() { return; }
-    get day() { return; }
-    get dow() { return; }
-    get hour() { return; }
-    get minute() { return; }
-    get second() { return; }
+    get year(): number {
+        return this.date.getFullYear();
+    }
+
+    get month(): number {
+        return this.date.getMonth() + 1;
+    }
+
+    get day(): number {
+        return this.date.getDate();
+    }
+
+    get dow() {
+        return this.date.getDay();
+    }
+
+    get hour() {
+        return this.date.getHours();
+    }
+
+    get minute() {
+        return this.date.getMinutes();
+    }
+
+    get second() {
+        return this.date.getSeconds();
+    }
+    
     get ymd() { return; }
     get ymdhi() { return; }
     get ymdw() { return; }
