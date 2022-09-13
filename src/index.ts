@@ -100,7 +100,10 @@ class Ymdhis {
         return this.date.getSeconds();
     }
 
-    get ampm() { return; }
+    get ampm() {
+        return this.date.getHours() % 12;
+    }
+
     get y() { return; }
     get m() { return; }
     get d() { return; }
@@ -123,7 +126,16 @@ class Ymdhis {
     get hisa() { return; }
     get ahi() { return; }
     get ahis() { return; }
-    get number() { return; }
+
+    get number() {
+        return this.date.getFullYear() * 10000000000 +
+          (this.date.getMonth() + 1) * 100000000 +
+          this.date.getDate() * 1000000 +
+          this.date.getHours() * 10000 +
+          this.date.getMinutes() * 100 +
+          this.date.getSeconds();
+    }
+
     get iso9075() { return; }
     get iso8601() { return; }
     get rfc3339() { return; }
