@@ -3,6 +3,9 @@ lib/
 esm/
 umd/
 
+# test
+coverage/
+
 # packages
 node_modules/
 
