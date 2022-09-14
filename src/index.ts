@@ -12,6 +12,7 @@ interface Options {
   hourSeparator: string;
   minuteSeparator: string;
   secondSeparator: string;
+  ampmSeparator: string;
   dowSeparators: [string, string];
 
   // Notations
@@ -43,6 +44,7 @@ class Ymdhis {
     hourSeparator: ":",
     minuteSeparator: ":",
     secondSeparator: ":",
+    ampmSeparator: " ",
     dowSeparators: [" (", ")"],
 
     // Notations
@@ -51,13 +53,13 @@ class Ymdhis {
     monthNotations: [],
     dateNotations: [],
     dowNotations: [
+      "Sunday",
       "Monday",
       "Tuesday",
       "Wednesday",
       "Thursday",
       "Friday",
       "Saturday",
-      "Sunday",
     ],
 
     // Digits
@@ -119,48 +121,62 @@ class Ymdhis {
     }
   }
 
-  get m() {
+  get m(): string {
     return this.options.isMonthAsTwoDigits
       ? this.month.toString().padStart(2, "0")
       : this.month.toString();
   }
 
-  get d() {
+  get d(): string {
     return this.options.isDayAsTwoDigits
       ? this.day.toString().padStart(2, "0")
       : this.day.toString();
   }
 
-  get h() {
+  get h(): string {
     return this.options.isHourAsTwoDigits
       ? this.hour.toString().padStart(2, "0")
       : this.hour.toString();
   }
 
-  get i() {
+  get i(): string {
     return this.options.isMinuteAsTwoDigits
       ? this.minute.toString().padStart(2, "0")
       : this.minute.toString();
   }
 
-  get s() {
+  get s(): string {
     return this.options.isSecondAsTwoDigits
       ? this.second.toString().padStart(2, "0")
       : this.second.toString();
   }
 
-  get w() {
-    return;
+  get w(): string {
+    return this.options.dowNotations.length > this.date.getDay()
+      ? this.options.dowNotations[this.date.getDay()]
+      : "";
   }
-  get a() {
-    return;
+
+  get a(): string {
+    return this.date.getHours() > 12
+      ? this.options.pmNotation
+      : this.options.amNotation;
   }
-  get ymd() {
-    return;
+
+  get ymd(): string {
+    return (
+      this.y +
+      this.options.yearSeparator +
+      this.m +
+      this.options.monthSeparator +
+      this.d
+    );
   }
+
   get ymdhi() {
     return;
   }
+
   get ymdw() {
     return;
   }
@@ -233,10 +249,18 @@ class Ymdhis {
   beforeHours() {}
   beforeMinutes() {}
   beforeSeconds() {}
-  separateDateBy() {}
+
+  separateDateBy(separator: string): Ymdhis {
+    return this.cloneWithOptions({
+      yearSeparator: separator,
+      monthSeparator: separator,
+      daySeparator: separator,
+    });
+  }
+
   separateTimeBy() {}
   separateDateTimeBy() {}
-  separateItemsBy() {}
+  separateAmpmBy() {}
   encloseDowIn() {}
   ampmAs() {}
 
