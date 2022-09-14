@@ -41,7 +41,7 @@ describe("Calculated properties", () => {
   });
 });
 
-describe("Format date functions", () => {
+describe("Basic format date properties", () => {
   it("y: digits 4", () => {
     expect(ymdhis(new Date(1987, 0, 1)).y).toBe("1987");
   });
@@ -117,5 +117,41 @@ describe("Format date functions", () => {
     expect(ymdhis(new Date(2000, 0, 1, 1, 1, 20)).noPaddingSeconds().s).toBe(
       "20"
     );
+  });
+  it("w: default dow notations", () => {
+    // 2022-01-01 (Saturday)
+    expect(ymdhis(new Date(2022, 0, 1)).w).toBe("Saturday");
+    expect(ymdhis(new Date(2022, 0, 2)).w).toBe("Sunday");
+    expect(ymdhis(new Date(2022, 0, 3)).w).toBe("Monday");
+    expect(ymdhis(new Date(2022, 0, 4)).w).toBe("Tuesday");
+    expect(ymdhis(new Date(2022, 0, 5)).w).toBe("Wednesday");
+    expect(ymdhis(new Date(2022, 0, 6)).w).toBe("Thursday");
+    expect(ymdhis(new Date(2022, 0, 7)).w).toBe("Friday");
+    expect(ymdhis(new Date(2022, 0, 8)).w).toBe("Saturday");
+  });
+  it("w: set incomplete dow list", () => {
+    // 2022-01-02 (Sunday)
+    const list = ["Sun.", "Mon.", "Tue."];
+    expect(ymdhis(new Date(2022, 0, 2)).dowAs(list).w).toBe("Sun.");
+    expect(ymdhis(new Date(2022, 0, 3)).dowAs(list).w).toBe("Mon.");
+    expect(ymdhis(new Date(2022, 0, 4)).dowAs(list).w).toBe("Tue.");
+    expect(ymdhis(new Date(2022, 0, 5)).dowAs(list).w).toBe("");
+    expect(ymdhis(new Date(2022, 0, 6)).dowAs(list).w).toBe("");
+    expect(ymdhis(new Date(2022, 0, 7)).dowAs(list).w).toBe("");
+    expect(ymdhis(new Date(2022, 0, 8)).dowAs(list).w).toBe("");
+    expect(ymdhis(new Date(2022, 0, 9)).dowAs(list).w).toBe("Sun.");
+  });
+  it("a", () => {
+    expect(ymdhis(new Date(2000, 0, 1, 0, 0)).a).toBe("AM");
+    expect(ymdhis(new Date(2000, 0, 1, 12, 0)).a).toBe("AM");
+    expect(ymdhis(new Date(2000, 0, 1, 13, 0)).a).toBe("PM");
+    expect(ymdhis(new Date(2000, 0, 1, 23, 0)).a).toBe("PM");
+  });
+});
+
+describe("Combined format date properties", () => {
+  it("ymd", () => {
+    expect(ymdhis(new Date(2000, 0, 2)).ymd).toBe("2000-01-02");
+    expect(ymdhis(new Date(2000, 0, 2))).toBe("2000-01-02");
   });
 });
