@@ -89,44 +89,66 @@ class Ymdhis {
     return this.date.getDate();
   }
 
-  get dow() {
+  get dow(): number {
     return this.date.getDay();
   }
 
-  get hour() {
+  get hour(): number {
     return this.date.getHours();
   }
 
-  get minute() {
+  get minute(): number {
     return this.date.getMinutes();
   }
 
-  get second() {
+  get second(): number {
     return this.date.getSeconds();
   }
 
-  get ampm() {
+  get ampm(): number {
     return this.date.getHours() % 12;
   }
 
-  get y() {
-    return;
+  get y(): string {
+    if (this.options.isYearAsFourDigits) {
+      return this.date.getFullYear().toString();
+    } else {
+      return this.options.isEnablePaddingYear
+        ? this.date.getFullYear().toString().slice(-2).padStart(2, "0")
+        : parseInt(this.date.getFullYear().toString().slice(-2), 10).toString();
+    }
   }
+
   get m() {
-    return;
+    return this.options.isMonthAsTwoDigits
+      ? this.month.toString().padStart(2, "0")
+      : this.month.toString();
   }
+
   get d() {
-    return;
+    return this.options.isDayAsTwoDigits
+      ? this.day.toString().padStart(2, "0")
+      : this.day.toString();
   }
+
   get h() {
-    return;
+    return this.options.isHourAsTwoDigits
+      ? this.hour.toString().padStart(2, "0")
+      : this.hour.toString();
   }
+
   get i() {
-    return;
+    return this.options.isMinuteAsTwoDigits
+      ? this.minute.toString().padStart(2, "0")
+      : this.minute.toString();
   }
+
   get s() {
-    return;
+    return this.options.isSecondAsTwoDigits
+      ? this.second.toString().padStart(2, "0")
+      : this.second.toString();
   }
+
   get w() {
     return;
   }
@@ -216,14 +238,6 @@ class Ymdhis {
   separateDateTimeBy() {}
   separateItemsBy() {}
   encloseDowIn() {}
-  noPaddingYear() {}
-  noPaddingDate() {}
-  noPaddingMonth() {}
-  noPaddingDay() {}
-  noPaddingTime() {}
-  noPaddingHours() {}
-  noPaddingMinutes() {}
-  noPaddingSeconds() {}
   ampmAs() {}
 
   dowAs(dowList: string[]): Ymdhis {
@@ -232,8 +246,59 @@ class Ymdhis {
 
   monthsAs() {}
   datesAs() {}
-  yearAsTwoDigits() {}
-  toString() {}
+  noPaddingDate() {
+    return this.cloneWithOptions({
+      isEnablePaddingYear: false,
+      isMonthAsTwoDigits: false,
+      isDayAsTwoDigits: false,
+    });
+  }
+  yearAsTwoDigits(): Ymdhis {
+    return this.cloneWithOptions({ isYearAsFourDigits: false });
+  }
+  noPaddingYear() {
+    return this.cloneWithOptions({ isEnablePaddingYear: false });
+  }
+  noPaddingMonth() {
+    return this.cloneWithOptions({ isMonthAsTwoDigits: false });
+  }
+  noPaddingDay() {
+    return this.cloneWithOptions({ isDayAsTwoDigits: false });
+  }
+  noPaddingTime() {
+    return this.cloneWithOptions({
+      isHourAsTwoDigits: false,
+      isMinuteAsTwoDigits: false,
+      isSecondAsTwoDigits: false,
+    });
+  }
+  noPaddingHours() {
+    return this.cloneWithOptions({ isHourAsTwoDigits: false });
+  }
+  noPaddingMinutes() {
+    return this.cloneWithOptions({ isMinuteAsTwoDigits: false });
+  }
+  noPaddingSeconds() {
+    return this.cloneWithOptions({ isSecondAsTwoDigits: false });
+  }
+
+  toString(): string {
+    return (
+      this.y +
+      this.options.yearSeparator +
+      this.m +
+      this.options.monthSeparator +
+      this.d +
+      this.options.daySeparator +
+      this.options.dateTimeSeparator +
+      this.h +
+      this.options.hourSeparator +
+      this.i +
+      this.options.minuteSeparator +
+      this.s +
+      this.options.secondSeparator
+    );
+  }
 
   initDate(date: Date) {
     return new Ymdhis({
