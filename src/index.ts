@@ -5,15 +5,19 @@ interface Props {
 
 interface Options {
   // Separators
-  yearSeparator: string;
-  monthSeparator: string;
-  daySeparator: string;
+  dateSeparator: string;
   dateTimeSeparator: string;
-  hourSeparator: string;
-  minuteSeparator: string;
-  secondSeparator: string;
+  timeSeparator: string;
   ampmSeparator: string;
   dowSeparators: [string, string];
+
+  // Suffixes
+  yearSuffix: string;
+  monthSuffix: string;
+  daySuffix: string;
+  hourSuffix: string;
+  minuteSuffix: string;
+  secondSuffix: string;
 
   // Notations
   amNotation: string;
@@ -37,15 +41,19 @@ class Ymdhis {
 
   private options: Options = {
     // Separators
-    yearSeparator: "-",
-    monthSeparator: "-",
-    daySeparator: "-",
+    dateSeparator: "-",
     dateTimeSeparator: " ",
-    hourSeparator: ":",
-    minuteSeparator: ":",
-    secondSeparator: ":",
+    timeSeparator: ":",
     ampmSeparator: " ",
     dowSeparators: [" (", ")"],
+
+    // Suffixes
+    yearSuffix: "",
+    monthSuffix: "",
+    daySuffix: "",
+    hourSuffix: "",
+    minuteSuffix: "",
+    secondSuffix: "",
 
     // Notations
     amNotation: "AM",
@@ -113,42 +121,57 @@ class Ymdhis {
 
   get y(): string {
     if (this.options.isYearAsFourDigits) {
-      return this.date.getFullYear().toString();
+      return this.date.getFullYear().toString() + this.options.yearSuffix;
     } else {
-      return this.options.isEnablePaddingYear
-        ? this.date.getFullYear().toString().slice(-2).padStart(2, "0")
-        : parseInt(this.date.getFullYear().toString().slice(-2), 10).toString();
+      return (
+        (this.options.isEnablePaddingYear
+          ? this.date.getFullYear().toString().slice(-2).padStart(2, "0")
+          : parseInt(
+              this.date.getFullYear().toString().slice(-2),
+              10
+            ).toString()) + this.options.yearSuffix
+      );
     }
   }
 
   get m(): string {
-    return this.options.isMonthAsTwoDigits
-      ? this.month.toString().padStart(2, "0")
-      : this.month.toString();
+    return (
+      (this.options.isMonthAsTwoDigits
+        ? this.month.toString().padStart(2, "0")
+        : this.month.toString()) + this.options.monthSuffix
+    );
   }
 
   get d(): string {
-    return this.options.isDayAsTwoDigits
-      ? this.day.toString().padStart(2, "0")
-      : this.day.toString();
+    return (
+      (this.options.isDayAsTwoDigits
+        ? this.day.toString().padStart(2, "0")
+        : this.day.toString()) + this.options.daySuffix
+    );
   }
 
   get h(): string {
-    return this.options.isHourAsTwoDigits
-      ? this.hour.toString().padStart(2, "0")
-      : this.hour.toString();
+    return (
+      (this.options.isHourAsTwoDigits
+        ? this.hour.toString().padStart(2, "0")
+        : this.hour.toString()) + this.options.hourSuffix
+    );
   }
 
   get i(): string {
-    return this.options.isMinuteAsTwoDigits
-      ? this.minute.toString().padStart(2, "0")
-      : this.minute.toString();
+    return (
+      (this.options.isMinuteAsTwoDigits
+        ? this.minute.toString().padStart(2, "0")
+        : this.minute.toString()) + this.options.minuteSuffix
+    );
   }
 
   get s(): string {
-    return this.options.isSecondAsTwoDigits
-      ? this.second.toString().padStart(2, "0")
-      : this.second.toString();
+    return (
+      (this.options.isSecondAsTwoDigits
+        ? this.second.toString().padStart(2, "0")
+        : this.second.toString()) + this.options.secondSuffix
+    );
   }
 
   get w(): string {
@@ -166,9 +189,9 @@ class Ymdhis {
   get ymd(): string {
     return (
       this.y +
-      this.options.yearSeparator +
+      this.options.dateSeparator +
       this.m +
-      this.options.monthSeparator +
+      this.options.dateSeparator +
       this.d
     );
   }
@@ -252,75 +275,81 @@ class Ymdhis {
 
   separateDateBy(separator: string): Ymdhis {
     return this.cloneWithOptions({
-      yearSeparator: separator,
-      monthSeparator: separator,
-      daySeparator: separator,
+      dateSeparator: separator,
     });
   }
 
-  separateTimeBy() {}
-  separateDateTimeBy() {}
-  separateAmpmBy() {}
-  encloseDowIn() {}
-  ampmAs() {}
+  setTimeSeparator() {}
+  setDateTimeSeparator() {}
+  setYearSuffix() {}
+  setMonthSuffix() {}
+  setDaySuffix() {}
+  setHourSuffix() {}
+  setMinuteSuffix() {}
+  setSecondSuffix() {}
+  setAmNotation() {}
+  setPmNotation() {}
 
-  dowAs(dowList: string[]): Ymdhis {
+  setDowNotations(dowList: string[]): Ymdhis {
     return this.cloneWithOptions({ dowNotations: dowList });
   }
 
-  monthsAs() {}
-  datesAs() {}
-  noPaddingDate() {
+  setMonthNotations() {}
+  setDateNotations() {}
+
+  setYearAsTwoDigits(): Ymdhis {
+    return this.cloneWithOptions({ isYearAsFourDigits: false });
+  }
+
+  disableDatePadding() {
     return this.cloneWithOptions({
       isEnablePaddingYear: false,
       isMonthAsTwoDigits: false,
       isDayAsTwoDigits: false,
     });
   }
-  yearAsTwoDigits(): Ymdhis {
-    return this.cloneWithOptions({ isYearAsFourDigits: false });
-  }
-  noPaddingYear() {
+
+  disableYearPadding() {
     return this.cloneWithOptions({ isEnablePaddingYear: false });
   }
-  noPaddingMonth() {
+  disableMonthPadding() {
     return this.cloneWithOptions({ isMonthAsTwoDigits: false });
   }
-  noPaddingDay() {
+  disableDayPadding() {
     return this.cloneWithOptions({ isDayAsTwoDigits: false });
   }
-  noPaddingTime() {
+
+  disableTimePadding() {
     return this.cloneWithOptions({
       isHourAsTwoDigits: false,
       isMinuteAsTwoDigits: false,
       isSecondAsTwoDigits: false,
     });
   }
-  noPaddingHours() {
+
+  disableHourPadding() {
     return this.cloneWithOptions({ isHourAsTwoDigits: false });
   }
-  noPaddingMinutes() {
+  disableMinutePadding() {
     return this.cloneWithOptions({ isMinuteAsTwoDigits: false });
   }
-  noPaddingSeconds() {
+  disableSecondPadding() {
     return this.cloneWithOptions({ isSecondAsTwoDigits: false });
   }
 
   toString(): string {
     return (
       this.y +
-      this.options.yearSeparator +
+      this.options.dateSeparator +
       this.m +
-      this.options.monthSeparator +
+      this.options.dateSeparator +
       this.d +
-      this.options.daySeparator +
       this.options.dateTimeSeparator +
       this.h +
-      this.options.hourSeparator +
+      this.options.timeSeparator +
       this.i +
-      this.options.minuteSeparator +
-      this.s +
-      this.options.secondSeparator
+      this.options.timeSeparator +
+      this.s
     );
   }
 
