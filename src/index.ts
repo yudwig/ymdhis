@@ -9,7 +9,7 @@ interface Options {
   dateTimeSeparator: string;
   timeSeparator: string;
   ampmSeparator: string;
-  dowSeparators: [string, string];
+  dowSeparator: string;
 
   // Suffixes
   yearSuffix: string;
@@ -45,7 +45,7 @@ class Ymdhis {
     dateTimeSeparator: " ",
     timeSeparator: ":",
     ampmSeparator: " ",
-    dowSeparators: [" (", ")"],
+    dowSeparator: " ",
 
     // Suffixes
     yearSuffix: "",
@@ -186,6 +186,14 @@ class Ymdhis {
       : this.options.amNotation;
   }
 
+  get g(): string {
+    return (
+      (this.options.isHourAsTwoDigits
+        ? this.ampm.toString().padStart(2, "0")
+        : this.ampm.toString()) + this.options.hourSuffix
+    );
+  }
+
   get ymd(): string {
     return (
       this.y +
@@ -196,45 +204,128 @@ class Ymdhis {
     );
   }
 
-  get ymdhi() {
-    return;
+  get ymdhi(): string {
+    return (
+      this.y +
+      this.options.dateSeparator +
+      this.m +
+      this.options.dateSeparator +
+      this.d +
+      this.options.dateTimeSeparator +
+      this.h +
+      this.options.timeSeparator +
+      this.i
+    );
   }
 
-  get ymdw() {
-    return;
+  get ymdw(): string {
+    return (
+      this.y +
+      this.options.dateSeparator +
+      this.m +
+      this.options.dateSeparator +
+      this.d +
+      this.options.dowSeparator +
+      this.w
+    );
   }
-  get wymd() {
-    return;
+
+  get wymd(): string {
+    return (
+      this.w +
+      this.options.dowSeparator +
+      this.y +
+      this.options.dateSeparator +
+      this.m +
+      this.options.dateSeparator +
+      this.d
+    );
   }
-  get dmy() {
-    return;
+
+  get dmy(): string {
+    return (
+      this.d +
+      this.options.dowSeparator +
+      this.m +
+      this.options.dateSeparator +
+      this.y
+    );
   }
-  get dm() {
-    return;
+
+  get dm(): string {
+    return this.d + this.options.dateSeparator + this.m;
   }
-  get mdy() {
-    return;
+
+  get mdy(): string {
+    return (
+      this.m +
+      this.options.dateSeparator +
+      this.d +
+      this.options.dateSeparator +
+      this.y
+    );
   }
-  get md() {
-    return;
+
+  get md(): string {
+    return this.m + this.options.dateSeparator + this.d;
   }
-  get hi() {
-    return;
+
+  get hi(): string {
+    return this.h + this.options.timeSeparator + this.i;
   }
-  get his() {
-    return;
+
+  get his(): string {
+    return (
+      this.h +
+      this.options.timeSeparator +
+      this.i +
+      this.options.timeSeparator +
+      this.s
+    );
   }
-  get hia() {
-    return;
+
+  get hia(): string {
+    return (
+      this.g +
+      this.options.timeSeparator +
+      this.i +
+      this.options.ampmSeparator +
+      this.a
+    );
   }
-  get hisa() {
-    return;
+
+  get hisa(): string {
+    return (
+      this.g +
+      this.options.timeSeparator +
+      this.i +
+      this.options.timeSeparator +
+      this.s +
+      this.options.ampmSeparator +
+      this.a
+    );
   }
-  get ahi() {
-    return;
+
+  get ahi(): string {
+    return (
+      this.a +
+      this.options.ampmSeparator +
+      this.g +
+      this.options.timeSeparator +
+      this.i
+    );
   }
-  get ahis() {
-    return;
+
+  get ahis(): string {
+    return (
+      this.a +
+      this.options.ampmSeparator +
+      this.g +
+      this.options.timeSeparator +
+      this.i +
+      this.options.timeSeparator +
+      this.s
+    );
   }
 
   get number() {
@@ -273,14 +364,36 @@ class Ymdhis {
   beforeMinutes() {}
   beforeSeconds() {}
 
-  separateDateBy(separator: string): Ymdhis {
+  setDateSeparator(separator: string): Ymdhis {
     return this.cloneWithOptions({
       dateSeparator: separator,
     });
   }
 
-  setTimeSeparator() {}
-  setDateTimeSeparator() {}
+  setTimeSeparator(separator: string): Ymdhis {
+    return this.cloneWithOptions({
+      timeSeparator: separator,
+    });
+  }
+
+  setDateTimeSeparator(separator: string): Ymdhis {
+    return this.cloneWithOptions({
+      dateTimeSeparator: separator,
+    });
+  }
+
+  setAmpmSeparator(separator: string): Ymdhis {
+    return this.cloneWithOptions({
+      ampmSeparator: separator,
+    });
+  }
+
+  setDowSeparator(separator: string): Ymdhis {
+    return this.cloneWithOptions({
+      dowSeparator: separator,
+    });
+  }
+
   setYearSuffix() {}
   setMonthSuffix() {}
   setDaySuffix() {}
