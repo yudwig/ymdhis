@@ -154,8 +154,17 @@ describe("Basic format date properties", () => {
 describe("Combined format date properties", () => {
   it("ymd", () => {
     expect(ymdhis(new Date(2000, 0, 2)).ymd).toBe("2000-01-02");
-    expect(ymdhis(new Date(2000, 0, 2)).separateDateBy("/").ymd).toBe(
+    expect(ymdhis(new Date(2000, 0, 2)).setDateSeparator("/").ymd).toBe(
       "2000/01/02"
     );
+  });
+  it("ymdhi", () => {
+    expect(ymdhis(new Date(2000, 0, 2, 12, 34)).ymdhi).toBe("2000-01-02 12:34");
+    expect(
+      ymdhis(new Date(2000, 0, 2, 12, 34))
+        .setDateSeparator("/")
+        .setDateTimeSeparator("-")
+        .setTimeSeparator(".").ymdhi
+    ).toBe("2000/01/02-12.34");
   });
 });
