@@ -89,7 +89,9 @@ describe("Basic format date properties", () => {
     expect(ymdhis(new Date(2000, 0, 1, 12, 0, 0)).h).toBe("12");
   });
   it("h: disable padding", () => {
-    expect(ymdhis(new Date(2000, 0, 1, 1, 0, 0)).disableHourPadding().h).toBe("1");
+    expect(ymdhis(new Date(2000, 0, 1, 1, 0, 0)).disableHourPadding().h).toBe(
+      "1"
+    );
     expect(ymdhis(new Date(2000, 0, 1, 12, 0, 0)).disableHourPadding().h).toBe(
       "12"
     );
@@ -102,9 +104,9 @@ describe("Basic format date properties", () => {
     expect(ymdhis(new Date(2000, 0, 1, 1, 1, 0)).disableMinutePadding().i).toBe(
       "1"
     );
-    expect(ymdhis(new Date(2000, 0, 1, 1, 20, 0)).disableMinutePadding().i).toBe(
-      "20"
-    );
+    expect(
+      ymdhis(new Date(2000, 0, 1, 1, 20, 0)).disableMinutePadding().i
+    ).toBe("20");
   });
   it("s: enable padding", () => {
     expect(ymdhis(new Date(2000, 0, 1, 1, 1, 1)).s).toBe("01");
@@ -114,9 +116,9 @@ describe("Basic format date properties", () => {
     expect(ymdhis(new Date(2000, 0, 1, 1, 1, 1)).disableSecondPadding().s).toBe(
       "1"
     );
-    expect(ymdhis(new Date(2000, 0, 1, 1, 1, 20)).disableSecondPadding().s).toBe(
-      "20"
-    );
+    expect(
+      ymdhis(new Date(2000, 0, 1, 1, 1, 20)).disableSecondPadding().s
+    ).toBe("20");
   });
   it("w: default dow notations", () => {
     // 2022-01-01 (Saturday)
