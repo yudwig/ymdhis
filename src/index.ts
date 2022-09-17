@@ -22,8 +22,8 @@ interface Options {
   // Notations
   amNotation: string;
   pmNotation: string;
-  monthNotations: string[];
-  dateNotations: string[];
+  monthNotations: string[] | null;
+  dateNotations: string[] | null;
   dowNotations: string[];
 
   // Digits
@@ -58,8 +58,8 @@ class Ymdhis {
     // Notations
     amNotation: "AM",
     pmNotation: "PM",
-    monthNotations: [],
-    dateNotations: [],
+    monthNotations: null,
+    dateNotations: null,
     dowNotations: [
       "Sunday",
       "Monday",
@@ -135,19 +135,31 @@ class Ymdhis {
   }
 
   get m(): string {
-    return (
-      (this.options.isMonthAsTwoDigits
-        ? this.month.toString().padStart(2, "0")
-        : this.month.toString()) + this.options.monthSuffix
-    );
+    if (this.options.monthNotations !== null) {
+      return this.options.monthNotations.length > this.date.getMonth()
+        ? this.options.monthNotations[this.date.getMonth()]
+        : "";
+    } else {
+      return (
+        (this.options.isMonthAsTwoDigits
+          ? this.month.toString().padStart(2, "0")
+          : this.month.toString()) + this.options.monthSuffix
+      );
+    }
   }
 
   get d(): string {
-    return (
-      (this.options.isDayAsTwoDigits
-        ? this.day.toString().padStart(2, "0")
-        : this.day.toString()) + this.options.daySuffix
-    );
+    if (this.options.dateNotations !== null) {
+      return this.options.dateNotations.length > this.date.getDate() - 1
+        ? this.options.dateNotations[this.date.getDate() - 1]
+        : "";
+    } else {
+      return (
+        (this.options.isDayAsTwoDigits
+          ? this.day.toString().padStart(2, "0")
+          : this.day.toString()) + this.options.daySuffix
+      );
+    }
   }
 
   get h(): string {
@@ -430,7 +442,7 @@ class Ymdhis {
   }
 
   beforeMinutes(minutes: number): Ymdhis {
-    return this.afterHours(-minutes);
+    return this.afterMinutes(-minutes);
   }
 
   beforeSeconds(seconds: number): Ymdhis {
