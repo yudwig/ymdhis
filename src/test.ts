@@ -564,3 +564,27 @@ describe("Calculate date functions", () => {
     );
   });
 });
+
+describe("ISO date format functions", () => {
+  it("iso9075", () => {
+    expect(ymdhis(new Date(2022, 0, 2, 12, 34, 56)).iso9075).toBe(
+      "2022-01-02 12:34:56"
+    );
+    expect(
+      ymdhis(new Date(2022, 0, 2, 12, 34, 56))
+        .setDateSeparator("/")
+        .setDateTimeSeparator("_")
+        .setTimeSeparator(":")
+        .setMonthNotations([])
+        .setDateNotations([])
+        .setYearSuffix("Y")
+        .setMonthSuffix("M")
+        .setDaySuffix("D")
+        .setHourSuffix("H")
+        .setMinuteSuffix("I")
+        .setSecondSuffix("S")
+        .disableDatePadding()
+        .disableTimePadding().iso9075
+    ).toBe("2022-01-02 12:34:56");
+  });
+});
