@@ -194,6 +194,10 @@ class Ymdhis {
     );
   }
 
+  get ym(): string {
+    return this.y + this.options.dateSeparator + this.m;
+  }
+
   get ymd(): string {
     return (
       this.y +
@@ -339,30 +343,99 @@ class Ymdhis {
     );
   }
 
-  get iso9075() {
-    return;
-  }
-  get iso8601() {
-    return;
-  }
-  get rfc3339() {
-    return;
+  get iso9075(): string {
+    return new Ymdhis({
+      date: this.date,
+    }).toString();
   }
 
-  afterYears() {}
-  afterMonths() {}
-  afterWeeks() {}
-  afterDays() {}
-  afterHours() {}
-  afterMinutes() {}
-  afterSeconds() {}
-  beforeYears() {}
-  beforeMonths() {}
-  beforeWeeks() {}
-  beforeDays() {}
-  beforeHours() {}
-  beforeMinutes() {}
-  beforeSeconds() {}
+  get iso8601(): string {
+    return this.date.toISOString();
+  }
+
+  afterYears(years: number): Ymdhis {
+    this.date.setFullYear(this.date.getFullYear() + years);
+    return new Ymdhis({
+      date: this.date,
+      options: this.options,
+    });
+  }
+
+  afterMonths(months: number): Ymdhis {
+    this.date.setMonth(this.date.getMonth() + months);
+    return new Ymdhis({
+      date: this.date,
+      options: this.options,
+    });
+  }
+
+  afterWeeks(weeks: number): Ymdhis {
+    this.date.setDate(this.date.getDate() + weeks * 7);
+    return new Ymdhis({
+      date: this.date,
+      options: this.options,
+    });
+  }
+
+  afterDays(days: number): Ymdhis {
+    this.date.setDate(this.date.getDate() + days);
+    return new Ymdhis({
+      date: this.date,
+      options: this.options,
+    });
+  }
+
+  afterHours(hours: number): Ymdhis {
+    this.date.setHours(this.date.getHours() + hours);
+    return new Ymdhis({
+      date: this.date,
+      options: this.options,
+    });
+  }
+
+  afterMinutes(minutes: number): Ymdhis {
+    this.date.setMinutes(this.date.getMinutes() + minutes);
+    return new Ymdhis({
+      date: this.date,
+      options: this.options,
+    });
+  }
+
+  afterSeconds(seconds: number): Ymdhis {
+    this.date.setSeconds(this.date.getSeconds() + seconds);
+    return new Ymdhis({
+      date: this.date,
+      options: this.options,
+    });
+  }
+
+  beforeYears(years: number): Ymdhis {
+    return this.afterYears(-years);
+  }
+
+  beforeMonths(months: number): Ymdhis {
+    return this.afterMonths(-months);
+  }
+
+  beforeWeeks(weeks: number): Ymdhis {
+    return this.afterWeeks(-weeks);
+  }
+
+  beforeDays(days: number): Ymdhis {
+    return this.afterDays(-days);
+  }
+
+  beforeHours(hours: number): Ymdhis {
+    return this.afterHours(-hours);
+  }
+
+  beforeMinutes(minutes: number): Ymdhis {
+    return this.afterHours(-minutes);
+  }
+
+  beforeSeconds(seconds: number): Ymdhis {
+    return this.afterSeconds(-seconds);
+  }
 
   setDateSeparator(separator: string): Ymdhis {
     return this.cloneWithOptions({
@@ -394,21 +467,71 @@ class Ymdhis {
     });
   }
 
-  setYearSuffix() {}
-  setMonthSuffix() {}
-  setDaySuffix() {}
-  setHourSuffix() {}
-  setMinuteSuffix() {}
-  setSecondSuffix() {}
-  setAmNotation() {}
-  setPmNotation() {}
-
-  setDowNotations(dowList: string[]): Ymdhis {
-    return this.cloneWithOptions({ dowNotations: dowList });
+  setYearSuffix(suffix: string): Ymdhis {
+    return this.cloneWithOptions({
+      yearSuffix: suffix,
+    });
   }
 
-  setMonthNotations() {}
-  setDateNotations() {}
+  setMonthSuffix(suffix: string): Ymdhis {
+    return this.cloneWithOptions({
+      monthSuffix: suffix,
+    });
+  }
+
+  setDaySuffix(suffix: string): Ymdhis {
+    return this.cloneWithOptions({
+      daySuffix: suffix,
+    });
+  }
+
+  setHourSuffix(suffix: string): Ymdhis {
+    return this.cloneWithOptions({
+      hourSuffix: suffix,
+    });
+  }
+
+  setMinuteSuffix(suffix: string): Ymdhis {
+    return this.cloneWithOptions({
+      minuteSuffix: suffix,
+    });
+  }
+
+  setSecondSuffix(suffix: string): Ymdhis {
+    return this.cloneWithOptions({
+      secondSuffix: suffix,
+    });
+  }
+
+  setAmNotation(am: string): Ymdhis {
+    return this.cloneWithOptions({
+      amNotation: am,
+    });
+  }
+
+  setPmNotation(pm: string): Ymdhis {
+    return this.cloneWithOptions({
+      pmNotation: pm,
+    });
+  }
+
+  setDowNotations(dowList: string[]): Ymdhis {
+    return this.cloneWithOptions({
+      dowNotations: dowList.slice(0, 7),
+    });
+  }
+
+  setMonthNotations(monthList: string[]): Ymdhis {
+    return this.cloneWithOptions({
+      monthNotations: monthList.slice(0, 12),
+    });
+  }
+
+  setDateNotations(dateList: string[]) {
+    return this.cloneWithOptions({
+      dateNotations: dateList.slice(0, 31),
+    });
+  }
 
   setYearAsTwoDigits(): Ymdhis {
     return this.cloneWithOptions({ isYearAsFourDigits: false });
