@@ -152,6 +152,12 @@ describe("Basic format date properties", () => {
 });
 
 describe("Combined format date properties", () => {
+  it("ym", () => {
+    expect(ymdhis(new Date(2000, 0, 2)).ym).toBe("2000-01");
+    expect(ymdhis(new Date(2000, 0, 2)).setDateSeparator("/").ym).toBe(
+      "2000/01"
+    );
+  });
   it("ymd", () => {
     expect(ymdhis(new Date(2000, 0, 2)).ymd).toBe("2000-01-02");
     expect(ymdhis(new Date(2000, 0, 2)).setDateSeparator("/").ymd).toBe(
@@ -258,5 +264,25 @@ describe("Combined format date properties", () => {
         .setTimeSeparator(".")
         .setAmpmSeparator("_").ahis
     ).toBe("PM_12.34.56");
+  });
+});
+
+describe("Calculate date functions", () => {
+  it("afterYears", () => {
+    expect(ymdhis(new Date(2000, 0, 2)).afterYears(10).year).toBe(2010);
+    expect(ymdhis(new Date(2000, 0, 2)).afterYears(0).year).toBe(2000);
+    expect(ymdhis(new Date(2000, 0, 2)).afterYears(-10).year).toBe(1990);
+  });
+  it("afterMonths", () => {
+    expect(ymdhis(new Date(2000, 0, 2)).afterMonths(1).ym).toBe("2000-02");
+    expect(ymdhis(new Date(2000, 0, 2)).afterMonths(0).ym).toBe("2000-01");
+    expect(ymdhis(new Date(2000, 0, 2)).afterMonths(-1).ym).toBe("1999-12");
+    expect(ymdhis(new Date(2000, 0, 2)).afterMonths(6).ym).toBe("2000-07");
+    expect(ymdhis(new Date(2000, 0, 2)).afterMonths(12).ym).toBe("2001-01");
+  });
+  it("afterWeeks", () => {
+    expect(ymdhis(new Date(2022, 0, 2)).afterWeeks(1).ymd).toBe("2022-01-09");
+    expect(ymdhis(new Date(2022, 0, 2)).afterWeeks(0).ymd).toBe("2022-01-02");
+    expect(ymdhis(new Date(2022, 0, 2)).afterWeeks(-1).ymd).toBe("2021-12-26");
   });
 });
