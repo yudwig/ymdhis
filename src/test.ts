@@ -151,6 +151,189 @@ describe("Basic format date properties", () => {
   });
 });
 
+describe("Suffix and Notations", () => {
+  it("setYearSuffix", () => {
+    expect(ymdhis(new Date(2000, 0, 1)).y).toBe("2000");
+    expect(ymdhis(new Date(2000, 0, 1)).setYearSuffix("Y").y).toBe("2000Y");
+  });
+  it("setMonthSuffix", () => {
+    expect(ymdhis(new Date(2000, 0, 1)).m).toBe("01");
+    expect(ymdhis(new Date(2000, 0, 1)).setMonthSuffix("M").m).toBe("01M");
+  });
+  it("setDaySuffix", () => {
+    expect(ymdhis(new Date(2000, 0, 1)).d).toBe("01");
+    expect(ymdhis(new Date(2000, 0, 1)).setDaySuffix("D").d).toBe("01D");
+  });
+  it("setHourSuffix", () => {
+    expect(ymdhis(new Date(2000, 0, 1, 12, 34, 56)).h).toBe("12");
+    expect(ymdhis(new Date(2000, 0, 1, 12, 34, 56)).setHourSuffix("H").h).toBe(
+      "12H"
+    );
+  });
+  it("setMinuteSuffix", () => {
+    expect(ymdhis(new Date(2000, 0, 1, 12, 34, 56)).i).toBe("34");
+    expect(
+      ymdhis(new Date(2000, 0, 1, 12, 34, 56)).setMinuteSuffix("I").i
+    ).toBe("34I");
+  });
+  it("setSecondSuffix", () => {
+    expect(ymdhis(new Date(2000, 0, 1, 12, 34, 56)).s).toBe("56");
+    expect(
+      ymdhis(new Date(2000, 0, 1, 12, 34, 56)).setSecondSuffix("S").s
+    ).toBe("56S");
+  });
+  it("setAmNotation", () => {
+    expect(ymdhis(new Date(2000, 0, 1, 0, 0)).a).toBe("AM");
+    expect(ymdhis(new Date(2000, 0, 1, 0, 0)).setAmNotation("a.m.").a).toBe(
+      "a.m."
+    );
+  });
+  it("setPmNotation", () => {
+    expect(ymdhis(new Date(2000, 0, 1, 12, 0)).a).toBe("PM");
+    expect(ymdhis(new Date(2000, 0, 1, 12, 0)).setPmNotation("p.m.").a).toBe(
+      "p.m."
+    );
+  });
+  it("setMonthNotations", () => {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    expect(ymdhis(new Date(2000, 0, 1)).m).toBe("01");
+    expect(ymdhis(new Date(2000, 0, 1)).setMonthNotations(months).m).toBe(
+      "January"
+    );
+    expect(ymdhis(new Date(2000, 1, 1)).setMonthNotations(months).m).toBe(
+      "February"
+    );
+    expect(ymdhis(new Date(2000, 2, 1)).setMonthNotations(months).m).toBe(
+      "March"
+    );
+    expect(ymdhis(new Date(2000, 3, 1)).setMonthNotations(months).m).toBe(
+      "April"
+    );
+    expect(ymdhis(new Date(2000, 4, 1)).setMonthNotations(months).m).toBe(
+      "May"
+    );
+    expect(ymdhis(new Date(2000, 5, 1)).setMonthNotations(months).m).toBe(
+      "June"
+    );
+    expect(ymdhis(new Date(2000, 6, 1)).setMonthNotations(months).m).toBe(
+      "July"
+    );
+    expect(ymdhis(new Date(2000, 7, 1)).setMonthNotations(months).m).toBe(
+      "August"
+    );
+    expect(ymdhis(new Date(2000, 8, 1)).setMonthNotations(months).m).toBe(
+      "September"
+    );
+    expect(ymdhis(new Date(2000, 9, 1)).setMonthNotations(months).m).toBe(
+      "October"
+    );
+    expect(ymdhis(new Date(2000, 10, 1)).setMonthNotations(months).m).toBe(
+      "November"
+    );
+    expect(ymdhis(new Date(2000, 11, 1)).setMonthNotations(months).m).toBe(
+      "December"
+    );
+    expect(ymdhis(new Date(2000, 12, 1)).setMonthNotations(months).m).toBe(
+      "January"
+    );
+    expect(ymdhis(new Date(2000, 0, 1)).setMonthNotations([]).m).toBe("");
+    expect(ymdhis(new Date(2000, 0, 1)).setMonthNotations(["J"]).m).toBe("J");
+    expect(ymdhis(new Date(2000, 1, 1)).setMonthNotations(["J"]).m).toBe("");
+  });
+
+  it("setMonthNotations", () => {
+    const arr = [
+      "1st",
+      "2nd",
+      "3rd",
+      "4th",
+      "5th",
+      "6th",
+      "7th",
+      "8th",
+      "9th",
+      "10th",
+      "11th",
+      "12th",
+      "13th",
+      "14th",
+      "15th",
+      "16th",
+      "17th",
+      "18th",
+      "19th",
+      "20th",
+      "21st",
+      "22nd",
+      "23rd",
+      "24th",
+      "25th",
+      "26th",
+      "27th",
+      "28th",
+      "29th",
+      "30th",
+      "31st",
+    ];
+    expect(ymdhis(new Date(2000, 0, 1)).d).toBe("01");
+    expect(ymdhis(new Date(2000, 0, 1)).setDateNotations(arr).d).toBe("1st");
+    expect(ymdhis(new Date(2000, 0, 2)).setDateNotations(arr).d).toBe("2nd");
+    expect(ymdhis(new Date(2000, 0, 3)).setDateNotations(arr).d).toBe("3rd");
+    expect(ymdhis(new Date(2000, 0, 4)).setDateNotations(arr).d).toBe("4th");
+    expect(ymdhis(new Date(2000, 0, 5)).setDateNotations(arr).d).toBe("5th");
+    expect(ymdhis(new Date(2000, 0, 6)).setDateNotations(arr).d).toBe("6th");
+    expect(ymdhis(new Date(2000, 0, 7)).setDateNotations(arr).d).toBe("7th");
+    expect(ymdhis(new Date(2000, 0, 8)).setDateNotations(arr).d).toBe("8th");
+    expect(ymdhis(new Date(2000, 0, 9)).setDateNotations(arr).d).toBe("9th");
+    expect(ymdhis(new Date(2000, 0, 10)).setDateNotations(arr).d).toBe("10th");
+    expect(ymdhis(new Date(2000, 0, 11)).setDateNotations(arr).d).toBe("11th");
+    expect(ymdhis(new Date(2000, 0, 12)).setDateNotations(arr).d).toBe("12th");
+    expect(ymdhis(new Date(2000, 0, 13)).setDateNotations(arr).d).toBe("13th");
+    expect(ymdhis(new Date(2000, 0, 14)).setDateNotations(arr).d).toBe("14th");
+    expect(ymdhis(new Date(2000, 0, 15)).setDateNotations(arr).d).toBe("15th");
+    expect(ymdhis(new Date(2000, 0, 16)).setDateNotations(arr).d).toBe("16th");
+    expect(ymdhis(new Date(2000, 0, 17)).setDateNotations(arr).d).toBe("17th");
+    expect(ymdhis(new Date(2000, 0, 18)).setDateNotations(arr).d).toBe("18th");
+    expect(ymdhis(new Date(2000, 0, 19)).setDateNotations(arr).d).toBe("19th");
+    expect(ymdhis(new Date(2000, 0, 20)).setDateNotations(arr).d).toBe("20th");
+    expect(ymdhis(new Date(2000, 0, 21)).setDateNotations(arr).d).toBe("21st");
+    expect(ymdhis(new Date(2000, 0, 22)).setDateNotations(arr).d).toBe("22nd");
+    expect(ymdhis(new Date(2000, 0, 23)).setDateNotations(arr).d).toBe("23rd");
+    expect(ymdhis(new Date(2000, 0, 24)).setDateNotations(arr).d).toBe("24th");
+    expect(ymdhis(new Date(2000, 0, 25)).setDateNotations(arr).d).toBe("25th");
+    expect(ymdhis(new Date(2000, 0, 26)).setDateNotations(arr).d).toBe("26th");
+    expect(ymdhis(new Date(2000, 0, 27)).setDateNotations(arr).d).toBe("27th");
+    expect(ymdhis(new Date(2000, 0, 28)).setDateNotations(arr).d).toBe("28th");
+    expect(ymdhis(new Date(2000, 0, 29)).setDateNotations(arr).d).toBe("29th");
+    expect(ymdhis(new Date(2000, 0, 30)).setDateNotations(arr).d).toBe("30th");
+    expect(ymdhis(new Date(2000, 0, 31)).setDateNotations(arr).d).toBe("31st");
+    expect(ymdhis(new Date(2000, 1, 1)).setDateNotations(arr).d).toBe("1st");
+    expect(ymdhis(new Date(2000, 0, 1)).setDateNotations([]).d).toBe("");
+    expect(ymdhis(new Date(2000, 0, 1)).setDateNotations(["a", "b"]).d).toBe(
+      "a"
+    );
+    expect(ymdhis(new Date(2000, 0, 2)).setDateNotations(["a", "b"]).d).toBe(
+      "b"
+    );
+    expect(ymdhis(new Date(2000, 0, 3)).setDateNotations(["a", "b"]).d).toBe(
+      ""
+    );
+  });
+});
+
 describe("Combined format date properties", () => {
   it("ym", () => {
     expect(ymdhis(new Date(2000, 0, 2)).ym).toBe("2000-01");
@@ -273,6 +456,11 @@ describe("Calculate date functions", () => {
     expect(ymdhis(new Date(2000, 0, 2)).afterYears(0).year).toBe(2000);
     expect(ymdhis(new Date(2000, 0, 2)).afterYears(-10).year).toBe(1990);
   });
+  it("beforeYears", () => {
+    expect(ymdhis(new Date(2000, 0, 2)).beforeYears(10).year).toBe(1990);
+    expect(ymdhis(new Date(2000, 0, 2)).beforeYears(0).year).toBe(2000);
+    expect(ymdhis(new Date(2000, 0, 2)).beforeYears(-10).year).toBe(2010);
+  });
   it("afterMonths", () => {
     expect(ymdhis(new Date(2000, 0, 2)).afterMonths(1).ym).toBe("2000-02");
     expect(ymdhis(new Date(2000, 0, 2)).afterMonths(0).ym).toBe("2000-01");
@@ -280,9 +468,99 @@ describe("Calculate date functions", () => {
     expect(ymdhis(new Date(2000, 0, 2)).afterMonths(6).ym).toBe("2000-07");
     expect(ymdhis(new Date(2000, 0, 2)).afterMonths(12).ym).toBe("2001-01");
   });
+  it("beforeMonths", () => {
+    expect(ymdhis(new Date(2000, 0, 2)).beforeMonths(1).ym).toBe("1999-12");
+    expect(ymdhis(new Date(2000, 0, 2)).beforeMonths(0).ym).toBe("2000-01");
+    expect(ymdhis(new Date(2000, 0, 2)).beforeMonths(-1).ym).toBe("2000-02");
+    expect(ymdhis(new Date(2000, 0, 2)).beforeMonths(6).ym).toBe("1999-07");
+    expect(ymdhis(new Date(2000, 0, 2)).beforeMonths(12).ym).toBe("1999-01");
+  });
   it("afterWeeks", () => {
     expect(ymdhis(new Date(2022, 0, 2)).afterWeeks(1).ymd).toBe("2022-01-09");
     expect(ymdhis(new Date(2022, 0, 2)).afterWeeks(0).ymd).toBe("2022-01-02");
     expect(ymdhis(new Date(2022, 0, 2)).afterWeeks(-1).ymd).toBe("2021-12-26");
+  });
+  it("beforeWeeks", () => {
+    expect(ymdhis(new Date(2022, 0, 2)).beforeWeeks(1).ymd).toBe("2021-12-26");
+    expect(ymdhis(new Date(2022, 0, 2)).beforeWeeks(0).ymd).toBe("2022-01-02");
+    expect(ymdhis(new Date(2022, 0, 2)).beforeWeeks(-1).ymd).toBe("2022-01-09");
+  });
+  it("afterDays", () => {
+    expect(ymdhis(new Date(2022, 0, 2)).afterDays(1).ymd).toBe("2022-01-03");
+    expect(ymdhis(new Date(2022, 0, 2)).afterDays(0).ymd).toBe("2022-01-02");
+    expect(ymdhis(new Date(2022, 0, 2)).afterDays(-1).ymd).toBe("2022-01-01");
+    expect(ymdhis(new Date(2022, 0, 2)).afterDays(-2).ymd).toBe("2021-12-31");
+  });
+  it("beforeDays", () => {
+    expect(ymdhis(new Date(2022, 0, 2)).beforeDays(1).ymd).toBe("2022-01-01");
+    expect(ymdhis(new Date(2022, 0, 2)).beforeDays(0).ymd).toBe("2022-01-02");
+    expect(ymdhis(new Date(2022, 0, 2)).beforeDays(-1).ymd).toBe("2022-01-03");
+    expect(ymdhis(new Date(2022, 0, 2)).beforeDays(2).ymd).toBe("2021-12-31");
+  });
+  it("afterHours", () => {
+    expect(ymdhis(new Date(2022, 0, 2)).afterHours(1).toString()).toBe(
+      "2022-01-02 01:00:00"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).afterHours(0).toString()).toBe(
+      "2022-01-02 00:00:00"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).afterHours(-1).toString()).toBe(
+      "2022-01-01 23:00:00"
+    );
+  });
+  it("beforeHours", () => {
+    expect(ymdhis(new Date(2022, 0, 2)).beforeHours(1).toString()).toBe(
+      "2022-01-01 23:00:00"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).beforeHours(0).toString()).toBe(
+      "2022-01-02 00:00:00"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).beforeHours(-1).toString()).toBe(
+      "2022-01-02 01:00:00"
+    );
+  });
+  it("afterMinutes", () => {
+    expect(ymdhis(new Date(2022, 0, 2)).afterMinutes(1).toString()).toBe(
+      "2022-01-02 00:01:00"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).afterMinutes(0).toString()).toBe(
+      "2022-01-02 00:00:00"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).afterMinutes(-1).toString()).toBe(
+      "2022-01-01 23:59:00"
+    );
+  });
+  it("beforeMinutes", () => {
+    expect(ymdhis(new Date(2022, 0, 2)).beforeMinutes(1).toString()).toBe(
+      "2022-01-01 23:59:00"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).beforeMinutes(0).toString()).toBe(
+      "2022-01-02 00:00:00"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).beforeMinutes(-1).toString()).toBe(
+      "2022-01-02 00:01:00"
+    );
+  });
+  it("afterSeconds", () => {
+    expect(ymdhis(new Date(2022, 0, 2)).afterSeconds(1).toString()).toBe(
+      "2022-01-02 00:00:01"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).afterSeconds(0).toString()).toBe(
+      "2022-01-02 00:00:00"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).afterSeconds(-1).toString()).toBe(
+      "2022-01-01 23:59:59"
+    );
+  });
+  it("beforeSeconds", () => {
+    expect(ymdhis(new Date(2022, 0, 2)).beforeSeconds(1).toString()).toBe(
+      "2022-01-01 23:59:59"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).beforeSeconds(0).toString()).toBe(
+      "2022-01-02 00:00:00"
+    );
+    expect(ymdhis(new Date(2022, 0, 2)).beforeSeconds(-1).toString()).toBe(
+      "2022-01-02 00:00:01"
+    );
   });
 });
