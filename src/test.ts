@@ -28,10 +28,10 @@ describe("Basic alias properties", () => {
 
 describe("Calculated properties", () => {
   it("ampm", () => {
-    expect(ymdhis(new Date(2000, 0, 1, 0, 0, 0)).ampm).toBe(0);
+    expect(ymdhis(new Date(2000, 0, 1, 0, 0, 0)).ampm).toBe(12);
     expect(ymdhis(new Date(2000, 0, 1, 1, 0, 0)).ampm).toBe(1);
     expect(ymdhis(new Date(2000, 0, 1, 11, 0, 0)).ampm).toBe(11);
-    expect(ymdhis(new Date(2000, 0, 1, 12, 0, 0)).ampm).toBe(0);
+    expect(ymdhis(new Date(2000, 0, 1, 12, 0, 0)).ampm).toBe(12);
     expect(ymdhis(new Date(2000, 0, 1, 23, 0, 0)).ampm).toBe(11);
   });
   it("number", () => {
@@ -145,8 +145,8 @@ describe("Basic format date properties", () => {
   });
   it("a", () => {
     expect(ymdhis(new Date(2000, 0, 1, 0, 0)).a).toBe("AM");
-    expect(ymdhis(new Date(2000, 0, 1, 12, 0)).a).toBe("AM");
-    expect(ymdhis(new Date(2000, 0, 1, 13, 0)).a).toBe("PM");
+    expect(ymdhis(new Date(2000, 0, 1, 11, 0)).a).toBe("AM");
+    expect(ymdhis(new Date(2000, 0, 1, 12, 0)).a).toBe("PM");
     expect(ymdhis(new Date(2000, 0, 1, 23, 0)).a).toBe("PM");
   });
 });
@@ -167,4 +167,122 @@ describe("Combined format date properties", () => {
         .setTimeSeparator(".").ymdhi
     ).toBe("2000/01/02-12.34");
   });
+  it("ymdw", () => {
+    // 2000-01-02 (Sunday)
+    expect(ymdhis(new Date(2000, 0, 2)).ymdw).toBe("2000-01-02 Sunday");
+    expect(
+      ymdhis(new Date(2000, 0, 2))
+        .setDateSeparator("/")
+        .setDowSeparator("_")
+        .ymdw
+    ).toBe("2000/01/02_Sunday");
+  });
+  it("wymd", () => {
+    // 2000-01-02 (Sunday)
+    expect(ymdhis(new Date(2000, 0, 2)).wymd).toBe("Sunday 2000-01-02");
+    expect(
+      ymdhis(new Date(2000, 0, 2))
+        .setDateSeparator("/")
+        .setDowSeparator("_")
+        .wymd
+    ).toBe("Sunday_2000/01/02");
+  });
+  it("dmy", () => {
+    expect(ymdhis(new Date(2000, 0, 2)).dmy).toBe("02-01-2000");
+    expect(
+      ymdhis(new Date(2000, 0, 2))
+        .setDateSeparator("/")
+        .dmy
+    ).toBe("02/01/2000");
+  });
+  it("dm", () => {
+    expect(ymdhis(new Date(2000, 0, 2)).dm).toBe("02-01");
+    expect(
+      ymdhis(new Date(2000, 0, 2))
+        .setDateSeparator("/")
+        .dm
+    ).toBe("02/01");
+  });
+  it("mdy", () => {
+    expect(ymdhis(new Date(2000, 0, 2)).mdy).toBe("01-02-2000");
+    expect(
+      ymdhis(new Date(2000, 0, 2))
+        .setDateSeparator("/")
+        .mdy
+    ).toBe("01/02/2000");
+  });
+  it("md", () => {
+    expect(ymdhis(new Date(2000, 0, 2)).md).toBe("01-02");
+    expect(
+      ymdhis(new Date(2000, 0, 2))
+        .setDateSeparator("/")
+        .md
+    ).toBe("01/02");
+  });
+  it("hi", () => {
+    expect(ymdhis(new Date(2000, 0, 2, 12, 34)).hi).toBe("12:34");
+    expect(
+      ymdhis(new Date(2000, 0, 2, 12, 34))
+        .setTimeSeparator(".")
+        .hi
+    ).toBe("12.34");
+  });
+  it("his", () => {
+    expect(ymdhis(new Date(2000, 0, 2, 12, 34, 56)).his).toBe("12:34:56");
+    expect(
+      ymdhis(new Date(2000, 0, 2, 12, 34, 56))
+        .setTimeSeparator(".")
+        .his
+    ).toBe("12.34.56");
+  });
+  it("hia", () => {
+    expect(ymdhis(new Date(2000, 0, 2, 0, 0)).hia).toBe("12:00 AM");
+    expect(ymdhis(new Date(2000, 0, 2, 11, 59)).hia).toBe("11:59 AM");
+    expect(ymdhis(new Date(2000, 0, 2, 12, 0)).hia).toBe("12:00 PM");
+    expect(ymdhis(new Date(2000, 0, 2, 23, 59)).hia).toBe("11:59 PM");
+    expect(
+      ymdhis(new Date(2000, 0, 2, 12, 34))
+        .setTimeSeparator(".")
+        .setAmpmSeparator("_")
+        .hia
+    ).toBe("12.34_PM");
+  });
+  it("hisa", () => {
+    expect(ymdhis(new Date(2000, 0, 2, 0, 0)).hisa).toBe("12:00:00 AM");
+    expect(ymdhis(new Date(2000, 0, 2, 11, 59)).hisa).toBe("11:59:00 AM");
+    expect(ymdhis(new Date(2000, 0, 2, 12, 0)).hisa).toBe("12:00:00 PM");
+    expect(ymdhis(new Date(2000, 0, 2, 23, 59)).hisa).toBe("11:59:00 PM");
+    expect(
+      ymdhis(new Date(2000, 0, 2, 12, 34, 56))
+        .setTimeSeparator(".")
+        .setAmpmSeparator("_")
+        .hisa
+    ).toBe("12.34.56_PM");
+  });
+  it("ahi", () => {
+    expect(ymdhis(new Date(2000, 0, 2, 0, 0)).ahi).toBe("AM 12:00");
+    expect(ymdhis(new Date(2000, 0, 2, 11, 59)).ahi).toBe("AM 11:59");
+    expect(ymdhis(new Date(2000, 0, 2, 12, 0)).ahi).toBe("PM 12:00");
+    expect(ymdhis(new Date(2000, 0, 2, 23, 59)).ahi).toBe("PM 11:59");
+    expect(
+      ymdhis(new Date(2000, 0, 2, 12, 34))
+        .setTimeSeparator(".")
+        .setAmpmSeparator("_")
+        .ahi
+    ).toBe("PM_12.34");
+  });
+  it("ahis", () => {
+    expect(ymdhis(new Date(2000, 0, 2, 0, 0)).ahis).toBe("AM 12:00:00");
+    expect(ymdhis(new Date(2000, 0, 2, 11, 59)).ahis).toBe("AM 11:59:00");
+    expect(ymdhis(new Date(2000, 0, 2, 12, 0)).ahis).toBe("PM 12:00:00");
+    expect(ymdhis(new Date(2000, 0, 2, 23, 59)).ahis).toBe("PM 11:59:00");
+    expect(
+      ymdhis(new Date(2000, 0, 2, 12, 34, 56))
+        .setTimeSeparator(".")
+        .setAmpmSeparator("_")
+        .ahis
+    ).toBe("PM_12.34.56");
+  });
+
+
 });
