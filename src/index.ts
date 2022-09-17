@@ -116,7 +116,7 @@ class Ymdhis {
   }
 
   get ampm(): number {
-    return this.date.getHours() % 12;
+    return this.date.getHours() % 12 > 0 ? this.date.getHours() % 12 : 12;
   }
 
   get y(): string {
@@ -181,12 +181,12 @@ class Ymdhis {
   }
 
   get a(): string {
-    return this.date.getHours() > 12
+    return this.date.getHours() > 11
       ? this.options.pmNotation
       : this.options.amNotation;
   }
 
-  get g(): string {
+  private get g(): string {
     return (
       (this.options.isHourAsTwoDigits
         ? this.ampm.toString().padStart(2, "0")
@@ -245,7 +245,7 @@ class Ymdhis {
   get dmy(): string {
     return (
       this.d +
-      this.options.dowSeparator +
+      this.options.dateSeparator +
       this.m +
       this.options.dateSeparator +
       this.y
