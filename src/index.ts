@@ -234,6 +234,22 @@ class Ymdhis {
     );
   }
 
+  get ymdhis(): string {
+    return (
+      this.y +
+      this.options.dateSeparator +
+      this.m +
+      this.options.dateSeparator +
+      this.d +
+      this.options.dateTimeSeparator +
+      this.h +
+      this.options.timeSeparator +
+      this.i +
+      this.options.timeSeparator +
+      this.s
+    );
+  }
+
   get ymdw(): string {
     return (
       this.y +
@@ -356,9 +372,19 @@ class Ymdhis {
   }
 
   get iso9075(): string {
-    return new Ymdhis({
-      date: this.date,
-    }).toString();
+    return (
+      this.year.toString().padStart(4, "0") +
+      "-" +
+      this.month.toString().padStart(2, "0") +
+      "-" +
+      this.day.toString().padStart(2, "0") +
+      " " +
+      this.hour.toString().padStart(2, "0") +
+      ":" +
+      this.minute.toString().padStart(2, "0") +
+      ":" +
+      this.second.toString().padStart(2, "0")
+    );
   }
 
   get iso8601(): string {
@@ -586,19 +612,7 @@ class Ymdhis {
   }
 
   toString(): string {
-    return (
-      this.y +
-      this.options.dateSeparator +
-      this.m +
-      this.options.dateSeparator +
-      this.d +
-      this.options.dateTimeSeparator +
-      this.h +
-      this.options.timeSeparator +
-      this.i +
-      this.options.timeSeparator +
-      this.s
-    );
+    return this.ymdhis;
   }
 
   initDate(date: Date) {
