@@ -171,9 +171,7 @@ describe("Combined format date properties", () => {
     // 2000-01-02 (Sunday)
     expect(ymdhis(new Date(2000, 0, 2)).ymdw).toBe("2000-01-02 Sunday");
     expect(
-      ymdhis(new Date(2000, 0, 2))
-        .setDateSeparator("/")
-        .setDowSeparator("_")
+      ymdhis(new Date(2000, 0, 2)).setDateSeparator("/").setDowSeparator("_")
         .ymdw
     ).toBe("2000/01/02_Sunday");
   });
@@ -181,58 +179,40 @@ describe("Combined format date properties", () => {
     // 2000-01-02 (Sunday)
     expect(ymdhis(new Date(2000, 0, 2)).wymd).toBe("Sunday 2000-01-02");
     expect(
-      ymdhis(new Date(2000, 0, 2))
-        .setDateSeparator("/")
-        .setDowSeparator("_")
+      ymdhis(new Date(2000, 0, 2)).setDateSeparator("/").setDowSeparator("_")
         .wymd
     ).toBe("Sunday_2000/01/02");
   });
   it("dmy", () => {
     expect(ymdhis(new Date(2000, 0, 2)).dmy).toBe("02-01-2000");
-    expect(
-      ymdhis(new Date(2000, 0, 2))
-        .setDateSeparator("/")
-        .dmy
-    ).toBe("02/01/2000");
+    expect(ymdhis(new Date(2000, 0, 2)).setDateSeparator("/").dmy).toBe(
+      "02/01/2000"
+    );
   });
   it("dm", () => {
     expect(ymdhis(new Date(2000, 0, 2)).dm).toBe("02-01");
-    expect(
-      ymdhis(new Date(2000, 0, 2))
-        .setDateSeparator("/")
-        .dm
-    ).toBe("02/01");
+    expect(ymdhis(new Date(2000, 0, 2)).setDateSeparator("/").dm).toBe("02/01");
   });
   it("mdy", () => {
     expect(ymdhis(new Date(2000, 0, 2)).mdy).toBe("01-02-2000");
-    expect(
-      ymdhis(new Date(2000, 0, 2))
-        .setDateSeparator("/")
-        .mdy
-    ).toBe("01/02/2000");
+    expect(ymdhis(new Date(2000, 0, 2)).setDateSeparator("/").mdy).toBe(
+      "01/02/2000"
+    );
   });
   it("md", () => {
     expect(ymdhis(new Date(2000, 0, 2)).md).toBe("01-02");
-    expect(
-      ymdhis(new Date(2000, 0, 2))
-        .setDateSeparator("/")
-        .md
-    ).toBe("01/02");
+    expect(ymdhis(new Date(2000, 0, 2)).setDateSeparator("/").md).toBe("01/02");
   });
   it("hi", () => {
     expect(ymdhis(new Date(2000, 0, 2, 12, 34)).hi).toBe("12:34");
-    expect(
-      ymdhis(new Date(2000, 0, 2, 12, 34))
-        .setTimeSeparator(".")
-        .hi
-    ).toBe("12.34");
+    expect(ymdhis(new Date(2000, 0, 2, 12, 34)).setTimeSeparator(".").hi).toBe(
+      "12.34"
+    );
   });
   it("his", () => {
     expect(ymdhis(new Date(2000, 0, 2, 12, 34, 56)).his).toBe("12:34:56");
     expect(
-      ymdhis(new Date(2000, 0, 2, 12, 34, 56))
-        .setTimeSeparator(".")
-        .his
+      ymdhis(new Date(2000, 0, 2, 12, 34, 56)).setTimeSeparator(".").his
     ).toBe("12.34.56");
   });
   it("hia", () => {
@@ -243,8 +223,7 @@ describe("Combined format date properties", () => {
     expect(
       ymdhis(new Date(2000, 0, 2, 12, 34))
         .setTimeSeparator(".")
-        .setAmpmSeparator("_")
-        .hia
+        .setAmpmSeparator("_").hia
     ).toBe("12.34_PM");
   });
   it("hisa", () => {
@@ -255,8 +234,7 @@ describe("Combined format date properties", () => {
     expect(
       ymdhis(new Date(2000, 0, 2, 12, 34, 56))
         .setTimeSeparator(".")
-        .setAmpmSeparator("_")
-        .hisa
+        .setAmpmSeparator("_").hisa
     ).toBe("12.34.56_PM");
   });
   it("ahi", () => {
@@ -267,8 +245,7 @@ describe("Combined format date properties", () => {
     expect(
       ymdhis(new Date(2000, 0, 2, 12, 34))
         .setTimeSeparator(".")
-        .setAmpmSeparator("_")
-        .ahi
+        .setAmpmSeparator("_").ahi
     ).toBe("PM_12.34");
   });
   it("ahis", () => {
@@ -279,10 +256,7 @@ describe("Combined format date properties", () => {
     expect(
       ymdhis(new Date(2000, 0, 2, 12, 34, 56))
         .setTimeSeparator(".")
-        .setAmpmSeparator("_")
-        .ahis
+        .setAmpmSeparator("_").ahis
     ).toBe("PM_12.34.56");
   });
-
-
 });
