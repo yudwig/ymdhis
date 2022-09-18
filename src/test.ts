@@ -52,13 +52,13 @@ describe("Basic format date properties", () => {
   });
   it("y: digits 2, disable padding", () => {
     expect(
-      ymdhis(new Date(1987, 0, 1)).setYearAsTwoDigits().disableYearPadding().y
+      ymdhis(new Date(1987, 0, 1)).setYearAsTwoDigits().clearYearPad().y
     ).toBe("87");
     expect(
-      ymdhis(new Date(2003, 0, 1)).setYearAsTwoDigits().disableYearPadding().y
+      ymdhis(new Date(2003, 0, 1)).setYearAsTwoDigits().clearYearPad().y
     ).toBe("3");
     expect(
-      ymdhis(new Date(2000, 0, 1)).setYearAsTwoDigits().disableYearPadding().y
+      ymdhis(new Date(2000, 0, 1)).setYearAsTwoDigits().clearYearPad().y
     ).toBe("0");
   });
   it("m: enable padding", () => {
@@ -66,16 +66,16 @@ describe("Basic format date properties", () => {
     expect(ymdhis(new Date(2000, 11, 1)).m).toBe("12");
   });
   it("m: disable padding", () => {
-    expect(ymdhis(new Date(2000, 0, 1)).disableMonthPadding().m).toBe("1");
-    expect(ymdhis(new Date(2000, 11, 1)).disableMonthPadding().m).toBe("12");
+    expect(ymdhis(new Date(2000, 0, 1)).clearMonthPad().m).toBe("1");
+    expect(ymdhis(new Date(2000, 11, 1)).clearMonthPad().m).toBe("12");
   });
   it("d: enable padding", () => {
     expect(ymdhis(new Date(2000, 0, 1)).d).toBe("01");
     expect(ymdhis(new Date(2000, 0, 20)).d).toBe("20");
   });
   it("d: disable padding", () => {
-    expect(ymdhis(new Date(2000, 0, 1)).disableDayPadding().d).toBe("1");
-    expect(ymdhis(new Date(2000, 0, 20)).disableDayPadding().d).toBe("20");
+    expect(ymdhis(new Date(2000, 0, 1)).clearDayPad().d).toBe("1");
+    expect(ymdhis(new Date(2000, 0, 20)).clearDayPad().d).toBe("20");
   });
   it("noPaddingDate()", () => {
     expect(ymdhis(new Date(2000, 0, 1)).disableDatePadding().y).toBe("2000");
@@ -89,10 +89,10 @@ describe("Basic format date properties", () => {
     expect(ymdhis(new Date(2000, 0, 1, 12, 0, 0)).h).toBe("12");
   });
   it("h: disable padding", () => {
-    expect(ymdhis(new Date(2000, 0, 1, 1, 0, 0)).disableHourPadding().h).toBe(
+    expect(ymdhis(new Date(2000, 0, 1, 1, 0, 0)).clearHourPad().h).toBe(
       "1"
     );
-    expect(ymdhis(new Date(2000, 0, 1, 12, 0, 0)).disableHourPadding().h).toBe(
+    expect(ymdhis(new Date(2000, 0, 1, 12, 0, 0)).clearHourPad().h).toBe(
       "12"
     );
   });
@@ -101,11 +101,11 @@ describe("Basic format date properties", () => {
     expect(ymdhis(new Date(2000, 0, 1, 1, 20, 0)).i).toBe("20");
   });
   it("i: disable padding", () => {
-    expect(ymdhis(new Date(2000, 0, 1, 1, 1, 0)).disableMinutePadding().i).toBe(
+    expect(ymdhis(new Date(2000, 0, 1, 1, 1, 0)).clearMinutePad().i).toBe(
       "1"
     );
     expect(
-      ymdhis(new Date(2000, 0, 1, 1, 20, 0)).disableMinutePadding().i
+      ymdhis(new Date(2000, 0, 1, 1, 20, 0)).clearMinutePad().i
     ).toBe("20");
   });
   it("s: enable padding", () => {
@@ -113,11 +113,11 @@ describe("Basic format date properties", () => {
     expect(ymdhis(new Date(2000, 0, 1, 1, 1, 20)).s).toBe("20");
   });
   it("s: disable padding", () => {
-    expect(ymdhis(new Date(2000, 0, 1, 1, 1, 1)).disableSecondPadding().s).toBe(
+    expect(ymdhis(new Date(2000, 0, 1, 1, 1, 1)).clearSecondPad().s).toBe(
       "1"
     );
     expect(
-      ymdhis(new Date(2000, 0, 1, 1, 1, 20)).disableSecondPadding().s
+      ymdhis(new Date(2000, 0, 1, 1, 1, 20)).clearSecondPad().s
     ).toBe("20");
   });
   it("w: default dow notations", () => {
@@ -584,7 +584,7 @@ describe("ISO date format functions", () => {
         .setMinuteSuffix("I")
         .setSecondSuffix("S")
         .disableDatePadding()
-        .disableTimePadding().iso9075
+        .clearTimePad().iso9075
     ).toBe("2022-01-02 12:34:56");
   });
   it("iso8601", () => {

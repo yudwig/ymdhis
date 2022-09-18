@@ -583,17 +583,17 @@ class Ymdhis {
     });
   }
 
-  disableYearPadding() {
+  clearYearPad() {
     return this.cloneWithOptions({ isEnablePaddingYear: false });
   }
-  disableMonthPadding() {
+  clearMonthPad() {
     return this.cloneWithOptions({ isMonthAsTwoDigits: false });
   }
-  disableDayPadding() {
+  clearDayPad() {
     return this.cloneWithOptions({ isDayAsTwoDigits: false });
   }
 
-  disableTimePadding() {
+  clearTimePad() {
     return this.cloneWithOptions({
       isHourAsTwoDigits: false,
       isMinuteAsTwoDigits: false,
@@ -601,13 +601,13 @@ class Ymdhis {
     });
   }
 
-  disableHourPadding() {
+  clearHourPad() {
     return this.cloneWithOptions({ isHourAsTwoDigits: false });
   }
-  disableMinutePadding() {
+  clearMinutePad() {
     return this.cloneWithOptions({ isMinuteAsTwoDigits: false });
   }
-  disableSecondPadding() {
+  clearSecondPad() {
     return this.cloneWithOptions({ isSecondAsTwoDigits: false });
   }
 
