@@ -588,15 +588,15 @@ describe("ISO date format functions", () => {
     ).toBe("2022-01-02 12:34:56");
   });
   it("iso8601", () => {
-    const date = new Date(2022, 0, 2, 12, 34, 56)
+    const date = new Date(2022, 0, 2, 12, 34, 56);
     expect(ymdhis(date).iso8601).toBe(date.toISOString());
-  })
+  });
 });
 
 describe("Initializer", () => {
   it("initDate", () => {
-    const before = ymdhis(new Date(2000, 0, 1))
-    const after = before.initDate(new Date(2000, 0, 2))
-    expect(before.ymd).not.toBe(after.ymd)
-  })
-})
+    const before = ymdhis(new Date(2000, 0, 1));
+    const after = before.initDate(new Date(2000, 0, 2));
+    expect(before.ymd).not.toBe(after.ymd);
+  });
+});
