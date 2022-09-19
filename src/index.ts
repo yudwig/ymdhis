@@ -371,6 +371,10 @@ class Ymdhis {
     );
   }
 
+  get string() {
+    return this.toString();
+  }
+
   get iso9075(): string {
     return (
       this.year.toString().padStart(4, "0") +
@@ -475,108 +479,149 @@ class Ymdhis {
     return this.afterSeconds(-seconds);
   }
 
+  setSeparators(
+    dateSeparator: string,
+    dateTimeSeparator: string,
+    timeSeparator: string
+  ) {
+    return this.cloneWithUpdateOptions({
+      dateSeparator: dateSeparator,
+      dateTimeSeparator: dateTimeSeparator,
+      timeSeparator: timeSeparator,
+    });
+  }
+
   setDateSeparator(separator: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       dateSeparator: separator,
     });
   }
 
   setTimeSeparator(separator: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       timeSeparator: separator,
     });
   }
 
   setDateTimeSeparator(separator: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       dateTimeSeparator: separator,
     });
   }
 
   setAmpmSeparator(separator: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       ampmSeparator: separator,
     });
   }
 
   setDowSeparator(separator: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       dowSeparator: separator,
     });
   }
 
+  setSuffixes(
+    y: string,
+    m: string,
+    d: string,
+    h: string,
+    i: string,
+    s: string
+  ) {
+    return this.cloneWithUpdateOptions({
+      yearSuffix: y,
+      monthSuffix: m,
+      daySuffix: d,
+      hourSuffix: h,
+      minuteSuffix: i,
+      secondSuffix: s,
+    });
+  }
+
   setYearSuffix(suffix: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       yearSuffix: suffix,
     });
   }
 
   setMonthSuffix(suffix: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       monthSuffix: suffix,
     });
   }
 
   setDaySuffix(suffix: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       daySuffix: suffix,
     });
   }
 
   setHourSuffix(suffix: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       hourSuffix: suffix,
     });
   }
 
   setMinuteSuffix(suffix: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       minuteSuffix: suffix,
     });
   }
 
   setSecondSuffix(suffix: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       secondSuffix: suffix,
     });
   }
 
   setAmNotation(am: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       amNotation: am,
     });
   }
 
   setPmNotation(pm: string): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       pmNotation: pm,
     });
   }
 
   setDowNotations(dowList: string[]): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       dowNotations: dowList.slice(0, 7),
     });
   }
 
   setMonthNotations(monthList: string[]): Ymdhis {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       monthNotations: monthList.slice(0, 12),
     });
   }
 
   setDateNotations(dateList: string[]) {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       dateNotations: dateList.slice(0, 31),
     });
   }
 
   setYearAsTwoDigits(): Ymdhis {
-    return this.cloneWithOptions({ isYearAsFourDigits: false });
+    return this.cloneWithUpdateOptions({ isYearAsFourDigits: false });
   }
 
-  disableDatePadding() {
-    return this.cloneWithOptions({
+  clearPads() {
+    return this.cloneWithUpdateOptions({
+      isEnablePaddingYear: false,
+      isMonthAsTwoDigits: false,
+      isDayAsTwoDigits: false,
+      isHourAsTwoDigits: false,
+      isMinuteAsTwoDigits: false,
+      isSecondAsTwoDigits: false,
+    });
+  }
+
+  clearDatePad() {
+    return this.cloneWithUpdateOptions({
       isEnablePaddingYear: false,
       isMonthAsTwoDigits: false,
       isDayAsTwoDigits: false,
@@ -584,17 +629,17 @@ class Ymdhis {
   }
 
   clearYearPad() {
-    return this.cloneWithOptions({ isEnablePaddingYear: false });
+    return this.cloneWithUpdateOptions({ isEnablePaddingYear: false });
   }
   clearMonthPad() {
-    return this.cloneWithOptions({ isMonthAsTwoDigits: false });
+    return this.cloneWithUpdateOptions({ isMonthAsTwoDigits: false });
   }
   clearDayPad() {
-    return this.cloneWithOptions({ isDayAsTwoDigits: false });
+    return this.cloneWithUpdateOptions({ isDayAsTwoDigits: false });
   }
 
   clearTimePad() {
-    return this.cloneWithOptions({
+    return this.cloneWithUpdateOptions({
       isHourAsTwoDigits: false,
       isMinuteAsTwoDigits: false,
       isSecondAsTwoDigits: false,
@@ -602,27 +647,136 @@ class Ymdhis {
   }
 
   clearHourPad() {
-    return this.cloneWithOptions({ isHourAsTwoDigits: false });
+    return this.cloneWithUpdateOptions({ isHourAsTwoDigits: false });
   }
   clearMinutePad() {
-    return this.cloneWithOptions({ isMinuteAsTwoDigits: false });
+    return this.cloneWithUpdateOptions({ isMinuteAsTwoDigits: false });
   }
   clearSecondPad() {
-    return this.cloneWithOptions({ isSecondAsTwoDigits: false });
+    return this.cloneWithUpdateOptions({ isSecondAsTwoDigits: false });
+  }
+
+  clearSeparators() {
+    return this.cloneWithUpdateOptions({
+      dateSeparator: "",
+      dateTimeSeparator: "",
+      timeSeparator: "",
+      dowSeparator: "",
+      ampmSeparator: "",
+    });
+  }
+
+  clearOptions() {
+    return this.cloneWithUpdateOptions({
+      dateSeparator: "",
+      dateTimeSeparator: "",
+      timeSeparator: "",
+      dowSeparator: "",
+      ampmSeparator: "",
+      yearSuffix: "",
+      monthSuffix: "",
+      daySuffix: "",
+      hourSuffix: "",
+      minuteSuffix: "",
+      secondSuffix: "",
+      amNotation: "",
+      pmNotation: "",
+      monthNotations: null,
+      dateNotations: null,
+      dowNotations: [],
+      isEnablePaddingYear: false,
+      isMonthAsTwoDigits: false,
+      isDayAsTwoDigits: false,
+      isHourAsTwoDigits: false,
+      isMinuteAsTwoDigits: false,
+      isSecondAsTwoDigits: false,
+    });
+  }
+
+  utc(): Ymdhis {
+    return this.afterMinutes(this.date.getTimezoneOffset());
   }
 
   toString(): string {
     return this.ymdhis;
   }
 
-  initDate(date: Date) {
+  initDate(
+    y: number,
+    m: number,
+    d: number,
+    h: number,
+    i: number,
+    s: number
+  ): Ymdhis;
+
+  initDate(y: number, m: number, d: number, h: number, i: number): Ymdhis;
+
+  initDate(y: number, m: number, d: number, h: number): Ymdhis;
+
+  initDate(y: number, m: number, d: number): Ymdhis;
+
+  initDate(y: number, m: number): Ymdhis;
+
+  initDate(unixTime: number): Ymdhis;
+
+  initDate(str: string): Ymdhis;
+
+  initDate(date: Date): Ymdhis;
+
+  initDate(): Ymdhis;
+
+  initDate(
+    arg1?: number | string | Date,
+    m?: number,
+    d?: number,
+    h?: number,
+    i?: number,
+    s?: number
+  ): Ymdhis {
+    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s));
+  }
+
+  static createDate(
+    arg1?: number | string | Date,
+    m?: number,
+    d?: number,
+    h?: number,
+    i?: number,
+    s?: number
+  ): Date {
+    switch (typeof arg1) {
+      case "undefined":
+        return new Date();
+      case "string":
+        return new Date(arg1);
+      case "object":
+        return new Date(arg1);
+      case "number":
+        if (typeof m === "undefined") {
+          return new Date(arg1);
+        } else if (typeof d === "undefined") {
+          return new Date(arg1, m - 1);
+        } else if (typeof h === "undefined") {
+          return new Date(arg1, m - 1, d);
+        } else if (typeof i === "undefined") {
+          return new Date(arg1, m - 1, d, h);
+        } else if (typeof s === "undefined") {
+          return new Date(arg1, m - 1, d, h, i);
+        } else {
+          return new Date(arg1, m - 1, d, h, i, s);
+        }
+    }
+  }
+
+  private cloneWithNewDate(date: Date): Ymdhis {
     return new Ymdhis({
       date: date,
       options: this.options,
     });
   }
 
-  private cloneWithOptions(options: Partial<Options>): Ymdhis {
+  private cloneWithUpdateOptions(options: Partial<Options>): Ymdhis {
     return new Ymdhis({
       date: this.date,
       options: Object.assign(this.options, options),
@@ -630,6 +784,15 @@ class Ymdhis {
   }
 }
 
-export function ymdhis(date: Date = new Date()): Ymdhis {
-  return new Ymdhis({ date: date });
+export function ymdhis(
+  arg1?: number | string | Date,
+  m?: number,
+  d?: number,
+  h?: number,
+  i?: number,
+  s?: number
+): Ymdhis {
+  return new Ymdhis({
+    date: Ymdhis.createDate(arg1, m, d, h, i, s),
+  });
 }
