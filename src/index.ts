@@ -693,12 +693,23 @@ class Ymdhis {
     });
   }
 
-  utc(): Ymdhis {
-    return this.afterMinutes(this.date.getTimezoneOffset());
-  }
-
   toString(): string {
     return this.ymdhis;
+  }
+
+  utc(): Ymdhis;
+
+  utc(
+    arg1?: number | string | Date,
+    m?: number,
+    d?: number,
+    h?: number,
+    i?: number,
+    s?: number
+  ): Ymdhis;
+
+  utc(): Ymdhis {
+    return this.afterMinutes(this.date.getTimezoneOffset());
   }
 
   initDate(
@@ -737,6 +748,48 @@ class Ymdhis {
     return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s));
   }
 
+  static iso9075toDate(str: string): Date {
+    const msg = `Invalid date format: ${str}`;
+    if (str.match(/[^\d\s:\-]/)) {
+      throw new Error(msg);
+    }
+    const dt = str.trim().split(" ");
+    if (dt.length === 0) {
+      throw new Error(msg);
+    }
+    const d = dt[0].split("-").map((n) => parseInt(n, 10));
+    const t =
+      dt.length === 1 ? [] : dt[1].split(":").map((n) => parseInt(n, 10));
+
+    d.concat(t).forEach((item) => {
+      if (isNaN(item)) {
+        throw new Error(msg);
+      }
+    });
+    switch (d.length) {
+      case 0:
+      case 1:
+        throw new Error(msg);
+      case 2:
+        return new Date(d[0], d[1] - 1);
+      case 3:
+        switch (t.length) {
+          case 0:
+            return new Date(d[0], d[1] - 1, d[2]);
+          case 1:
+            throw new Error(msg);
+          case 2:
+            return new Date(d[0], d[1] - 1, d[2], t[0], t[1]);
+          case 3:
+            return new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2]);
+          default:
+            throw new Error(msg);
+        }
+      default:
+        throw new Error(msg);
+    }
+  }
+
   static createDate(
     arg1?: number | string | Date,
     m?: number,
@@ -749,7 +802,7 @@ class Ymdhis {
       case "undefined":
         return new Date();
       case "string":
-        return new Date(arg1);
+        return Ymdhis.iso9075toDate(arg1)
       case "object":
         return new Date(arg1);
       case "number":
