@@ -608,3 +608,20 @@ describe("Timezone functions", () => {
     expect(before.ymd).not.toBe(after.ymd);
   });
 });
+
+describe("Create Date functions", () => {
+  it("iso9075toDate", () => {
+    expect(ymdhis("2000-01-02 12:34:56").toString()).toBe("2000-01-02 12:34:56")
+    expect(ymdhis("2000-01-02 12:34").toString()).toBe("2000-01-02 12:34:00")
+    expect(ymdhis("2000-01-02").toString()).toBe("2000-01-02 00:00:00")
+    expect(ymdhis("2000-01").toString()).toBe("2000-01-01 00:00:00")
+
+    expect(() => ymdhis("2000-01-02-03 12:34:56")).toThrow()
+    expect(() => ymdhis("2000-01-02 12:34:56:78")).toThrow()
+    expect(() => ymdhis("2000-01-02 12")).toThrow()
+    expect(() => ymdhis("2000")).toThrow()
+    expect(() => ymdhis("2000-0x10-02")).toThrow()
+    expect(() => ymdhis("")).toThrow()
+    expect(() => ymdhis("1-2-3")).toThrow()
+  })
+})
