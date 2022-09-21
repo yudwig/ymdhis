@@ -34,6 +34,9 @@ interface Options {
   isHourAsTwoDigits: boolean;
   isMinuteAsTwoDigits: boolean;
   isSecondAsTwoDigits: boolean;
+
+  // Timezone
+  isUtc: boolean;
 }
 
 class Ymdhis {
@@ -78,6 +81,9 @@ class Ymdhis {
     isHourAsTwoDigits: true,
     isMinuteAsTwoDigits: true,
     isSecondAsTwoDigits: true,
+
+    // Timezone
+    isUtc: false,
   };
 
   constructor(props: Props) {
@@ -121,7 +127,10 @@ class Ymdhis {
 
   get y(): string {
     if (this.options.isYearAsFourDigits) {
-      return this.date.getFullYear().toString() + this.options.yearSuffix;
+      return (
+        this.date.getFullYear().toString().padStart(4, "0") +
+        this.options.yearSuffix
+      );
     } else {
       return (
         (this.options.isEnablePaddingYear
@@ -690,6 +699,7 @@ class Ymdhis {
       isHourAsTwoDigits: false,
       isMinuteAsTwoDigits: false,
       isSecondAsTwoDigits: false,
+      isUtc: false,
     });
   }
 
@@ -700,7 +710,7 @@ class Ymdhis {
   utc(): Ymdhis;
 
   utc(
-    arg1?: number | string | Date,
+    arg1?: number,
     m?: number,
     d?: number,
     h?: number,
@@ -708,8 +718,23 @@ class Ymdhis {
     s?: number
   ): Ymdhis;
 
-  utc(): Ymdhis {
-    return this.afterMinutes(this.date.getTimezoneOffset());
+  utc(
+    arg1?: number,
+    m?: number,
+    d?: number,
+    h?: number,
+    i?: number,
+    s?: number
+  ): Ymdhis {
+    if (typeof arg1 === "undefined") {
+      this.options.isUtc = true;
+      return this.afterMinutes(this.date.getTimezoneOffset());
+    }
+    if (this.options.isUtc) {
+      return this.cloneWithNewDate(this.date);
+    }
+    this.options.isUtc = true;
+    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s)).utc();
   }
 
   initDate(
@@ -750,7 +775,7 @@ class Ymdhis {
 
   static iso9075toDate(str: string): Date {
     const msg = `Invalid date format: ${str}`;
-    if (str.match(/[^\d\s:\-]/)) {
+    if (str.match(/[^\d\s:-]/)) {
       throw new Error(msg);
     }
     const dt = str.trim().split(" ");
@@ -771,23 +796,95 @@ class Ymdhis {
       case 1:
         throw new Error(msg);
       case 2:
-        return new Date(d[0], d[1] - 1);
+        return Ymdhis.numbersToDate(d[0], d[1]);
       case 3:
         switch (t.length) {
           case 0:
-            return new Date(d[0], d[1] - 1, d[2]);
+            return Ymdhis.numbersToDate(d[0], d[1], d[2]);
           case 1:
             throw new Error(msg);
           case 2:
-            return new Date(d[0], d[1] - 1, d[2], t[0], t[1]);
+            return Ymdhis.numbersToDate(d[0], d[1], d[2], t[0], t[1]);
           case 3:
-            return new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2]);
+            return Ymdhis.numbersToDate(d[0], d[1], d[2], t[0], t[1], t[2]);
           default:
             throw new Error(msg);
         }
       default:
         throw new Error(msg);
     }
+  }
+
+  static validateDateItems(
+    y: number,
+    m?: number,
+    d?: number,
+    h?: number,
+    i?: number,
+    s?: number
+  ) {
+    if (typeof m !== "undefined") {
+      if (m < 1 || m > 12) {
+        throw new Error(`Invalid month: ${m}`);
+      }
+    }
+    if (typeof d !== "undefined") {
+      if (d < 1 || d > 31) {
+        throw new Error(`Invalid day: ${d}`);
+      }
+    }
+    if (typeof h !== "undefined") {
+      if (h < 0 || h > 60) {
+        throw new Error(`Invalid hour: ${h}`);
+      }
+    }
+    if (typeof i !== "undefined") {
+      if (i < 0 || i > 60) {
+        throw new Error(`Invalid minute: ${h}`);
+      }
+    }
+    if (typeof s !== "undefined") {
+      if (s < 0 || s > 60) {
+        throw new Error(`Invalid second: ${s}`);
+      }
+    }
+  }
+
+  static numbersToDate(
+    y: number,
+    m?: number,
+    d?: number,
+    h?: number,
+    i?: number,
+    s?: number
+  ) {
+    Ymdhis.validateDateItems(y, m, d, h, i, s);
+    const date = new Date(0, 1, 1, 0, 0, 0);
+    date.setFullYear(y);
+    if (typeof m === "undefined") {
+      return date;
+    } else if (typeof d === "undefined") {
+      date.setMonth(m - 1);
+    } else if (typeof h === "undefined") {
+      date.setMonth(m - 1);
+      date.setDate(d);
+    } else if (typeof i === "undefined") {
+      date.setMonth(m - 1);
+      date.setDate(d);
+      date.setHours(h);
+    } else if (typeof s === "undefined") {
+      date.setMonth(m - 1);
+      date.setDate(d);
+      date.setHours(h);
+      date.setMinutes(i);
+    } else {
+      date.setMonth(m - 1);
+      date.setDate(d);
+      date.setHours(h);
+      date.setMinutes(i);
+      date.setSeconds(s);
+    }
+    return date;
   }
 
   static createDate(
@@ -802,23 +899,11 @@ class Ymdhis {
       case "undefined":
         return new Date();
       case "string":
-        return Ymdhis.iso9075toDate(arg1)
+        return Ymdhis.iso9075toDate(arg1);
       case "object":
         return new Date(arg1);
       case "number":
-        if (typeof m === "undefined") {
-          return new Date(arg1);
-        } else if (typeof d === "undefined") {
-          return new Date(arg1, m - 1);
-        } else if (typeof h === "undefined") {
-          return new Date(arg1, m - 1, d);
-        } else if (typeof i === "undefined") {
-          return new Date(arg1, m - 1, d, h);
-        } else if (typeof s === "undefined") {
-          return new Date(arg1, m - 1, d, h, i);
-        } else {
-          return new Date(arg1, m - 1, d, h, i, s);
-        }
+        return Ymdhis.numbersToDate(arg1, m, d, h, i, s);
     }
   }
 
