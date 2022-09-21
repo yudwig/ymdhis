@@ -630,10 +630,6 @@ describe("Create Date functions", () => {
     expect(ymdhis("9999-12-31 23:59:59").toString()).toBe(
       "9999-12-31 23:59:59"
     );
-    expect(ymdhis("10000-01-01 12:34:56").toString()).toBe(
-      "10000-01-01 12:34:56"
-    );
-
     expect(() => ymdhis("2000-01-02-03 12:34:56")).toThrow();
     expect(() => ymdhis("2000-01-02 12:34:56:78")).toThrow();
     expect(() => ymdhis("2000-01-02 12")).toThrow();
@@ -642,5 +638,36 @@ describe("Create Date functions", () => {
     expect(() => ymdhis("2000-0x10-02")).toThrow();
     expect(() => ymdhis("")).toThrow();
     expect(() => ymdhis("2000-13-01")).toThrow();
+  });
+
+  it("numberToDate", () => {
+    expect(ymdhis(2000, 1, 2, 12, 34, 56).toString()).toBe(
+      "2000-01-02 12:34:56"
+    );
+    expect(ymdhis(0, 1, 2, 12, 34, 56).toString()).toBe("0000-01-02 12:34:56");
+    expect(ymdhis(10, 1, 2, 12, 34, 56).toString()).toBe("0010-01-02 12:34:56");
+
+    expect(() => ymdhis(-1, 1, 2)).toThrow();
+    expect(() => ymdhis(0, 1, 2)).not.toThrow();
+    expect(() => ymdhis(9999, 1, 2)).not.toThrow();
+    expect(() => ymdhis(10000, 1, 2)).toThrow();
+    expect(() => ymdhis(2000, 0, 2)).toThrow();
+    expect(() => ymdhis(2000, 1, 2)).not.toThrow();
+    expect(() => ymdhis(2000, 12, 2)).not.toThrow();
+    expect(() => ymdhis(2000, 13, 2)).toThrow();
+    expect(() => ymdhis(2000, 1, 0)).toThrow();
+    expect(() => ymdhis(2000, 1, 30)).not.toThrow();
+    expect(() => ymdhis(2000, 1, 31)).not.toThrow();
+    expect(() => ymdhis(2000, 1, 32)).toThrow();
+    expect(() => ymdhis(2000, 1, 2, -1, 0, 0)).toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, 0, 0)).not.toThrow();
+    expect(() => ymdhis(2000, 1, 2, 23, 0, 0)).not.toThrow();
+    expect(() => ymdhis(2000, 1, 2, 24, 0, 0)).toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, -1, 0)).toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, 59, 0)).not.toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, 60, 0)).toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, 0, -1)).toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, 0, 59)).not.toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, 0, 60)).toThrow();
   });
 });
