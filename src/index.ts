@@ -823,6 +823,9 @@ class Ymdhis {
     i?: number,
     s?: number
   ) {
+    if (y < 0 || y > 9999) {
+      throw new Error(`Invalid year: ${y}`);
+    }
     if (typeof m !== "undefined") {
       if (m < 1 || m > 12) {
         throw new Error(`Invalid month: ${m}`);
@@ -834,17 +837,17 @@ class Ymdhis {
       }
     }
     if (typeof h !== "undefined") {
-      if (h < 0 || h > 60) {
+      if (h < 0 || h > 23) {
         throw new Error(`Invalid hour: ${h}`);
       }
     }
     if (typeof i !== "undefined") {
-      if (i < 0 || i > 60) {
+      if (i < 0 || i > 59) {
         throw new Error(`Invalid minute: ${h}`);
       }
     }
     if (typeof s !== "undefined") {
-      if (s < 0 || s > 60) {
+      if (s < 0 || s > 59) {
         throw new Error(`Invalid second: ${s}`);
       }
     }
