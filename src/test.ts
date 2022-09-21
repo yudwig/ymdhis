@@ -39,6 +39,11 @@ describe("Calculated properties", () => {
       20220102123456
     );
   });
+  it("string", () => {
+    expect(ymdhis(new Date(2022, 0, 2, 12, 34, 56)).string).toBe(
+      "2022-01-02 12:34:56"
+    );
+  });
 });
 
 describe("Basic format date properties", () => {
@@ -611,17 +616,31 @@ describe("Timezone functions", () => {
 
 describe("Create Date functions", () => {
   it("iso9075toDate", () => {
-    expect(ymdhis("2000-01-02 12:34:56").toString()).toBe("2000-01-02 12:34:56")
-    expect(ymdhis("2000-01-02 12:34").toString()).toBe("2000-01-02 12:34:00")
-    expect(ymdhis("2000-01-02").toString()).toBe("2000-01-02 00:00:00")
-    expect(ymdhis("2000-01").toString()).toBe("2000-01-01 00:00:00")
+    expect(ymdhis("2000-01-02 12:34:56").toString()).toBe(
+      "2000-01-02 12:34:56"
+    );
+    expect(ymdhis("2000-1-2 3:4:5").toString()).toBe("2000-01-02 03:04:05");
+    expect(ymdhis("2000-01-02 12:34").toString()).toBe("2000-01-02 12:34:00");
+    expect(ymdhis("2000-1-2 3:4").toString()).toBe("2000-01-02 03:04:00");
+    expect(ymdhis("2000-01-02").toString()).toBe("2000-01-02 00:00:00");
+    expect(ymdhis("2000-1-2").toString()).toBe("2000-01-02 00:00:00");
+    expect(ymdhis("2000-01").toString()).toBe("2000-01-01 00:00:00");
+    expect(ymdhis("2000-1").toString()).toBe("2000-01-01 00:00:00");
+    expect(ymdhis("1-2-3").toString()).toBe("0001-02-03 00:00:00");
+    expect(ymdhis("9999-12-31 23:59:59").toString()).toBe(
+      "9999-12-31 23:59:59"
+    );
+    expect(ymdhis("10000-01-01 12:34:56").toString()).toBe(
+      "10000-01-01 12:34:56"
+    );
 
-    expect(() => ymdhis("2000-01-02-03 12:34:56")).toThrow()
-    expect(() => ymdhis("2000-01-02 12:34:56:78")).toThrow()
-    expect(() => ymdhis("2000-01-02 12")).toThrow()
-    expect(() => ymdhis("2000")).toThrow()
-    expect(() => ymdhis("2000-0x10-02")).toThrow()
-    expect(() => ymdhis("")).toThrow()
-    expect(() => ymdhis("1-2-3")).toThrow()
-  })
-})
+    expect(() => ymdhis("2000-01-02-03 12:34:56")).toThrow();
+    expect(() => ymdhis("2000-01-02 12:34:56:78")).toThrow();
+    expect(() => ymdhis("2000-01-02 12")).toThrow();
+    expect(() => ymdhis("-1-2-3")).toThrow();
+    expect(() => ymdhis("2000")).toThrow();
+    expect(() => ymdhis("2000-0x10-02")).toThrow();
+    expect(() => ymdhis("")).toThrow();
+    expect(() => ymdhis("2000-13-01")).toThrow();
+  });
+});
