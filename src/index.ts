@@ -23,7 +23,7 @@ interface Options {
   amNotation: string;
   pmNotation: string;
   monthNotations: string[] | null;
-  dateNotations: string[] | null;
+  dayNotations: string[] | null;
   dowNotations: string[];
 
   // Digits
@@ -62,7 +62,7 @@ class Ymdhis {
     amNotation: "AM",
     pmNotation: "PM",
     monthNotations: null,
-    dateNotations: null,
+    dayNotations: null,
     dowNotations: [
       "Sunday",
       "Monday",
@@ -158,9 +158,9 @@ class Ymdhis {
   }
 
   get d(): string {
-    if (this.options.dateNotations !== null) {
-      return this.options.dateNotations.length > this.date.getDate() - 1
-        ? this.options.dateNotations[this.date.getDate() - 1]
+    if (this.options.dayNotations !== null) {
+      return this.options.dayNotations.length > this.date.getDate() - 1
+        ? this.options.dayNotations[this.date.getDate() - 1]
         : "";
     } else {
       return (
@@ -608,9 +608,9 @@ class Ymdhis {
     });
   }
 
-  setDateNotations(dateList: string[]) {
+  setDayNotations(dayList: string[]) {
     return this.cloneWithUpdateOptions({
-      dateNotations: dateList.slice(0, 31),
+      dayNotations: dayList.slice(0, 31),
     });
   }
 
@@ -691,7 +691,7 @@ class Ymdhis {
       amNotation: "",
       pmNotation: "",
       monthNotations: null,
-      dateNotations: null,
+      dayNotations: null,
       dowNotations: [],
       isEnablePaddingYear: false,
       isMonthAsTwoDigits: false,
@@ -727,14 +727,22 @@ class Ymdhis {
     s?: number
   ): Ymdhis {
     if (typeof arg1 === "undefined") {
+      if (this.options.isUtc) {
+        return this.cloneWithNewDate(this.date);
+      }
       this.options.isUtc = true;
       return this.afterMinutes(this.date.getTimezoneOffset());
     }
-    if (this.options.isUtc) {
+    this.options.isUtc = true;
+    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s));
+  }
+
+  local() {
+    if (!this.options.isUtc) {
       return this.cloneWithNewDate(this.date);
     }
-    this.options.isUtc = true;
-    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s)).utc();
+    this.options.isUtc = false;
+    return this.beforeMinutes(this.date.getTimezoneOffset());
   }
 
   initDate(
@@ -779,9 +787,6 @@ class Ymdhis {
       throw new Error(msg);
     }
     const dt = str.trim().split(" ");
-    if (dt.length === 0) {
-      throw new Error(msg);
-    }
     const d = dt[0].split("-").map((n) => parseInt(n, 10));
     const t =
       dt.length === 1 ? [] : dt[1].split(":").map((n) => parseInt(n, 10));
