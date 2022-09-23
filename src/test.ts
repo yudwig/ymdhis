@@ -82,12 +82,23 @@ describe("Basic format date properties", () => {
     expect(ymdhis(new Date(2000, 0, 1)).clearDayPad().d).toBe("1");
     expect(ymdhis(new Date(2000, 0, 20)).clearDayPad().d).toBe("20");
   });
-  it("noPaddingDate()", () => {
+  it("clearDatePad()", () => {
     expect(ymdhis(new Date(2000, 0, 1)).clearDatePad().y).toBe("2000");
     expect(ymdhis(new Date(2000, 0, 1)).clearDatePad().m).toBe("1");
     expect(ymdhis(new Date(2000, 0, 1)).clearDatePad().d).toBe("1");
     expect(ymdhis(new Date(2000, 11, 20)).clearDatePad().m).toBe("12");
     expect(ymdhis(new Date(2000, 11, 20)).clearDatePad().d).toBe("20");
+  });
+  it("clearPads()", () => {
+    expect(ymdhis(new Date(2001, 0, 2, 3, 4, 5)).toString()).toBe(
+      "" + "2001-01-02 03:04:05"
+    );
+    expect(
+      ymdhis(new Date(2001, 1, 3, 4, 5, 6))
+        .setYearAsTwoDigits()
+        .clearPads()
+        .toString()
+    ).toBe("" + "1-2-3 4:5:6");
   });
   it("h: enable padding", () => {
     expect(ymdhis(new Date(2000, 0, 1, 1, 0, 0)).h).toBe("01");
@@ -178,6 +189,14 @@ describe("Suffix and Notations", () => {
     expect(
       ymdhis(new Date(2000, 0, 1, 12, 34, 56)).setSecondSuffix("S").s
     ).toBe("56S");
+  });
+  it("setSuffixes", () => {
+    expect(
+      ymdhis(new Date(2000, 0, 2, 12, 34, 56))
+        .clearSeparators()
+        .setSuffixes("Y", "M", "D", "H", "I", "S")
+        .toString()
+    ).toBe("2000Y01M02D12H34I56S");
   });
   it("setAmNotation", () => {
     expect(ymdhis(new Date(2000, 0, 1, 0, 0)).a).toBe("AM");
@@ -286,48 +305,46 @@ describe("Suffix and Notations", () => {
       "31st",
     ];
     expect(ymdhis(new Date(2000, 0, 1)).d).toBe("01");
-    expect(ymdhis(new Date(2000, 0, 1)).setDateNotations(arr).d).toBe("1st");
-    expect(ymdhis(new Date(2000, 0, 2)).setDateNotations(arr).d).toBe("2nd");
-    expect(ymdhis(new Date(2000, 0, 3)).setDateNotations(arr).d).toBe("3rd");
-    expect(ymdhis(new Date(2000, 0, 4)).setDateNotations(arr).d).toBe("4th");
-    expect(ymdhis(new Date(2000, 0, 5)).setDateNotations(arr).d).toBe("5th");
-    expect(ymdhis(new Date(2000, 0, 6)).setDateNotations(arr).d).toBe("6th");
-    expect(ymdhis(new Date(2000, 0, 7)).setDateNotations(arr).d).toBe("7th");
-    expect(ymdhis(new Date(2000, 0, 8)).setDateNotations(arr).d).toBe("8th");
-    expect(ymdhis(new Date(2000, 0, 9)).setDateNotations(arr).d).toBe("9th");
-    expect(ymdhis(new Date(2000, 0, 10)).setDateNotations(arr).d).toBe("10th");
-    expect(ymdhis(new Date(2000, 0, 11)).setDateNotations(arr).d).toBe("11th");
-    expect(ymdhis(new Date(2000, 0, 12)).setDateNotations(arr).d).toBe("12th");
-    expect(ymdhis(new Date(2000, 0, 13)).setDateNotations(arr).d).toBe("13th");
-    expect(ymdhis(new Date(2000, 0, 14)).setDateNotations(arr).d).toBe("14th");
-    expect(ymdhis(new Date(2000, 0, 15)).setDateNotations(arr).d).toBe("15th");
-    expect(ymdhis(new Date(2000, 0, 16)).setDateNotations(arr).d).toBe("16th");
-    expect(ymdhis(new Date(2000, 0, 17)).setDateNotations(arr).d).toBe("17th");
-    expect(ymdhis(new Date(2000, 0, 18)).setDateNotations(arr).d).toBe("18th");
-    expect(ymdhis(new Date(2000, 0, 19)).setDateNotations(arr).d).toBe("19th");
-    expect(ymdhis(new Date(2000, 0, 20)).setDateNotations(arr).d).toBe("20th");
-    expect(ymdhis(new Date(2000, 0, 21)).setDateNotations(arr).d).toBe("21st");
-    expect(ymdhis(new Date(2000, 0, 22)).setDateNotations(arr).d).toBe("22nd");
-    expect(ymdhis(new Date(2000, 0, 23)).setDateNotations(arr).d).toBe("23rd");
-    expect(ymdhis(new Date(2000, 0, 24)).setDateNotations(arr).d).toBe("24th");
-    expect(ymdhis(new Date(2000, 0, 25)).setDateNotations(arr).d).toBe("25th");
-    expect(ymdhis(new Date(2000, 0, 26)).setDateNotations(arr).d).toBe("26th");
-    expect(ymdhis(new Date(2000, 0, 27)).setDateNotations(arr).d).toBe("27th");
-    expect(ymdhis(new Date(2000, 0, 28)).setDateNotations(arr).d).toBe("28th");
-    expect(ymdhis(new Date(2000, 0, 29)).setDateNotations(arr).d).toBe("29th");
-    expect(ymdhis(new Date(2000, 0, 30)).setDateNotations(arr).d).toBe("30th");
-    expect(ymdhis(new Date(2000, 0, 31)).setDateNotations(arr).d).toBe("31st");
-    expect(ymdhis(new Date(2000, 1, 1)).setDateNotations(arr).d).toBe("1st");
-    expect(ymdhis(new Date(2000, 0, 1)).setDateNotations([]).d).toBe("");
-    expect(ymdhis(new Date(2000, 0, 1)).setDateNotations(["a", "b"]).d).toBe(
+    expect(ymdhis(new Date(2000, 0, 1)).setDayNotations(arr).d).toBe("1st");
+    expect(ymdhis(new Date(2000, 0, 2)).setDayNotations(arr).d).toBe("2nd");
+    expect(ymdhis(new Date(2000, 0, 3)).setDayNotations(arr).d).toBe("3rd");
+    expect(ymdhis(new Date(2000, 0, 4)).setDayNotations(arr).d).toBe("4th");
+    expect(ymdhis(new Date(2000, 0, 5)).setDayNotations(arr).d).toBe("5th");
+    expect(ymdhis(new Date(2000, 0, 6)).setDayNotations(arr).d).toBe("6th");
+    expect(ymdhis(new Date(2000, 0, 7)).setDayNotations(arr).d).toBe("7th");
+    expect(ymdhis(new Date(2000, 0, 8)).setDayNotations(arr).d).toBe("8th");
+    expect(ymdhis(new Date(2000, 0, 9)).setDayNotations(arr).d).toBe("9th");
+    expect(ymdhis(new Date(2000, 0, 10)).setDayNotations(arr).d).toBe("10th");
+    expect(ymdhis(new Date(2000, 0, 11)).setDayNotations(arr).d).toBe("11th");
+    expect(ymdhis(new Date(2000, 0, 12)).setDayNotations(arr).d).toBe("12th");
+    expect(ymdhis(new Date(2000, 0, 13)).setDayNotations(arr).d).toBe("13th");
+    expect(ymdhis(new Date(2000, 0, 14)).setDayNotations(arr).d).toBe("14th");
+    expect(ymdhis(new Date(2000, 0, 15)).setDayNotations(arr).d).toBe("15th");
+    expect(ymdhis(new Date(2000, 0, 16)).setDayNotations(arr).d).toBe("16th");
+    expect(ymdhis(new Date(2000, 0, 17)).setDayNotations(arr).d).toBe("17th");
+    expect(ymdhis(new Date(2000, 0, 18)).setDayNotations(arr).d).toBe("18th");
+    expect(ymdhis(new Date(2000, 0, 19)).setDayNotations(arr).d).toBe("19th");
+    expect(ymdhis(new Date(2000, 0, 20)).setDayNotations(arr).d).toBe("20th");
+    expect(ymdhis(new Date(2000, 0, 21)).setDayNotations(arr).d).toBe("21st");
+    expect(ymdhis(new Date(2000, 0, 22)).setDayNotations(arr).d).toBe("22nd");
+    expect(ymdhis(new Date(2000, 0, 23)).setDayNotations(arr).d).toBe("23rd");
+    expect(ymdhis(new Date(2000, 0, 24)).setDayNotations(arr).d).toBe("24th");
+    expect(ymdhis(new Date(2000, 0, 25)).setDayNotations(arr).d).toBe("25th");
+    expect(ymdhis(new Date(2000, 0, 26)).setDayNotations(arr).d).toBe("26th");
+    expect(ymdhis(new Date(2000, 0, 27)).setDayNotations(arr).d).toBe("27th");
+    expect(ymdhis(new Date(2000, 0, 28)).setDayNotations(arr).d).toBe("28th");
+    expect(ymdhis(new Date(2000, 0, 29)).setDayNotations(arr).d).toBe("29th");
+    expect(ymdhis(new Date(2000, 0, 30)).setDayNotations(arr).d).toBe("30th");
+    expect(ymdhis(new Date(2000, 0, 31)).setDayNotations(arr).d).toBe("31st");
+    expect(ymdhis(new Date(2000, 1, 1)).setDayNotations(arr).d).toBe("1st");
+    expect(ymdhis(new Date(2000, 0, 1)).setDayNotations([]).d).toBe("");
+    expect(ymdhis(new Date(2000, 0, 1)).setDayNotations(["a", "b"]).d).toBe(
       "a"
     );
-    expect(ymdhis(new Date(2000, 0, 2)).setDateNotations(["a", "b"]).d).toBe(
+    expect(ymdhis(new Date(2000, 0, 2)).setDayNotations(["a", "b"]).d).toBe(
       "b"
     );
-    expect(ymdhis(new Date(2000, 0, 3)).setDateNotations(["a", "b"]).d).toBe(
-      ""
-    );
+    expect(ymdhis(new Date(2000, 0, 3)).setDayNotations(["a", "b"]).d).toBe("");
   });
 });
 
@@ -351,6 +368,9 @@ describe("Combined format date properties", () => {
         .setDateSeparator("/")
         .setDateTimeSeparator("-")
         .setTimeSeparator(".").ymdhi
+    ).toBe("2000/01/02-12.34");
+    expect(
+      ymdhis(new Date(2000, 0, 2, 12, 34)).setSeparators("/", "-", ".").ymdhi
     ).toBe("2000/01/02-12.34");
   });
   it("ymdw", () => {
@@ -573,7 +593,7 @@ describe("ISO date format functions", () => {
         .setDateTimeSeparator("_")
         .setTimeSeparator(":")
         .setMonthNotations([])
-        .setDateNotations([])
+        .setDayNotations([])
         .setYearSuffix("Y")
         .setMonthSuffix("M")
         .setDaySuffix("D")
@@ -583,6 +603,7 @@ describe("ISO date format functions", () => {
         .clearDatePad()
         .clearTimePad().iso9075
     ).toBe("2022-01-02 12:34:56");
+    expect(() => ymdhis("-")).toThrow();
   });
   it("iso8601", () => {
     const date = new Date(2022, 0, 2, 12, 34, 56);
@@ -606,11 +627,44 @@ describe("Initializer", () => {
   });
 });
 
+describe("Option", () => {
+  it("clearOptions()", () => {
+    const dt = ymdhis(new Date(2022, 0, 2, 3, 4, 5))
+      .setMonthNotations(["Jan", "Feb"])
+      .setDayNotations(["1st", "2nd", "3rd"])
+      .setDowNotations(["Sun", "Mon", "Tue"])
+      .setSeparators("/", "_", ".")
+      .setAmpmSeparator(" - ")
+      .setSuffixes("y", "m", "d", "h", "i", "s")
+      .setAmNotation("a.m.")
+      .setPmNotation("p.m.")
+      .clearPads();
+    expect(dt.toString()).toBe("2022y/Jan/2nd_3h.4i.5s");
+    expect(dt.ahis).toBe("a.m. - 3h.4i.5s");
+    expect(dt.clearOptions().toString()).toBe("202212345");
+    expect(dt.clearOptions().ahis).toBe("345");
+    expect(
+      dt
+        .clearOptions()
+        .setSeparators(" ", " ", " ")
+        .setSuffixes("Y", "M", "D", "H", "I", "S").string
+    ).toBe("2022Y 1M 2D 3H 4I 5S");
+  });
+});
+
 describe("Timezone functions", () => {
-  it("utc", () => {
-    const before = ymdhis(new Date(2000, 0, 1));
-    const after = before.initDate(new Date(2000, 0, 2));
-    expect(before.ymd).not.toBe(after.ymd);
+  it("utc: to UTC datetime", () => {
+    const dt = ymdhis(new Date(2000, 0, 1, 10, 0, 0));
+    expect(dt.toString()).toBe("2000-01-01 10:00:00");
+    expect(dt.utc().toString()).toBe("2000-01-01 02:00:00");
+    expect(dt.utc().utc().toString()).toBe("2000-01-01 02:00:00");
+  });
+  it("utc: from UTC datetime", () => {
+    const dt = ymdhis().utc(2000, 1, 1, 2, 0, 0);
+    expect(dt.toString()).toBe("2000-01-01 02:00:00");
+    expect(dt.utc().toString()).toBe("2000-01-01 02:00:00");
+    expect(dt.local().toString()).toBe("2000-01-01 10:00:00");
+    expect(dt.local().local().toString()).toBe("2000-01-01 10:00:00");
   });
 });
 
