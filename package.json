@@ -9,7 +9,7 @@
     "umd"
   ],
   "scripts": {
-    "test": "jest --coverage",
+    "test": "TZ=Asia/Singapore jest --coverage",
     "build": "tsc -p tsconfig.cjs.json & tsc -p tsconfig.esm.json & webpack",
     "lint": "eslint 'src/**/*.ts'",
     "fmt": "eslint --fix 'src/**/*.ts' && prettier --write src"
