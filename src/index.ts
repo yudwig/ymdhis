@@ -87,7 +87,7 @@ class Ymdhis {
   };
 
   constructor(props: Props) {
-    this.date = new Date(props.date.getTime());
+    this.date = Ymdhis.newDateWithValidate(props.date.getTime());
     if (typeof props.options !== "undefined") {
       this.options = Object.assign({}, props.options);
     }
@@ -382,6 +382,10 @@ class Ymdhis {
 
   get string() {
     return this.toString();
+  }
+
+  get timestamp() {
+    return this.date.getTime();
   }
 
   get iso9075(): string {
@@ -820,6 +824,12 @@ class Ymdhis {
     }
   }
 
+  static validateDateRange(dt: Date) {
+    if (dt.getFullYear() < 0 || dt.getFullYear() > 9999) {
+      throw new Error(`Out of range. date: ${dt.toString()}`);
+    }
+  }
+
   static validateDateItems(
     y: number,
     m?: number,
@@ -859,19 +869,22 @@ class Ymdhis {
   }
 
   static numbersToDate(
-    y: number,
+    arg1: number,
     m?: number,
     d?: number,
     h?: number,
     i?: number,
     s?: number
   ) {
-    Ymdhis.validateDateItems(y, m, d, h, i, s);
-    const date = new Date(0, 1, 1, 0, 0, 0);
-    date.setFullYear(y);
+    // Create Date from unix timestamp.
     if (typeof m === "undefined") {
-      return date;
-    } else if (typeof d === "undefined") {
+      return Ymdhis.newDateWithValidate(arg1);
+    }
+    Ymdhis.validateDateItems(arg1, m, d, h, i, s);
+
+    const date = new Date(0, 1, 1, 0, 0, 0, 0);
+    date.setFullYear(arg1);
+    if (typeof d === "undefined") {
       date.setMonth(m - 1);
     } else if (typeof h === "undefined") {
       date.setMonth(m - 1);
@@ -892,6 +905,22 @@ class Ymdhis {
       date.setMinutes(i);
       date.setSeconds(s);
     }
+    Ymdhis.validateDateRange(date);
+    return date;
+  }
+
+  static newDateWithValidate(): Date;
+
+  static newDateWithValidate(timestamp: number): Date;
+
+  static newDateWithValidate(timestamp?: number): Date {
+    let date: Date;
+    if (typeof timestamp === "undefined") {
+      date = new Date();
+    } else {
+      date = new Date(timestamp);
+    }
+    Ymdhis.validateDateRange(date);
     return date;
   }
 
@@ -903,13 +932,14 @@ class Ymdhis {
     i?: number,
     s?: number
   ): Date {
+    let date: Date;
     switch (typeof arg1) {
       case "undefined":
-        return new Date();
+        return Ymdhis.newDateWithValidate();
       case "string":
         return Ymdhis.iso9075toDate(arg1);
       case "object":
-        return new Date(arg1);
+        return Ymdhis.newDateWithValidate(arg1.getTime());
       case "number":
         return Ymdhis.numbersToDate(arg1, m, d, h, i, s);
     }
