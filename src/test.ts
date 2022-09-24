@@ -44,6 +44,10 @@ describe("Calculated properties", () => {
       "2022-01-02 12:34:56"
     );
   });
+  it("timestamp", () => {
+    expect(ymdhis(0).timestamp).toBe(0);
+    expect(ymdhis(-1).timestamp).toBe(-1);
+  });
 });
 
 describe("Basic format date properties", () => {
@@ -686,6 +690,8 @@ describe("Create Date functions", () => {
     );
     expect(() => ymdhis("2000-01-02-03 12:34:56")).toThrow();
     expect(() => ymdhis("2000-01-02 12:34:56:78")).toThrow();
+    expect(() => ymdhis("1-2-3-4")).toThrow();
+    expect(() => ymdhis("12:34:56")).toThrow();
     expect(() => ymdhis("2000-01-02 12")).toThrow();
     expect(() => ymdhis("-1-2-3")).toThrow();
     expect(() => ymdhis("2000")).toThrow();
@@ -694,13 +700,16 @@ describe("Create Date functions", () => {
     expect(() => ymdhis("2000-13-01")).toThrow();
   });
 
-  it("numberToDate", () => {
+  it("numbersToDate", () => {
     expect(ymdhis(2000, 1, 2, 12, 34, 56).toString()).toBe(
       "2000-01-02 12:34:56"
     );
     expect(ymdhis(0, 1, 2, 12, 34, 56).toString()).toBe("0000-01-02 12:34:56");
     expect(ymdhis(10, 1, 2, 12, 34, 56).toString()).toBe("0010-01-02 12:34:56");
-
+    expect(ymdhis(2000, 1, 2, 12).toString()).toBe("2000-01-02 12:00:00");
+    expect(ymdhis(new Date(2000, 0, 2, 12, 34, 56).getTime()).toString()).toBe(
+      "2000-01-02 12:34:56"
+    );
     expect(() => ymdhis(-1, 1, 2)).toThrow();
     expect(() => ymdhis(0, 1, 2)).not.toThrow();
     expect(() => ymdhis(9999, 1, 2)).not.toThrow();
@@ -723,5 +732,9 @@ describe("Create Date functions", () => {
     expect(() => ymdhis(2000, 1, 2, 0, 0, -1)).toThrow();
     expect(() => ymdhis(2000, 1, 2, 0, 0, 59)).not.toThrow();
     expect(() => ymdhis(2000, 1, 2, 0, 0, 60)).toThrow();
+    expect(() => ymdhis(260000000000000)).toThrow();
+    expect(() => ymdhis(250000000000000)).not.toThrow();
+    expect(() => ymdhis(-63000000000000)).toThrow();
+    expect(() => ymdhis(-62000000000000)).not.toThrow();
   });
 });
