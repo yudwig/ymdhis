@@ -121,6 +121,10 @@ class Ymdhis {
     return this.date.getSeconds();
   }
 
+  get ms(): number {
+    return this.date.getMilliseconds();
+  }
+
   get ampm(): number {
     return this.date.getHours() % 12 > 0 ? this.date.getHours() % 12 : 12;
   }
@@ -405,7 +409,22 @@ class Ymdhis {
   }
 
   get iso8601(): string {
-    return this.date.toISOString();
+    return (
+      this.year.toString().padStart(4, "0") +
+      "-" +
+      this.month.toString().padStart(2, "0") +
+      "-" +
+      this.day.toString().padStart(2, "0") +
+      "T" +
+      this.hour.toString().padStart(2, "0") +
+      ":" +
+      this.minute.toString().padStart(2, "0") +
+      ":" +
+      this.second.toString().padStart(2, "0") +
+      "." +
+      this.ms.toString().padStart(3, "0") +
+      (this.options.isUtc ? "Z" : Ymdhis.minutesToTime(-this.date.getTimezoneOffset()))
+    );
   }
 
   afterYears(years: number): Ymdhis {
@@ -785,40 +804,73 @@ class Ymdhis {
     return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s));
   }
 
-  static iso9075toDate(str: string): Date {
+  static extractIso9075(str: string): string[] {
+
     const msg = `Invalid date format: ${str}`;
-    if (str.match(/[^\d\s:-]/)) {
+    if (str.match(/[^\d\s.:-]/)) {
       throw new Error(msg);
     }
     const dt = str.trim().split(" ");
-    const d = dt[0].split("-").map((n) => parseInt(n, 10));
-    const t =
-      dt.length === 1 ? [] : dt[1].split(":").map((n) => parseInt(n, 10));
+    if (dt.length > 2) {
+      throw new Error(msg);
+    }
+    const res: string[] = []
 
-    d.concat(t).forEach((item) => {
-      if (isNaN(item)) {
-        throw new Error(msg);
-      }
-    });
-    switch (d.length) {
-      case 0:
-      case 1:
-        throw new Error(msg);
+    // extract y-m-d
+    const ymd = dt[0].match(/^(\d{1,4})-(\d{1,2})(-(\d{1,2}))?$/)
+    if (!ymd) {
+      throw new Error(msg);
+    }
+    res.push(ymd[1], ymd[2])
+    if (ymd[4] !== undefined) {
+      res.push(ymd[4])
+    }
+    if (dt.length === 1) {
+      return res;
+    }
+    // extract ms
+    const tm = dt[1].split(".");
+    if (tm.length > 2) {
+      throw new Error(msg);
+    }
+    // extract h:i:s
+    const his = tm[0].match(/^(\d{1,2}):(\d{1,2})(:(\d{1,2}))?$/)
+    if (!his) {
+      throw new Error(msg);
+    }
+    res.push(his[1], his[2])
+    if (his[4] !== undefined) {
+      res.push(his[4])
+    }
+    if (tm.length === 1) {
+      return res;
+    }
+    // check ms
+    if (tm[1].match(/^\d{1,3}$/)) {
+      res.push(tm[1])
+      return res;
+    } else {
+      throw new Error(msg);
+    }
+  }
+
+  static iso9075toDate(str: string): Date {
+    const msg = `Invalid date format: ${str}`;
+    const nums = Ymdhis.extractIso9075(str).map(s => parseInt(s, 10))
+    if (nums.some(n => isNaN(n))) {
+      throw new Error(msg);
+    }
+    switch (nums.length) {
       case 2:
-        return Ymdhis.numbersToDate(d[0], d[1]);
+        return Ymdhis.numbersToDate(nums[0], nums[1]);
       case 3:
-        switch (t.length) {
-          case 0:
-            return Ymdhis.numbersToDate(d[0], d[1], d[2]);
-          case 1:
-            throw new Error(msg);
-          case 2:
-            return Ymdhis.numbersToDate(d[0], d[1], d[2], t[0], t[1]);
-          case 3:
-            return Ymdhis.numbersToDate(d[0], d[1], d[2], t[0], t[1], t[2]);
-          default:
-            throw new Error(msg);
-        }
+        return Ymdhis.numbersToDate(nums[0], nums[1], nums[2]);
+      case 5:
+        return Ymdhis.numbersToDate(nums[0], nums[1], nums[2], nums[3], nums[4]);
+      case 6:
+        return Ymdhis.numbersToDate(nums[0], nums[1], nums[2], nums[3], nums[4], nums[5]);
+      case 7:
+        return Ymdhis.numbersToDate(nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6]);
       default:
         throw new Error(msg);
     }
@@ -836,7 +888,8 @@ class Ymdhis {
     d?: number,
     h?: number,
     i?: number,
-    s?: number
+    s?: number,
+    ms?: number
   ) {
     if (y < 0 || y > 9999) {
       throw new Error(`Invalid year: ${y}`);
@@ -866,6 +919,11 @@ class Ymdhis {
         throw new Error(`Invalid second: ${s}`);
       }
     }
+    if (typeof ms !== "undefined") {
+      if (ms < 0 || ms > 999) {
+        throw new Error(`Invalid Millisecond: ${ms}`);
+      }
+    }
   }
 
   static numbersToDate(
@@ -874,13 +932,14 @@ class Ymdhis {
     d?: number,
     h?: number,
     i?: number,
-    s?: number
+    s?: number,
+    ms?: number
   ) {
     // Create Date from unix timestamp.
     if (typeof m === "undefined") {
       return Ymdhis.newDateWithValidate(arg1);
     }
-    Ymdhis.validateDateItems(arg1, m, d, h, i, s);
+    Ymdhis.validateDateItems(arg1, m, d, h, i, s ,ms);
 
     const date = new Date(0, 1, 1, 0, 0, 0, 0);
     date.setFullYear(arg1);
@@ -898,12 +957,19 @@ class Ymdhis {
       date.setDate(d);
       date.setHours(h);
       date.setMinutes(i);
+    } else if (typeof ms === "undefined") {
+      date.setMonth(m - 1);
+      date.setDate(d);
+      date.setHours(h);
+      date.setMinutes(i);
+      date.setSeconds(s);
     } else {
       date.setMonth(m - 1);
       date.setDate(d);
       date.setHours(h);
       date.setMinutes(i);
       date.setSeconds(s);
+      date.setMilliseconds(ms);
     }
     Ymdhis.validateDateRange(date);
     return date;
@@ -930,9 +996,9 @@ class Ymdhis {
     d?: number,
     h?: number,
     i?: number,
-    s?: number
+    s?: number,
+    ms?: number
   ): Date {
-    let date: Date;
     switch (typeof arg1) {
       case "undefined":
         return Ymdhis.newDateWithValidate();
@@ -941,8 +1007,19 @@ class Ymdhis {
       case "object":
         return Ymdhis.newDateWithValidate(arg1.getTime());
       case "number":
-        return Ymdhis.numbersToDate(arg1, m, d, h, i, s);
+        return Ymdhis.numbersToDate(arg1, m, d, h, i, s, ms);
     }
+  }
+
+  static minutesToTime(i: number): string {
+    return (
+      (i < 0 ? "-" : "+") +
+      Math.floor(Math.abs(i) / 60)
+        .toString()
+        .padStart(2, "0") +
+      ":" +
+      (Math.abs(i) % 60).toString().padStart(2, "0")
+    );
   }
 
   private cloneWithNewDate(date: Date): Ymdhis {
@@ -966,9 +1043,10 @@ export function ymdhis(
   d?: number,
   h?: number,
   i?: number,
-  s?: number
+  s?: number,
+  ms?: number
 ): Ymdhis {
   return new Ymdhis({
-    date: Ymdhis.createDate(arg1, m, d, h, i, s),
+    date: Ymdhis.createDate(arg1, m, d, h, i, s, ms),
   });
 }
