@@ -423,7 +423,9 @@ class Ymdhis {
       this.second.toString().padStart(2, "0") +
       "." +
       this.ms.toString().padStart(3, "0") +
-      (this.options.isUtc ? "Z" : Ymdhis.minutesToTime(-this.date.getTimezoneOffset()))
+      (this.options.isUtc
+        ? "Z"
+        : Ymdhis.minutesToTime(-this.date.getTimezoneOffset()))
     );
   }
 
@@ -805,7 +807,6 @@ class Ymdhis {
   }
 
   static extractIso9075(str: string): string[] {
-
     const msg = `Invalid date format: ${str}`;
     if (str.match(/[^\d\s.:-]/)) {
       throw new Error(msg);
@@ -814,16 +815,16 @@ class Ymdhis {
     if (dt.length > 2) {
       throw new Error(msg);
     }
-    const res: string[] = []
+    const res: string[] = [];
 
     // extract y-m-d
-    const ymd = dt[0].match(/^(\d{1,4})-(\d{1,2})(-(\d{1,2}))?$/)
+    const ymd = dt[0].match(/^(\d{1,4})-(\d{1,2})(-(\d{1,2}))?$/);
     if (!ymd) {
       throw new Error(msg);
     }
-    res.push(ymd[1], ymd[2])
+    res.push(ymd[1], ymd[2]);
     if (ymd[4] !== undefined) {
-      res.push(ymd[4])
+      res.push(ymd[4]);
     }
     if (dt.length === 1) {
       return res;
@@ -834,20 +835,20 @@ class Ymdhis {
       throw new Error(msg);
     }
     // extract h:i:s
-    const his = tm[0].match(/^(\d{1,2}):(\d{1,2})(:(\d{1,2}))?$/)
+    const his = tm[0].match(/^(\d{1,2}):(\d{1,2})(:(\d{1,2}))?$/);
     if (!his) {
       throw new Error(msg);
     }
-    res.push(his[1], his[2])
+    res.push(his[1], his[2]);
     if (his[4] !== undefined) {
-      res.push(his[4])
+      res.push(his[4]);
     }
     if (tm.length === 1) {
       return res;
     }
     // check ms
     if (tm[1].match(/^\d{1,3}$/)) {
-      res.push(tm[1])
+      res.push(tm[1]);
       return res;
     } else {
       throw new Error(msg);
@@ -856,8 +857,8 @@ class Ymdhis {
 
   static iso9075toDate(str: string): Date {
     const msg = `Invalid date format: ${str}`;
-    const nums = Ymdhis.extractIso9075(str).map(s => parseInt(s, 10))
-    if (nums.some(n => isNaN(n))) {
+    const nums = Ymdhis.extractIso9075(str).map((s) => parseInt(s, 10));
+    if (nums.some((n) => isNaN(n))) {
       throw new Error(msg);
     }
     switch (nums.length) {
@@ -866,11 +867,32 @@ class Ymdhis {
       case 3:
         return Ymdhis.numbersToDate(nums[0], nums[1], nums[2]);
       case 5:
-        return Ymdhis.numbersToDate(nums[0], nums[1], nums[2], nums[3], nums[4]);
+        return Ymdhis.numbersToDate(
+          nums[0],
+          nums[1],
+          nums[2],
+          nums[3],
+          nums[4]
+        );
       case 6:
-        return Ymdhis.numbersToDate(nums[0], nums[1], nums[2], nums[3], nums[4], nums[5]);
+        return Ymdhis.numbersToDate(
+          nums[0],
+          nums[1],
+          nums[2],
+          nums[3],
+          nums[4],
+          nums[5]
+        );
       case 7:
-        return Ymdhis.numbersToDate(nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6]);
+        return Ymdhis.numbersToDate(
+          nums[0],
+          nums[1],
+          nums[2],
+          nums[3],
+          nums[4],
+          nums[5],
+          nums[6]
+        );
       default:
         throw new Error(msg);
     }
@@ -939,7 +961,7 @@ class Ymdhis {
     if (typeof m === "undefined") {
       return Ymdhis.newDateWithValidate(arg1);
     }
-    Ymdhis.validateDateItems(arg1, m, d, h, i, s ,ms);
+    Ymdhis.validateDateItems(arg1, m, d, h, i, s, ms);
 
     const date = new Date(0, 1, 1, 0, 0, 0, 0);
     date.setFullYear(arg1);
