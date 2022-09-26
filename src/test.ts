@@ -610,8 +610,12 @@ describe("ISO date format functions", () => {
     expect(() => ymdhis("-")).toThrow();
   });
   it("iso8601", () => {
-    const date = new Date(2022, 0, 2, 12, 34, 56);
-    expect(ymdhis(date).iso8601).toBe(date.toISOString());
+    expect(ymdhis(new Date(2022, 0, 2, 12, 34, 56, 7)).iso8601).toBe(
+      "2022-01-02T12:34:56.007+08:00"
+    );
+    expect(ymdhis().utc(2022, 1, 2, 12, 34, 56).iso8601).toBe(
+      "2022-01-02T12:34:56.000Z"
+    );
   });
 });
 
@@ -688,6 +692,16 @@ describe("Create Date functions", () => {
     expect(ymdhis("9999-12-31 23:59:59").toString()).toBe(
       "9999-12-31 23:59:59"
     );
+    expect(ymdhis("2000-1-2 3:4:5.6").iso8601).toBe(
+      "2000-01-02T03:04:05.006+08:00"
+    );
+    expect(ymdhis("2000-1-2 3:4:5.67").iso8601).toBe(
+      "2000-01-02T03:04:05.067+08:00"
+    );
+    expect(ymdhis("2000-1-2 3:4:5.678").iso8601).toBe(
+      "2000-01-02T03:04:05.678+08:00"
+    );
+
     expect(() => ymdhis("2000-01-02-03 12:34:56")).toThrow();
     expect(() => ymdhis("2000-01-02 12:34:56:78")).toThrow();
     expect(() => ymdhis("1-2-3-4")).toThrow();
@@ -698,6 +712,7 @@ describe("Create Date functions", () => {
     expect(() => ymdhis("2000-0x10-02")).toThrow();
     expect(() => ymdhis("")).toThrow();
     expect(() => ymdhis("2000-13-01")).toThrow();
+    expect(() => ymdhis("2000-01-02-03 12:34:56.7890")).toThrow();
   });
 
   it("numbersToDate", () => {
