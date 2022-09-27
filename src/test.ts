@@ -619,6 +619,17 @@ describe("Calculate date functions", () => {
       ymdhis(new Date(2022, 0, 2, 0, 0, 10, 0)).beforeMillisecond(1000).iso8601
     ).toBe("2022-01-02T00:00:09.000+08:00");
   });
+  it("lastOfMonth", () => {
+    expect(
+      ymdhis(new Date(2022, 0, 10, 12, 34, 56)).lastOfMonth().toString()
+    ).toBe("2022-01-31 12:34:56");
+    expect(
+      ymdhis(new Date(2022, 1, 10, 12, 34, 56)).lastOfMonth().toString()
+    ).toBe("2022-02-28 12:34:56");
+    expect(
+      ymdhis(new Date(2022, 1, 10, 12, 34, 56)).firstOfMonth().toString()
+    ).toBe("2022-02-01 12:34:56");
+  });
 });
 
 describe("ISO date format functions", () => {
