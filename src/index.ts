@@ -744,6 +744,10 @@ class Ymdhis {
     return this.ymdhis;
   }
 
+  valueOf(): number {
+    return this.timestamp;
+  }
+
   utc(): Ymdhis;
 
   utc(
