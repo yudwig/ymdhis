@@ -584,6 +584,31 @@ describe("Calculate date functions", () => {
       "2022-01-02 00:00:01"
     );
   });
+  it("afterMillisecond", () => {
+    expect(
+      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMillisecond(0).iso8601
+    ).toBe("2022-01-02T00:00:00.000+08:00");
+    expect(
+      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMillisecond(1).iso8601
+    ).toBe("2022-01-02T00:00:00.001+08:00");
+    expect(
+      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMillisecond(999).iso8601
+    ).toBe("2022-01-02T00:00:00.999+08:00");
+    expect(
+      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMillisecond(1000).iso8601
+    ).toBe("2022-01-02T00:00:01.000+08:00");
+  });
+  it("beforeMillisecond", () => {
+    expect(
+      ymdhis(new Date(2022, 0, 2, 0, 0, 10, 0)).beforeMillisecond(0).iso8601
+    ).toBe("2022-01-02T00:00:10.000+08:00");
+    expect(
+      ymdhis(new Date(2022, 0, 2, 0, 0, 10, 0)).beforeMillisecond(1).iso8601
+    ).toBe("2022-01-02T00:00:09.999+08:00");
+    expect(
+      ymdhis(new Date(2022, 0, 2, 0, 0, 10, 0)).beforeMillisecond(1000).iso8601
+    ).toBe("2022-01-02T00:00:09.000+08:00");
+  });
 });
 
 describe("ISO date format functions", () => {
@@ -713,6 +738,11 @@ describe("Create Date functions", () => {
     expect(() => ymdhis("")).toThrow();
     expect(() => ymdhis("2000-13-01")).toThrow();
     expect(() => ymdhis("2000-01-02-03 12:34:56.7890")).toThrow();
+    expect(() => ymdhis("1 2 3")).toThrow();
+    expect(() => ymdhis("1-2-3 4:5:6.7")).not.toThrow();
+    expect(() => ymdhis("1-2-3 4:5:6.7.8")).toThrow();
+    expect(() => ymdhis("1-2-3 4:5:6.123")).not.toThrow();
+    expect(() => ymdhis("1-2-3 4:5:6.1234")).toThrow();
   });
 
   it("numbersToDate", () => {
@@ -747,6 +777,10 @@ describe("Create Date functions", () => {
     expect(() => ymdhis(2000, 1, 2, 0, 0, -1)).toThrow();
     expect(() => ymdhis(2000, 1, 2, 0, 0, 59)).not.toThrow();
     expect(() => ymdhis(2000, 1, 2, 0, 0, 60)).toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, 0, 0, 0)).not.toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, 0, 0, -1)).toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, 0, 0, 999)).not.toThrow();
+    expect(() => ymdhis(2000, 1, 2, 0, 0, 0, 1000)).toThrow();
     expect(() => ymdhis(260000000000000)).toThrow();
     expect(() => ymdhis(250000000000000)).not.toThrow();
     expect(() => ymdhis(-63000000000000)).toThrow();
