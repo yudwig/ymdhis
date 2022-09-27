@@ -525,6 +525,18 @@ class Ymdhis {
     return this.afterMillisecond(-ms);
   }
 
+  lastOfMonth(): Ymdhis {
+    return this.afterMonths(1).firstOfMonth().beforeDays(1);
+  }
+
+  firstOfMonth(): Ymdhis {
+    this.date.setDate(1);
+    return new Ymdhis({
+      date: this.date,
+      options: this.options,
+    });
+  }
+
   setSeparators(
     dateSeparator: string,
     dateTimeSeparator: string,
