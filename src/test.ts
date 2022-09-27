@@ -48,6 +48,16 @@ describe("Calculated properties", () => {
     expect(ymdhis(0).timestamp).toBe(0);
     expect(ymdhis(-1).timestamp).toBe(-1);
   });
+  it("valueOf", () => {
+    expect(ymdhis(2000, 1, 2) > ymdhis(2000, 1, 1)).toBe(true);
+    expect(ymdhis(2000, 1, 2) < ymdhis(2000, 1, 1)).toBe(false);
+    expect(ymdhis(2000, 1, 1, 0, 0, 0) < ymdhis(2000, 1, 1, 0, 0, 1)).toBe(
+      true
+    );
+    expect(
+      ymdhis(2000, 1, 1, 0, 0, 0, 0) < ymdhis(2000, 1, 1, 0, 0, 0, 1)
+    ).toBe(true);
+  });
 });
 
 describe("Basic format date properties", () => {
