@@ -485,6 +485,14 @@ class Ymdhis {
     });
   }
 
+  afterMillisecond(ms: number): Ymdhis {
+    this.date.setMilliseconds(this.date.getMilliseconds() + ms)
+    return new Ymdhis({
+      date: this.date,
+      options: this.options,
+    });
+  }
+
   beforeYears(years: number): Ymdhis {
     return this.afterYears(-years);
   }
@@ -511,6 +519,10 @@ class Ymdhis {
 
   beforeSeconds(seconds: number): Ymdhis {
     return this.afterSeconds(-seconds);
+  }
+
+  beforeMillisecond(ms: number): Ymdhis {
+    return this.afterMillisecond(-ms);
   }
 
   setSeparators(
@@ -740,7 +752,8 @@ class Ymdhis {
     d?: number,
     h?: number,
     i?: number,
-    s?: number
+    s?: number,
+    ms?: number
   ): Ymdhis;
 
   utc(
@@ -749,7 +762,8 @@ class Ymdhis {
     d?: number,
     h?: number,
     i?: number,
-    s?: number
+    s?: number,
+    ms?: number
   ): Ymdhis {
     if (typeof arg1 === "undefined") {
       if (this.options.isUtc) {
@@ -759,7 +773,7 @@ class Ymdhis {
       return this.afterMinutes(this.date.getTimezoneOffset());
     }
     this.options.isUtc = true;
-    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s));
+    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s, ms));
   }
 
   local() {
