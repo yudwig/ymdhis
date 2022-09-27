@@ -486,7 +486,7 @@ class Ymdhis {
   }
 
   afterMillisecond(ms: number): Ymdhis {
-    this.date.setMilliseconds(this.date.getMilliseconds() + ms)
+    this.date.setMilliseconds(this.date.getMilliseconds() + ms);
     return new Ymdhis({
       date: this.date,
       options: this.options,
