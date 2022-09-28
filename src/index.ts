@@ -373,7 +373,7 @@ class Ymdhis {
     );
   }
 
-  get number() {
+  get number(): number {
     return (
       this.date.getFullYear() * 10000000000 +
       (this.date.getMonth() + 1) * 100000000 +
@@ -384,11 +384,11 @@ class Ymdhis {
     );
   }
 
-  get string() {
+  get string(): string {
     return this.toString();
   }
 
-  get timestamp() {
+  get timestamp(): number {
     return this.date.getTime();
   }
 
@@ -541,7 +541,7 @@ class Ymdhis {
     dateSeparator: string,
     dateTimeSeparator: string,
     timeSeparator: string
-  ) {
+  ): Ymdhis {
     return this.cloneWithUpdateOptions({
       dateSeparator: dateSeparator,
       dateTimeSeparator: dateTimeSeparator,
@@ -586,7 +586,7 @@ class Ymdhis {
     h: string,
     i: string,
     s: string
-  ) {
+  ): Ymdhis {
     return this.cloneWithUpdateOptions({
       yearSuffix: y,
       monthSuffix: m,
@@ -657,7 +657,7 @@ class Ymdhis {
     });
   }
 
-  setDayNotations(dayList: string[]) {
+  setDayNotations(dayList: string[]): Ymdhis {
     return this.cloneWithUpdateOptions({
       dayNotations: dayList.slice(0, 31),
     });
@@ -667,7 +667,7 @@ class Ymdhis {
     return this.cloneWithUpdateOptions({ isYearAsFourDigits: false });
   }
 
-  clearPads() {
+  clearPads(): Ymdhis {
     return this.cloneWithUpdateOptions({
       isEnablePaddingYear: false,
       isMonthAsTwoDigits: false,
@@ -678,7 +678,7 @@ class Ymdhis {
     });
   }
 
-  clearDatePad() {
+  clearDatePad(): Ymdhis {
     return this.cloneWithUpdateOptions({
       isEnablePaddingYear: false,
       isMonthAsTwoDigits: false,
@@ -686,17 +686,17 @@ class Ymdhis {
     });
   }
 
-  clearYearPad() {
+  clearYearPad(): Ymdhis {
     return this.cloneWithUpdateOptions({ isEnablePaddingYear: false });
   }
-  clearMonthPad() {
+  clearMonthPad(): Ymdhis {
     return this.cloneWithUpdateOptions({ isMonthAsTwoDigits: false });
   }
-  clearDayPad() {
+  clearDayPad(): Ymdhis {
     return this.cloneWithUpdateOptions({ isDayAsTwoDigits: false });
   }
 
-  clearTimePad() {
+  clearTimePad(): Ymdhis {
     return this.cloneWithUpdateOptions({
       isHourAsTwoDigits: false,
       isMinuteAsTwoDigits: false,
@@ -704,17 +704,17 @@ class Ymdhis {
     });
   }
 
-  clearHourPad() {
+  clearHourPad(): Ymdhis {
     return this.cloneWithUpdateOptions({ isHourAsTwoDigits: false });
   }
-  clearMinutePad() {
+  clearMinutePad(): Ymdhis {
     return this.cloneWithUpdateOptions({ isMinuteAsTwoDigits: false });
   }
-  clearSecondPad() {
+  clearSecondPad(): Ymdhis {
     return this.cloneWithUpdateOptions({ isSecondAsTwoDigits: false });
   }
 
-  clearSeparators() {
+  clearSeparators(): Ymdhis {
     return this.cloneWithUpdateOptions({
       dateSeparator: "",
       dateTimeSeparator: "",
@@ -724,7 +724,7 @@ class Ymdhis {
     });
   }
 
-  clearOptions() {
+  clearOptions(): Ymdhis {
     return this.cloneWithUpdateOptions({
       dateSeparator: "",
       dateTimeSeparator: "",
@@ -792,7 +792,7 @@ class Ymdhis {
     return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s, ms));
   }
 
-  local() {
+  local(): Ymdhis {
     if (!this.options.isUtc) {
       return this.cloneWithNewDate(this.date);
     }
@@ -928,7 +928,7 @@ class Ymdhis {
     }
   }
 
-  static validateDateRange(dt: Date) {
+  static validateDateRange(dt: Date): void {
     if (dt.getFullYear() < 0 || dt.getFullYear() > 9999) {
       throw new Error(`Out of range. date: ${dt.toString()}`);
     }
@@ -942,7 +942,7 @@ class Ymdhis {
     i?: number,
     s?: number,
     ms?: number
-  ) {
+  ): void {
     if (y < 0 || y > 9999) {
       throw new Error(`Invalid year: ${y}`);
     }
@@ -986,7 +986,7 @@ class Ymdhis {
     i?: number,
     s?: number,
     ms?: number
-  ) {
+  ): Date {
     // Create Date from unix timestamp.
     if (typeof m === "undefined") {
       return Ymdhis.newDateWithValidate(arg1);
