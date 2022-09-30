@@ -28,11 +28,11 @@ describe("Basic alias properties", () => {
 
 describe("Calculated properties", () => {
   it("ampm", () => {
-    expect(ymdhis(new Date(2000, 0, 1, 0, 0, 0)).ampm).toBe(12);
-    expect(ymdhis(new Date(2000, 0, 1, 1, 0, 0)).ampm).toBe(1);
-    expect(ymdhis(new Date(2000, 0, 1, 11, 0, 0)).ampm).toBe(11);
-    expect(ymdhis(new Date(2000, 0, 1, 12, 0, 0)).ampm).toBe(12);
-    expect(ymdhis(new Date(2000, 0, 1, 23, 0, 0)).ampm).toBe(11);
+    expect(ymdhis(new Date(2000, 0, 1, 0, 0, 0)).ampmHour).toBe(12);
+    expect(ymdhis(new Date(2000, 0, 1, 1, 0, 0)).ampmHour).toBe(1);
+    expect(ymdhis(new Date(2000, 0, 1, 11, 0, 0)).ampmHour).toBe(11);
+    expect(ymdhis(new Date(2000, 0, 1, 12, 0, 0)).ampmHour).toBe(12);
+    expect(ymdhis(new Date(2000, 0, 1, 23, 0, 0)).ampmHour).toBe(11);
   });
   it("number", () => {
     expect(ymdhis(new Date(2022, 0, 2, 12, 34, 56)).number).toBe(

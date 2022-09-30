@@ -125,7 +125,7 @@ class Ymdhis {
     return this.date.getMilliseconds();
   }
 
-  get ampm(): number {
+  get ampmHour(): number {
     return this.date.getHours() % 12 > 0 ? this.date.getHours() % 12 : 12;
   }
 
@@ -214,8 +214,8 @@ class Ymdhis {
   private get g(): string {
     return (
       (this.options.isHourAsTwoDigits
-        ? this.ampm.toString().padStart(2, "0")
-        : this.ampm.toString()) + this.options.hourSuffix
+        ? this.ampmHour.toString().padStart(2, "0")
+        : this.ampmHour.toString()) + this.options.hourSuffix
     );
   }
 
