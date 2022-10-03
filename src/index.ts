@@ -425,7 +425,7 @@ class Ymdhis {
       this.ms.toString().padStart(3, "0") +
       (this.options.isUtc
         ? "Z"
-        : Ymdhis.offsetToTzd(-this.date.getTimezoneOffset()))
+        : Ymdhis.offsetMinutesToTzd(-this.date.getTimezoneOffset()))
     );
   }
 
@@ -1035,7 +1035,7 @@ class Ymdhis {
     }
   }
 
-  static offsetToTzd(i: number): string {
+  static offsetMinutesToTzd(i: number): string {
     return (
       (i < 0 ? "-" : "+") +
       Math.floor(Math.abs(i) / 60)
