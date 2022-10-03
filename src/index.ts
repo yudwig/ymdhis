@@ -724,34 +724,6 @@ class Ymdhis {
     });
   }
 
-  clearOptions(): Ymdhis {
-    return this.cloneWithUpdateOptions({
-      dateSeparator: "",
-      dateTimeSeparator: "",
-      timeSeparator: "",
-      dowSeparator: "",
-      ampmSeparator: "",
-      yearSuffix: "",
-      monthSuffix: "",
-      daySuffix: "",
-      hourSuffix: "",
-      minuteSuffix: "",
-      secondSuffix: "",
-      amNotation: "",
-      pmNotation: "",
-      monthNotations: null,
-      dayNotations: null,
-      dowNotations: [],
-      isEnablePaddingYear: false,
-      isMonthAsTwoDigits: false,
-      isDayAsTwoDigits: false,
-      isHourAsTwoDigits: false,
-      isMinuteAsTwoDigits: false,
-      isSecondAsTwoDigits: false,
-      isUtc: false,
-    });
-  }
-
   toString(): string {
     return this.ymdhis;
   }

@@ -681,31 +681,6 @@ describe("Initializer", () => {
   });
 });
 
-describe("Option", () => {
-  it("clearOptions()", () => {
-    const dt = ymdhis(new Date(2022, 0, 2, 3, 4, 5))
-      .setMonthNotations(["Jan", "Feb"])
-      .setDayNotations(["1st", "2nd", "3rd"])
-      .setDowNotations(["Sun", "Mon", "Tue"])
-      .setSeparators("/", "_", ".")
-      .setAmpmSeparator(" - ")
-      .setSuffixes("y", "m", "d", "h", "i", "s")
-      .setAmNotation("a.m.")
-      .setPmNotation("p.m.")
-      .clearPads();
-    expect(dt.toString()).toBe("2022y/Jan/2nd_3h.4i.5s");
-    expect(dt.ahis).toBe("a.m. - 3h.4i.5s");
-    expect(dt.clearOptions().toString()).toBe("202212345");
-    expect(dt.clearOptions().ahis).toBe("345");
-    expect(
-      dt
-        .clearOptions()
-        .setSeparators(" ", " ", " ")
-        .setSuffixes("Y", "M", "D", "H", "I", "S").string
-    ).toBe("2022Y 1M 2D 3H 4I 5S");
-  });
-});
-
 describe("Timezone functions", () => {
   it("utc: to UTC datetime", () => {
     const dt = ymdhis(new Date(2000, 0, 1, 10, 0, 0));
