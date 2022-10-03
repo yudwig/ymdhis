@@ -425,7 +425,7 @@ class Ymdhis {
       this.ms.toString().padStart(3, "0") +
       (this.options.isUtc
         ? "Z"
-        : Ymdhis.minutesToTime(-this.date.getTimezoneOffset()))
+        : Ymdhis.offsetToTzd(-this.date.getTimezoneOffset()))
     );
   }
 
@@ -667,7 +667,7 @@ class Ymdhis {
     return this.cloneWithUpdateOptions({ isYearAsFourDigits: false });
   }
 
-  clearPadding(): Ymdhis {
+  clearPaddings(): Ymdhis {
     return this.cloneWithUpdateOptions({
       isEnablePaddingYear: false,
       isMonthAsTwoDigits: false,
@@ -1035,7 +1035,7 @@ class Ymdhis {
     }
   }
 
-  static minutesToTime(i: number): string {
+  static offsetToTzd(i: number): string {
     return (
       (i < 0 ? "-" : "+") +
       Math.floor(Math.abs(i) / 60)

@@ -110,7 +110,7 @@ describe("Basic format date properties", () => {
     expect(
       ymdhis(new Date(2001, 1, 3, 4, 5, 6))
         .setYearAsTwoDigits()
-        .clearPadding()
+        .clearPaddings()
         .toString()
     ).toBe("" + "1-2-3 4:5:6");
   });
