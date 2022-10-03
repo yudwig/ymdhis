@@ -667,7 +667,7 @@ class Ymdhis {
     return this.cloneWithUpdateOptions({ isYearAsFourDigits: false });
   }
 
-  clearPads(): Ymdhis {
+  clearPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({
       isEnablePaddingYear: false,
       isMonthAsTwoDigits: false,
@@ -678,7 +678,7 @@ class Ymdhis {
     });
   }
 
-  clearDatePad(): Ymdhis {
+  clearDatePadding(): Ymdhis {
     return this.cloneWithUpdateOptions({
       isEnablePaddingYear: false,
       isMonthAsTwoDigits: false,
@@ -686,17 +686,17 @@ class Ymdhis {
     });
   }
 
-  clearYearPad(): Ymdhis {
+  clearYearPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isEnablePaddingYear: false });
   }
-  clearMonthPad(): Ymdhis {
+  clearMonthPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isMonthAsTwoDigits: false });
   }
-  clearDayPad(): Ymdhis {
+  clearDayPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isDayAsTwoDigits: false });
   }
 
-  clearTimePad(): Ymdhis {
+  clearTimePadding(): Ymdhis {
     return this.cloneWithUpdateOptions({
       isHourAsTwoDigits: false,
       isMinuteAsTwoDigits: false,
@@ -704,13 +704,13 @@ class Ymdhis {
     });
   }
 
-  clearHourPad(): Ymdhis {
+  clearHourPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isHourAsTwoDigits: false });
   }
-  clearMinutePad(): Ymdhis {
+  clearMinutePadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isMinuteAsTwoDigits: false });
   }
-  clearSecondPad(): Ymdhis {
+  clearSecondPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isSecondAsTwoDigits: false });
   }
 
