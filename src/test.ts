@@ -604,16 +604,16 @@ describe("Calculate date functions", () => {
   });
   it("afterMillisecond", () => {
     expect(
-      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMillisecond(0).iso8601
+      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMilliseconds(0).iso8601
     ).toBe("2022-01-02T00:00:00.000+08:00");
     expect(
-      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMillisecond(1).iso8601
+      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMilliseconds(1).iso8601
     ).toBe("2022-01-02T00:00:00.001+08:00");
     expect(
-      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMillisecond(999).iso8601
+      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMilliseconds(999).iso8601
     ).toBe("2022-01-02T00:00:00.999+08:00");
     expect(
-      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMillisecond(1000).iso8601
+      ymdhis(new Date(2022, 0, 2, 0, 0, 0, 0)).afterMilliseconds(1000).iso8601
     ).toBe("2022-01-02T00:00:01.000+08:00");
   });
   it("beforeMillisecond", () => {

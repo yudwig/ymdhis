@@ -485,7 +485,7 @@ class Ymdhis {
     });
   }
 
-  afterMillisecond(ms: number): Ymdhis {
+  afterMilliseconds(ms: number): Ymdhis {
     this.date.setMilliseconds(this.date.getMilliseconds() + ms);
     return new Ymdhis({
       date: this.date,
@@ -522,7 +522,7 @@ class Ymdhis {
   }
 
   beforeMillisecond(ms: number): Ymdhis {
-    return this.afterMillisecond(-ms);
+    return this.afterMilliseconds(-ms);
   }
 
   lastOfMonth(): Ymdhis {
