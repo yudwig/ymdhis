@@ -678,7 +678,7 @@ class Ymdhis {
     });
   }
 
-  clearDatePadding(): Ymdhis {
+  clearDatePaddings(): Ymdhis {
     return this.cloneWithUpdateOptions({
       isEnablePaddingYear: false,
       isMonthAsTwoDigits: false,
@@ -696,7 +696,7 @@ class Ymdhis {
     return this.cloneWithUpdateOptions({ isDayAsTwoDigits: false });
   }
 
-  clearTimePadding(): Ymdhis {
+  clearTimePaddings(): Ymdhis {
     return this.cloneWithUpdateOptions({
       isHourAsTwoDigits: false,
       isMinuteAsTwoDigits: false,

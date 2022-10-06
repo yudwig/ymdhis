@@ -97,11 +97,11 @@ describe("Basic format date properties", () => {
     expect(ymdhis(new Date(2000, 0, 20)).clearDayPadding().d).toBe("20");
   });
   it("clearDatePad()", () => {
-    expect(ymdhis(new Date(2000, 0, 1)).clearDatePadding().y).toBe("2000");
-    expect(ymdhis(new Date(2000, 0, 1)).clearDatePadding().m).toBe("1");
-    expect(ymdhis(new Date(2000, 0, 1)).clearDatePadding().d).toBe("1");
-    expect(ymdhis(new Date(2000, 11, 20)).clearDatePadding().m).toBe("12");
-    expect(ymdhis(new Date(2000, 11, 20)).clearDatePadding().d).toBe("20");
+    expect(ymdhis(new Date(2000, 0, 1)).clearDatePaddings().y).toBe("2000");
+    expect(ymdhis(new Date(2000, 0, 1)).clearDatePaddings().m).toBe("1");
+    expect(ymdhis(new Date(2000, 0, 1)).clearDatePaddings().d).toBe("1");
+    expect(ymdhis(new Date(2000, 11, 20)).clearDatePaddings().m).toBe("12");
+    expect(ymdhis(new Date(2000, 11, 20)).clearDatePaddings().d).toBe("20");
   });
   it("clearPads()", () => {
     expect(ymdhis(new Date(2001, 0, 2, 3, 4, 5)).toString()).toBe(
@@ -658,8 +658,8 @@ describe("ISO date format functions", () => {
         .setHourSuffix("H")
         .setMinuteSuffix("I")
         .setSecondSuffix("S")
-        .clearDatePadding()
-        .clearTimePadding().iso9075
+        .clearDatePaddings()
+        .clearTimePaddings().iso9075
     ).toBe("2022-01-02 12:34:56");
     expect(() => ymdhis("-")).toThrow();
   });
