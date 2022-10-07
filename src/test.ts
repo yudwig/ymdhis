@@ -45,8 +45,12 @@ describe("Calculated properties", () => {
     );
   });
   it("timestamp", () => {
-    expect(ymdhis(0).timestamp).toBe(0);
-    expect(ymdhis(-1).timestamp).toBe(-1);
+    expect(ymdhis().utc(0).timestamp).toBe(0);
+    expect(ymdhis().utc(-1).timestamp).toBe(-1);
+    expect(ymdhis(1970, 1, 1).timestamp).toBe(0);
+    expect(ymdhis().utc(1970, 1, 1).local().timestamp).toBe(
+      (7 * 60 + 30) * 60 * 1000
+    );
   });
   it("valueOf", () => {
     expect(ymdhis(2000, 1, 2) > ymdhis(2000, 1, 1)).toBe(true);
@@ -756,9 +760,6 @@ describe("Create Date functions", () => {
     expect(ymdhis(0, 1, 2, 12, 34, 56).toString()).toBe("0000-01-02 12:34:56");
     expect(ymdhis(10, 1, 2, 12, 34, 56).toString()).toBe("0010-01-02 12:34:56");
     expect(ymdhis(2000, 1, 2, 12).toString()).toBe("2000-01-02 12:00:00");
-    expect(ymdhis(new Date(2000, 0, 2, 12, 34, 56).getTime()).toString()).toBe(
-      "2000-01-02 12:34:56"
-    );
     expect(() => ymdhis(-1, 1, 2)).toThrow();
     expect(() => ymdhis(0, 1, 2)).not.toThrow();
     expect(() => ymdhis(9999, 1, 2)).not.toThrow();
@@ -785,9 +786,9 @@ describe("Create Date functions", () => {
     expect(() => ymdhis(2000, 1, 2, 0, 0, 0, -1)).toThrow();
     expect(() => ymdhis(2000, 1, 2, 0, 0, 0, 999)).not.toThrow();
     expect(() => ymdhis(2000, 1, 2, 0, 0, 0, 1000)).toThrow();
-    expect(() => ymdhis(260000000000000)).toThrow();
-    expect(() => ymdhis(250000000000000)).not.toThrow();
-    expect(() => ymdhis(-63000000000000)).toThrow();
-    expect(() => ymdhis(-62000000000000)).not.toThrow();
+    expect(() => ymdhis().utc(260000000000000)).toThrow();
+    expect(() => ymdhis().utc(250000000000000)).not.toThrow();
+    expect(() => ymdhis().utc(-63000000000000)).toThrow();
+    expect(() => ymdhis().utc(-62000000000000)).not.toThrow();
   });
 });

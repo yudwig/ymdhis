@@ -389,7 +389,7 @@ class Ymdhis {
   }
 
   get timestamp(): number {
-    return this.date.getTime();
+    return this.date.getTime() - this.date.getTimezoneOffset() * 60 * 1000;
   }
 
   get iso9075(): string {
@@ -732,6 +732,28 @@ class Ymdhis {
     return this.timestamp;
   }
 
+  utc(
+    y: number,
+    m: number,
+    d: number,
+    h: number,
+    i: number,
+    s: number,
+    ms: number
+  ): Ymdhis;
+
+  utc(y: number, m: number, d: number, h: number, i: number, s: number): Ymdhis;
+
+  utc(y: number, m: number, d: number, h: number, i: number): Ymdhis;
+
+  utc(y: number, m: number, d: number, h: number): Ymdhis;
+
+  utc(y: number, m: number, d: number): Ymdhis;
+
+  utc(y: number, m: number): Ymdhis;
+
+  utc(timestamp: number): Ymdhis;
+
   utc(): Ymdhis;
 
   utc(
@@ -756,12 +778,21 @@ class Ymdhis {
     if (typeof arg1 === "undefined") {
       if (this.options.isUtc) {
         return this.cloneWithNewDate(this.date);
+      } else {
+        this.options.isUtc = true;
+        return this.afterMinutes(this.date.getTimezoneOffset());
       }
-      this.options.isUtc = true;
-      return this.afterMinutes(this.date.getTimezoneOffset());
     }
-    this.options.isUtc = true;
-    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s, ms));
+    if (typeof m === "undefined") {
+      // create from unix timestamp
+      this.options.isUtc = false;
+      return this.cloneWithNewDate(
+        Ymdhis.createDate(arg1, m, d, h, i, s, ms)
+      ).utc();
+    } else {
+      this.options.isUtc = true;
+      return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s, ms));
+    }
   }
 
   local(): Ymdhis {
@@ -771,6 +802,16 @@ class Ymdhis {
     this.options.isUtc = false;
     return this.beforeMinutes(this.date.getTimezoneOffset());
   }
+
+  initDate(
+    y: number,
+    m: number,
+    d: number,
+    h: number,
+    i: number,
+    s: number,
+    ms: number
+  ): Ymdhis;
 
   initDate(
     y: number,
@@ -789,8 +830,6 @@ class Ymdhis {
 
   initDate(y: number, m: number): Ymdhis;
 
-  initDate(unixTime: number): Ymdhis;
-
   initDate(str: string): Ymdhis;
 
   initDate(date: Date): Ymdhis;
@@ -803,9 +842,10 @@ class Ymdhis {
     d?: number,
     h?: number,
     i?: number,
-    s?: number
+    s?: number,
+    ms?: number
   ): Ymdhis {
-    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s));
+    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s, ms));
   }
 
   static extractIso9075(str: string): string[] {
@@ -1060,6 +1100,45 @@ class Ymdhis {
     });
   }
 }
+
+export function ymdhis(
+  y: number,
+  m: number,
+  d: number,
+  h: number,
+  i: number,
+  s: number,
+  ms: number
+): Ymdhis;
+
+export function ymdhis(
+  y: number,
+  m: number,
+  d: number,
+  h: number,
+  i: number,
+  s: number
+): Ymdhis;
+
+export function ymdhis(
+  y: number,
+  m: number,
+  d: number,
+  h: number,
+  i: number
+): Ymdhis;
+
+export function ymdhis(y: number, m: number, d: number, h: number): Ymdhis;
+
+export function ymdhis(y: number, m: number, d: number): Ymdhis;
+
+export function ymdhis(y: number, m: number): Ymdhis;
+
+export function ymdhis(str: string): Ymdhis;
+
+export function ymdhis(date: Date): Ymdhis;
+
+export function ymdhis(): Ymdhis;
 
 export function ymdhis(
   arg1?: number | string | Date,
