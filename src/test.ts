@@ -677,23 +677,49 @@ describe("ISO date format functions", () => {
   });
 });
 
-describe("Initializer", () => {
-  it("initDate: immutable", () => {
-    const before = ymdhis(new Date(2000, 0, 1));
-    const after = before.initDate(new Date(2000, 0, 2));
-    expect(before.ymd).not.toBe(after.ymd);
-  });
-  it("initDate", () => {
-    expect(ymdhis("2022-01-02 12:34:56").toString()).toBe(
-      "2022-01-02 12:34:56"
+describe("Initializer functions", () => {
+  it("local", () => {
+    expect(ymdhis().local("2000-01-02 12:34:56").toString()).toBe(
+      "2000-01-02 12:34:56"
     );
-    expect(ymdhis().initDate("2022-01-02 12:34:56").toString()).toBe(
-      "2022-01-02 12:34:56"
+    expect(ymdhis().local("2000-01-02 12:34:56").local().toString()).toBe(
+      "2000-01-02 12:34:56"
     );
+    expect(ymdhis().local(2000, 1, 2, 12, 34, 56, 789).iso8601).toBe(
+      "2000-01-02T12:34:56.789+08:00"
+    );
+    expect(ymdhis().local(2000, 1, 2, 12, 34, 56, 789).local().iso8601).toBe(
+      "2000-01-02T12:34:56.789+08:00"
+    );
+    expect(ymdhis().local(new Date(2000, 0, 2, 12, 34, 56)).toString()).toBe(
+      "2000-01-02 12:34:56"
+    );
+    expect(
+      ymdhis().local(new Date(2000, 0, 2, 12, 34, 56)).local().toString()
+    ).toBe("2000-01-02 12:34:56");
   });
-});
-
-describe("Timezone functions", () => {
+  it("utc", () => {
+    expect(ymdhis().utc("2000-01-02 12:34:56").toString()).toBe(
+      "2000-01-02 12:34:56"
+    );
+    expect(ymdhis().utc("2000-01-02 12:34:56").utc().toString()).toBe(
+      "2000-01-02 12:34:56"
+    );
+    expect(ymdhis().utc(2000, 1, 2, 12, 34, 56, 789).iso8601).toBe(
+      "2000-01-02T12:34:56.789Z"
+    );
+    expect(ymdhis().utc(2000, 1, 2, 12, 34, 56, 789).utc().iso8601).toBe(
+      "2000-01-02T12:34:56.789Z"
+    );
+    expect(ymdhis().utc(new Date(2000, 0, 2, 12, 34, 56)).toString()).toBe(
+      "2000-01-02 04:34:56"
+    );
+    expect(
+      ymdhis().utc(new Date(2000, 0, 2, 12, 34, 56)).utc().toString()
+    ).toBe("2000-01-02 04:34:56");
+    expect(ymdhis().utc(0).string).toBe("1970-01-01 00:00:00");
+    expect(ymdhis().utc(0).utc().string).toBe("1970-01-01 00:00:00");
+  });
   it("utc: to UTC datetime", () => {
     const dt = ymdhis(new Date(2000, 0, 1, 10, 0, 0));
     expect(dt.toString()).toBe("2000-01-01 10:00:00");
@@ -706,6 +732,10 @@ describe("Timezone functions", () => {
     expect(dt.utc().toString()).toBe("2000-01-01 02:00:00");
     expect(dt.local().toString()).toBe("2000-01-01 10:00:00");
     expect(dt.local().local().toString()).toBe("2000-01-01 10:00:00");
+  });
+  it("now", () => {
+    const timestamp = new Date().getTime();
+    expect(ymdhis().utc(0).now().timestamp).toBeGreaterThanOrEqual(timestamp);
   });
 });
 
