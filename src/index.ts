@@ -771,30 +771,29 @@ class Ymdhis {
     s?: number,
     ms?: number
   ): Ymdhis {
-    // to UTC time
-    if (typeof arg1 === "undefined") {
-      if (this.options.isUtc) {
-        return this.cloneWithNewDate(this.date);
-      } else {
+    switch (typeof arg1) {
+      // to UTC time
+      case "undefined":
+        if (this.options.isUtc) {
+          return this.cloneWithNewDate(this.date);
+        }
         this.options.isUtc = true;
         return this.afterMinutes(this.date.getTimezoneOffset());
-      }
+      case "string":
+        this.options.isUtc = true;
+        return this.cloneWithNewDate(iso9075toDate(arg1));
+      case "object":
+        this.options.isUtc = false;
+        return this.cloneWithNewDate(newDateWithValidate(arg1.getTime())).utc();
+      case "number":
+        // create from timestamp
+        if (typeof m === "undefined") {
+          this.options.isUtc = false;
+          return this.cloneWithNewDate(newDateWithValidate(arg1)).utc();
+        }
+        this.options.isUtc = true;
+        return this.cloneWithNewDate(numbersToDate(arg1, m, d, h, i, s, ms));
     }
-    // create from unix timestamp
-    if (typeof arg1 === "number" && typeof m === "undefined") {
-      this.options.isUtc = false;
-      return this.cloneWithNewDate(newDateWithValidate(arg1)).utc();
-    }
-    // create from Date object
-    if (typeof arg1 === "object") {
-      this.options.isUtc = false;
-      return this.cloneWithNewDate(
-        newDateWithValidate(arg1.getTime())
-      ).utc();
-    }
-    // create from string or numbers
-    this.options.isUtc = true;
-    return this.cloneWithNewDate(createDate(arg1, m, d, h, i, s, ms));
   }
 
   local(
@@ -844,16 +843,15 @@ class Ymdhis {
       if (this.options.isUtc) {
         this.options.isUtc = false;
         return this.beforeMinutes(this.date.getTimezoneOffset());
-      } else {
-        return this.cloneWithNewDate(this.date);
       }
+      return this.cloneWithNewDate(this.date);
     }
     this.options.isUtc = false;
-    return this.cloneWithNewDate(createDate(arg1, m, d, h, i, s, ms));
+    return this.cloneWithNewDate(createLocalDate(arg1, m, d, h, i, s, ms));
   }
 
   now(): Ymdhis {
-    return this.cloneWithNewDate(createDate());
+    return this.cloneWithNewDate(newDateWithValidate());
   }
 
   private cloneWithNewDate(date: Date): Ymdhis {
@@ -932,13 +930,7 @@ function iso9075toDate(str: string): Date {
     case 3:
       return numbersToDate(nums[0], nums[1], nums[2]);
     case 5:
-      return numbersToDate(
-        nums[0],
-        nums[1],
-        nums[2],
-        nums[3],
-        nums[4]
-      );
+      return numbersToDate(nums[0], nums[1], nums[2], nums[3], nums[4]);
     case 6:
       return numbersToDate(
         nums[0],
@@ -1077,7 +1069,7 @@ function newDateWithValidate(timestamp?: number): Date {
   return date;
 }
 
-function createDate(
+function createLocalDate(
   arg1?: number | string | Date,
   m?: number,
   d?: number,
@@ -1158,6 +1150,6 @@ export function ymdhis(
   ms?: number
 ): Ymdhis {
   return new Ymdhis({
-    date: createDate(arg1, m, d, h, i, s, ms),
+    date: createLocalDate(arg1, m, d, h, i, s, ms),
   });
 }
