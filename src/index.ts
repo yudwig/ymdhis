@@ -521,7 +521,7 @@ class Ymdhis {
     return this.afterSeconds(-seconds);
   }
 
-  beforeMillisecond(ms: number): Ymdhis {
+  beforeMilliseconds(ms: number): Ymdhis {
     return this.afterMilliseconds(-ms);
   }
 
