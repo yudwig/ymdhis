@@ -87,7 +87,7 @@ class Ymdhis {
   };
 
   constructor(props: Props) {
-    this.date = Ymdhis.newDateWithValidate(props.date.getTime());
+    this.date = newDateWithValidate(props.date.getTime());
     if (typeof props.options !== "undefined") {
       this.options = Object.assign({}, props.options);
     }
@@ -425,7 +425,7 @@ class Ymdhis {
       this.ms.toString().padStart(3, "0") +
       (this.options.isUtc
         ? "Z"
-        : Ymdhis.offsetMinutesToTzd(-this.date.getTimezoneOffset()))
+        : offsetMinutesToTzd(-this.date.getTimezoneOffset()))
     );
   }
 
@@ -707,9 +707,11 @@ class Ymdhis {
   clearHourPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isHourAsTwoDigits: false });
   }
+
   clearMinutePadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isMinuteAsTwoDigits: false });
   }
+
   clearSecondPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isSecondAsTwoDigits: false });
   }
@@ -781,18 +783,18 @@ class Ymdhis {
     // create from unix timestamp
     if (typeof arg1 === "number" && typeof m === "undefined") {
       this.options.isUtc = false;
-      return this.cloneWithNewDate(Ymdhis.newDateWithValidate(arg1)).utc();
+      return this.cloneWithNewDate(newDateWithValidate(arg1)).utc();
     }
     // create from Date object
     if (typeof arg1 === "object") {
       this.options.isUtc = false;
       return this.cloneWithNewDate(
-        Ymdhis.newDateWithValidate(arg1.getTime())
+        newDateWithValidate(arg1.getTime())
       ).utc();
     }
     // create from string or numbers
     this.options.isUtc = true;
-    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s, ms));
+    return this.cloneWithNewDate(createDate(arg1, m, d, h, i, s, ms));
   }
 
   local(
@@ -847,249 +849,11 @@ class Ymdhis {
       }
     }
     this.options.isUtc = false;
-    return this.cloneWithNewDate(Ymdhis.createDate(arg1, m, d, h, i, s, ms));
+    return this.cloneWithNewDate(createDate(arg1, m, d, h, i, s, ms));
   }
 
   now(): Ymdhis {
-    return this.cloneWithNewDate(Ymdhis.createDate());
-  }
-
-  static extractIso9075(str: string): string[] {
-    const msg = `Invalid date format: ${str}`;
-    if (str.match(/[^\d\s.:-]/)) {
-      throw new Error(msg);
-    }
-    const dt = str.trim().split(" ");
-    if (dt.length > 2) {
-      throw new Error(msg);
-    }
-    const res: string[] = [];
-
-    // extract y-m-d
-    const ymd = dt[0].match(/^(\d{1,4})-(\d{1,2})(-(\d{1,2}))?$/);
-    if (!ymd) {
-      throw new Error(msg);
-    }
-    res.push(ymd[1], ymd[2]);
-    if (ymd[4] !== undefined) {
-      res.push(ymd[4]);
-    }
-    if (dt.length === 1) {
-      return res;
-    }
-    // extract ms
-    const tm = dt[1].split(".");
-    if (tm.length > 2) {
-      throw new Error(msg);
-    }
-    // extract h:i:s
-    const his = tm[0].match(/^(\d{1,2}):(\d{1,2})(:(\d{1,2}))?$/);
-    if (!his) {
-      throw new Error(msg);
-    }
-    res.push(his[1], his[2]);
-    if (his[4] !== undefined) {
-      res.push(his[4]);
-    }
-    if (tm.length === 1) {
-      return res;
-    }
-    // check ms
-    if (tm[1].match(/^\d{1,3}$/)) {
-      res.push(tm[1]);
-      return res;
-    } else {
-      throw new Error(msg);
-    }
-  }
-
-  static iso9075toDate(str: string): Date {
-    const msg = `Invalid date format: ${str}`;
-    const nums = Ymdhis.extractIso9075(str).map((s) => parseInt(s, 10));
-    if (nums.some((n) => isNaN(n))) {
-      throw new Error(msg);
-    }
-    switch (nums.length) {
-      case 2:
-        return Ymdhis.numbersToDate(nums[0], nums[1]);
-      case 3:
-        return Ymdhis.numbersToDate(nums[0], nums[1], nums[2]);
-      case 5:
-        return Ymdhis.numbersToDate(
-          nums[0],
-          nums[1],
-          nums[2],
-          nums[3],
-          nums[4]
-        );
-      case 6:
-        return Ymdhis.numbersToDate(
-          nums[0],
-          nums[1],
-          nums[2],
-          nums[3],
-          nums[4],
-          nums[5]
-        );
-      case 7:
-        return Ymdhis.numbersToDate(
-          nums[0],
-          nums[1],
-          nums[2],
-          nums[3],
-          nums[4],
-          nums[5],
-          nums[6]
-        );
-      default:
-        throw new Error(msg);
-    }
-  }
-
-  static validateDateRange(dt: Date): void {
-    if (dt.getFullYear() < 0 || dt.getFullYear() > 9999) {
-      throw new Error(`Out of range. date: ${dt.toString()}`);
-    }
-  }
-
-  static validateDateItems(
-    y: number,
-    m?: number,
-    d?: number,
-    h?: number,
-    i?: number,
-    s?: number,
-    ms?: number
-  ): void {
-    if (y < 0 || y > 9999) {
-      throw new Error(`Invalid year: ${y}`);
-    }
-    if (typeof m !== "undefined") {
-      if (m < 1 || m > 12) {
-        throw new Error(`Invalid month: ${m}`);
-      }
-    }
-    if (typeof d !== "undefined") {
-      if (d < 1 || d > 31) {
-        throw new Error(`Invalid day: ${d}`);
-      }
-    }
-    if (typeof h !== "undefined") {
-      if (h < 0 || h > 23) {
-        throw new Error(`Invalid hour: ${h}`);
-      }
-    }
-    if (typeof i !== "undefined") {
-      if (i < 0 || i > 59) {
-        throw new Error(`Invalid minute: ${h}`);
-      }
-    }
-    if (typeof s !== "undefined") {
-      if (s < 0 || s > 59) {
-        throw new Error(`Invalid second: ${s}`);
-      }
-    }
-    if (typeof ms !== "undefined") {
-      if (ms < 0 || ms > 999) {
-        throw new Error(`Invalid Millisecond: ${ms}`);
-      }
-    }
-  }
-
-  static numbersToDate(
-    arg1: number,
-    m?: number,
-    d?: number,
-    h?: number,
-    i?: number,
-    s?: number,
-    ms?: number
-  ): Date {
-    // Create Date from unix timestamp.
-    if (typeof m === "undefined") {
-      return Ymdhis.newDateWithValidate(arg1);
-    }
-    Ymdhis.validateDateItems(arg1, m, d, h, i, s, ms);
-
-    const date = new Date(0, 1, 1, 0, 0, 0, 0);
-    date.setFullYear(arg1);
-    if (typeof d === "undefined") {
-      date.setMonth(m - 1);
-    } else if (typeof h === "undefined") {
-      date.setMonth(m - 1);
-      date.setDate(d);
-    } else if (typeof i === "undefined") {
-      date.setMonth(m - 1);
-      date.setDate(d);
-      date.setHours(h);
-    } else if (typeof s === "undefined") {
-      date.setMonth(m - 1);
-      date.setDate(d);
-      date.setHours(h);
-      date.setMinutes(i);
-    } else if (typeof ms === "undefined") {
-      date.setMonth(m - 1);
-      date.setDate(d);
-      date.setHours(h);
-      date.setMinutes(i);
-      date.setSeconds(s);
-    } else {
-      date.setMonth(m - 1);
-      date.setDate(d);
-      date.setHours(h);
-      date.setMinutes(i);
-      date.setSeconds(s);
-      date.setMilliseconds(ms);
-    }
-    Ymdhis.validateDateRange(date);
-    return date;
-  }
-
-  static newDateWithValidate(): Date;
-
-  static newDateWithValidate(timestamp: number): Date;
-
-  static newDateWithValidate(timestamp?: number): Date {
-    let date: Date;
-    if (typeof timestamp === "undefined") {
-      date = new Date();
-    } else {
-      date = new Date(timestamp);
-    }
-    Ymdhis.validateDateRange(date);
-    return date;
-  }
-
-  static createDate(
-    arg1?: number | string | Date,
-    m?: number,
-    d?: number,
-    h?: number,
-    i?: number,
-    s?: number,
-    ms?: number
-  ): Date {
-    switch (typeof arg1) {
-      case "undefined":
-        return Ymdhis.newDateWithValidate();
-      case "string":
-        return Ymdhis.iso9075toDate(arg1);
-      case "object":
-        return Ymdhis.newDateWithValidate(arg1.getTime());
-      case "number":
-        return Ymdhis.numbersToDate(arg1, m, d, h, i, s, ms);
-    }
-  }
-
-  static offsetMinutesToTzd(i: number): string {
-    return (
-      (i < 0 ? "-" : "+") +
-      Math.floor(Math.abs(i) / 60)
-        .toString()
-        .padStart(2, "0") +
-      ":" +
-      (Math.abs(i) % 60).toString().padStart(2, "0")
-    );
+    return this.cloneWithNewDate(createDate());
   }
 
   private cloneWithNewDate(date: Date): Ymdhis {
@@ -1105,6 +869,244 @@ class Ymdhis {
       options: Object.assign(this.options, options),
     });
   }
+}
+
+function extractIso9075(str: string): string[] {
+  const msg = `Invalid date format: ${str}`;
+  if (str.match(/[^\d\s.:-]/)) {
+    throw new Error(msg);
+  }
+  const dt = str.trim().split(" ");
+  if (dt.length > 2) {
+    throw new Error(msg);
+  }
+  const res: string[] = [];
+
+  // extract y-m-d
+  const ymd = dt[0].match(/^(\d{1,4})-(\d{1,2})(-(\d{1,2}))?$/);
+  if (!ymd) {
+    throw new Error(msg);
+  }
+  res.push(ymd[1], ymd[2]);
+  if (ymd[4] !== undefined) {
+    res.push(ymd[4]);
+  }
+  if (dt.length === 1) {
+    return res;
+  }
+  // extract ms
+  const tm = dt[1].split(".");
+  if (tm.length > 2) {
+    throw new Error(msg);
+  }
+  // extract h:i:s
+  const his = tm[0].match(/^(\d{1,2}):(\d{1,2})(:(\d{1,2}))?$/);
+  if (!his) {
+    throw new Error(msg);
+  }
+  res.push(his[1], his[2]);
+  if (his[4] !== undefined) {
+    res.push(his[4]);
+  }
+  if (tm.length === 1) {
+    return res;
+  }
+  // check ms
+  if (tm[1].match(/^\d{1,3}$/)) {
+    res.push(tm[1]);
+    return res;
+  } else {
+    throw new Error(msg);
+  }
+}
+
+function iso9075toDate(str: string): Date {
+  const msg = `Invalid date format: ${str}`;
+  const nums = extractIso9075(str).map((s) => parseInt(s, 10));
+  if (nums.some((n) => isNaN(n))) {
+    throw new Error(msg);
+  }
+  switch (nums.length) {
+    case 2:
+      return numbersToDate(nums[0], nums[1]);
+    case 3:
+      return numbersToDate(nums[0], nums[1], nums[2]);
+    case 5:
+      return numbersToDate(
+        nums[0],
+        nums[1],
+        nums[2],
+        nums[3],
+        nums[4]
+      );
+    case 6:
+      return numbersToDate(
+        nums[0],
+        nums[1],
+        nums[2],
+        nums[3],
+        nums[4],
+        nums[5]
+      );
+    case 7:
+      return numbersToDate(
+        nums[0],
+        nums[1],
+        nums[2],
+        nums[3],
+        nums[4],
+        nums[5],
+        nums[6]
+      );
+    default:
+      throw new Error(msg);
+  }
+}
+
+function validateDateRange(dt: Date): void {
+  if (dt.getFullYear() < 0 || dt.getFullYear() > 9999) {
+    throw new Error(`Out of range. date: ${dt.toString()}`);
+  }
+}
+
+function validateDateItems(
+  y: number,
+  m?: number,
+  d?: number,
+  h?: number,
+  i?: number,
+  s?: number,
+  ms?: number
+): void {
+  if (y < 0 || y > 9999) {
+    throw new Error(`Invalid year: ${y}`);
+  }
+  if (typeof m !== "undefined") {
+    if (m < 1 || m > 12) {
+      throw new Error(`Invalid month: ${m}`);
+    }
+  }
+  if (typeof d !== "undefined") {
+    if (d < 1 || d > 31) {
+      throw new Error(`Invalid day: ${d}`);
+    }
+  }
+  if (typeof h !== "undefined") {
+    if (h < 0 || h > 23) {
+      throw new Error(`Invalid hour: ${h}`);
+    }
+  }
+  if (typeof i !== "undefined") {
+    if (i < 0 || i > 59) {
+      throw new Error(`Invalid minute: ${h}`);
+    }
+  }
+  if (typeof s !== "undefined") {
+    if (s < 0 || s > 59) {
+      throw new Error(`Invalid second: ${s}`);
+    }
+  }
+  if (typeof ms !== "undefined") {
+    if (ms < 0 || ms > 999) {
+      throw new Error(`Invalid Millisecond: ${ms}`);
+    }
+  }
+}
+
+function numbersToDate(
+  arg1: number,
+  m?: number,
+  d?: number,
+  h?: number,
+  i?: number,
+  s?: number,
+  ms?: number
+): Date {
+  // Create Date from unix timestamp.
+  if (typeof m === "undefined") {
+    return newDateWithValidate(arg1);
+  }
+  validateDateItems(arg1, m, d, h, i, s, ms);
+
+  const date = new Date(0, 1, 1, 0, 0, 0, 0);
+  date.setFullYear(arg1);
+  if (typeof d === "undefined") {
+    date.setMonth(m - 1);
+  } else if (typeof h === "undefined") {
+    date.setMonth(m - 1);
+    date.setDate(d);
+  } else if (typeof i === "undefined") {
+    date.setMonth(m - 1);
+    date.setDate(d);
+    date.setHours(h);
+  } else if (typeof s === "undefined") {
+    date.setMonth(m - 1);
+    date.setDate(d);
+    date.setHours(h);
+    date.setMinutes(i);
+  } else if (typeof ms === "undefined") {
+    date.setMonth(m - 1);
+    date.setDate(d);
+    date.setHours(h);
+    date.setMinutes(i);
+    date.setSeconds(s);
+  } else {
+    date.setMonth(m - 1);
+    date.setDate(d);
+    date.setHours(h);
+    date.setMinutes(i);
+    date.setSeconds(s);
+    date.setMilliseconds(ms);
+  }
+  validateDateRange(date);
+  return date;
+}
+
+function newDateWithValidate(): Date;
+
+function newDateWithValidate(timestamp: number): Date;
+
+function newDateWithValidate(timestamp?: number): Date {
+  let date: Date;
+  if (typeof timestamp === "undefined") {
+    date = new Date();
+  } else {
+    date = new Date(timestamp);
+  }
+  validateDateRange(date);
+  return date;
+}
+
+function createDate(
+  arg1?: number | string | Date,
+  m?: number,
+  d?: number,
+  h?: number,
+  i?: number,
+  s?: number,
+  ms?: number
+): Date {
+  switch (typeof arg1) {
+    case "undefined":
+      return newDateWithValidate();
+    case "string":
+      return iso9075toDate(arg1);
+    case "object":
+      return newDateWithValidate(arg1.getTime());
+    case "number":
+      return numbersToDate(arg1, m, d, h, i, s, ms);
+  }
+}
+
+function offsetMinutesToTzd(i: number): string {
+  return (
+    (i < 0 ? "-" : "+") +
+    Math.floor(Math.abs(i) / 60)
+      .toString()
+      .padStart(2, "0") +
+    ":" +
+    (Math.abs(i) % 60).toString().padStart(2, "0")
+  );
 }
 
 export function ymdhis(
@@ -1156,6 +1158,6 @@ export function ymdhis(
   ms?: number
 ): Ymdhis {
   return new Ymdhis({
-    date: Ymdhis.createDate(arg1, m, d, h, i, s, ms),
+    date: createDate(arg1, m, d, h, i, s, ms),
   });
 }
