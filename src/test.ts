@@ -633,13 +633,13 @@ describe("Calculate date functions", () => {
   });
   it("beforeMillisecond", () => {
     expect(
-      ymdhis(new Date(2022, 0, 2, 0, 0, 10, 0)).beforeMillisecond(0).iso8601
+      ymdhis(new Date(2022, 0, 2, 0, 0, 10, 0)).beforeMilliseconds(0).iso8601
     ).toBe("2022-01-02T00:00:10.000+08:00");
     expect(
-      ymdhis(new Date(2022, 0, 2, 0, 0, 10, 0)).beforeMillisecond(1).iso8601
+      ymdhis(new Date(2022, 0, 2, 0, 0, 10, 0)).beforeMilliseconds(1).iso8601
     ).toBe("2022-01-02T00:00:09.999+08:00");
     expect(
-      ymdhis(new Date(2022, 0, 2, 0, 0, 10, 0)).beforeMillisecond(1000).iso8601
+      ymdhis(new Date(2022, 0, 2, 0, 0, 10, 0)).beforeMilliseconds(1000).iso8601
     ).toBe("2022-01-02T00:00:09.000+08:00");
   });
   it("lastOfMonth", () => {
