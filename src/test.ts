@@ -457,6 +457,17 @@ describe("Combined format date properties", () => {
         .setTimeSeparator(".")
         .setAmpmSeparator("_").hia
     ).toBe("12.34_PM");
+    expect(ymdhis(2000, 1, 2, 3, 4, 5).clearHourPadding().hia).toBe("3:04 AM");
+    expect(ymdhis(2000, 1, 2, 3, 4, 5).setHourSuffix("H").hia).toBe(
+      "03H:04 AM"
+    );
+
+    expect(ymdhis(2000, 1, 2, 12, 34, 56).clearHourPadding().hia).toBe(
+      "12:34 PM"
+    );
+    expect(ymdhis(2000, 1, 2, 12, 34, 56).setHourSuffix("H").hia).toBe(
+      "12H:34 PM"
+    );
   });
   it("hisa", () => {
     expect(ymdhis(new Date(2000, 0, 2, 0, 0)).hisa).toBe("12:00:00 AM");
@@ -670,6 +681,9 @@ describe("ISO date format functions", () => {
   it("iso8601", () => {
     expect(ymdhis(new Date(2022, 0, 2, 12, 34, 56, 7)).iso8601).toBe(
       "2022-01-02T12:34:56.007+08:00"
+    );
+    expect(ymdhis().utc(2022, 1, 2, 12, 34, 56).iso8601).toBe(
+      "2022-01-02T12:34:56.000Z"
     );
     expect(ymdhis().utc(2022, 1, 2, 12, 34, 56).iso8601).toBe(
       "2022-01-02T12:34:56.000Z"
