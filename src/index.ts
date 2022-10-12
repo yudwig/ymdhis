@@ -922,6 +922,7 @@ function iso9075toDate(str: string): Date {
   const msg = `Invalid date format: ${str}`;
   const nums = extractIso9075(str).map((s) => parseInt(s, 10));
   if (nums.some((n) => isNaN(n))) {
+    // istanbul ignore next
     throw new Error(msg);
   }
   switch (nums.length) {
@@ -951,6 +952,7 @@ function iso9075toDate(str: string): Date {
         nums[6]
       );
     default:
+      // istanbul ignore next
       throw new Error(msg);
   }
 }
@@ -1007,19 +1009,14 @@ function validateDateItems(
 
 function numbersToDate(
   arg1: number,
-  m?: number,
+  m: number,
   d?: number,
   h?: number,
   i?: number,
   s?: number,
   ms?: number
 ): Date {
-  // Create Date from unix timestamp.
-  if (typeof m === "undefined") {
-    return newDateWithValidate(arg1);
-  }
   validateDateItems(arg1, m, d, h, i, s, ms);
-
   const date = new Date(0, 1, 1, 0, 0, 0, 0);
   date.setFullYear(arg1);
   if (typeof d === "undefined") {
@@ -1086,6 +1083,10 @@ function createLocalDate(
     case "object":
       return newDateWithValidate(arg1.getTime());
     case "number":
+      // istanbul ignore next
+      if (typeof m === "undefined") {
+        throw new Error("Invalid arguments. Input month.");
+      }
       return numbersToDate(arg1, m, d, h, i, s, ms);
   }
 }
