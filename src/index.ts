@@ -921,8 +921,8 @@ function extractIso9075(str: string): string[] {
 function iso9075toDate(str: string): Date {
   const msg = `Invalid date format: ${str}`;
   const nums = extractIso9075(str).map((s) => parseInt(s, 10));
+  // istanbul ignore next
   if (nums.some((n) => isNaN(n))) {
-    // istanbul ignore next
     throw new Error(msg);
   }
   switch (nums.length) {
@@ -951,8 +951,8 @@ function iso9075toDate(str: string): Date {
         nums[5],
         nums[6]
       );
+    // istanbul ignore next
     default:
-      // istanbul ignore next
       throw new Error(msg);
   }
 }
@@ -1092,8 +1092,11 @@ function createLocalDate(
 }
 
 function offsetMinutesToTzd(i: number): string {
+  // istanbul ignore next
+  const sign = i < 0 ? "-" : "+";
+
   return (
-    (i < 0 ? "-" : "+") +
+    sign +
     Math.floor(Math.abs(i) / 60)
       .toString()
       .padStart(2, "0") +
