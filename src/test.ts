@@ -836,3 +836,204 @@ describe("Create Date functions", () => {
     expect(() => ymdhis().utc(-62000000000000)).not.toThrow();
   });
 });
+
+describe("Documentation examples", () => {
+  expect(ymdhis(2000, 1, 2).year).toBe(2000);
+  expect(ymdhis(2000, 1, 2).month).toBe(1);
+  expect(ymdhis(2000, 1, 2).day).toBe(2);
+  expect(ymdhis(2000, 1, 1).dow).toBe(6);
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).hour).toBe(12);
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).minute).toBe(34);
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).second).toBe(56);
+  expect(ymdhis(2000, 1, 2, 12, 34, 56, 789).ms).toBe(789);
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).ampmHour).toBe(12);
+  expect(ymdhis(2000, 1, 2).y).toBe("2000");
+  expect(ymdhis(2000, 1, 2).m).toBe("01");
+  expect(ymdhis(2000, 1, 2).d).toBe("02");
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).h).toBe("03");
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).i).toBe("04");
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).s).toBe("05");
+  expect(ymdhis(2000, 1, 1).w).toBe("Saturday");
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).a).toBe("AM");
+  expect(ymdhis(2000, 1, 2).ym).toBe("2000-01");
+  expect(ymdhis(2000, 1, 2).ymd).toBe("2000-01-02");
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).ymdhi).toBe("2000-01-02 12:34");
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).ymdhis).toBe("2000-01-02 12:34:56");
+  expect(ymdhis(2000, 1, 1).ymdw).toBe("2000-01-01 Saturday");
+  expect(ymdhis(2000, 1, 1).wymd).toBe("Saturday 2000-01-01");
+  expect(ymdhis(2000, 1, 2).dmy).toBe("02-01-2000");
+  expect(ymdhis(2000, 1, 2).dm).toBe("02-01");
+  expect(ymdhis(2000, 1, 2).mdy).toBe("01-02-2000");
+  expect(ymdhis(2000, 1, 2).md).toBe("01-02");
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).hi).toBe("12:34");
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).his).toBe("12:34:56");
+  expect(ymdhis(2000, 1, 2, 20, 34, 56).hia).toBe("08:34 PM");
+  expect(ymdhis(2000, 1, 2, 20, 34, 56).hisa).toBe("08:34:56 PM");
+  expect(ymdhis(2000, 1, 2, 20, 34, 56).ahi).toBe("PM 08:34");
+  expect(ymdhis(2000, 1, 2, 20, 34, 56).ahis).toBe("PM 08:34:56");
+  expect(ymdhis(2018, 1, 2, 12, 34, 56).number).toBe(20180102123456);
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).string).toBe("2000-01-02 12:34:56");
+  expect(ymdhis(2000, 1, 1).timestamp).toBe(946684800000);
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).iso9075).toBe("2000-01-02 12:34:56");
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).iso8601).toBe(
+    "2000-01-02T12:34:56.000+08:00"
+  );
+  expect(ymdhis(2000, 1, 2).afterYears(10).ymd).toBe("2010-01-02");
+  expect(ymdhis(2000, 1, 2).afterMonths(2).ymd).toBe("2000-03-02");
+  expect(ymdhis(2000, 1, 2).afterWeeks(1).ymd).toBe("2000-01-09");
+  expect(ymdhis(2000, 1, 2).afterDays(3).ymd).toBe("2000-01-05");
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).afterHours(10).string).toBe(
+    "2000-01-02 13:04:05"
+  );
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).afterMinutes(3).string).toBe(
+    "2000-01-02 03:07:05"
+  );
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).afterSeconds(5).string).toBe(
+    "2000-01-02 03:04:10"
+  );
+  expect(ymdhis(2000, 1, 2, 3, 4, 5, 100).afterMilliseconds(50).iso8601).toBe(
+    "2000-01-02T03:04:05.150+08:00"
+  );
+  expect(ymdhis(2000, 1, 2).beforeYears(10).ymd).toBe("1990-01-02");
+  expect(ymdhis(2000, 1, 2).beforeMonths(2).ymd).toBe("1999-11-02");
+  expect(ymdhis(2000, 1, 2).beforeWeeks(1).ymd).toBe("1999-12-26");
+  expect(ymdhis(2000, 1, 2).beforeDays(3).ymd).toBe("1999-12-30");
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).beforeHours(10).string).toBe(
+    "2000-01-01 17:04:05"
+  );
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).beforeMinutes(3).string).toBe(
+    "2000-01-02 03:01:05"
+  );
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).beforeSeconds(5).string).toBe(
+    "2000-01-02 03:04:00"
+  );
+  expect(ymdhis(2000, 1, 2, 3, 4, 5, 100).beforeMilliseconds(50).iso8601).toBe(
+    "2000-01-02T03:04:05.050+08:00"
+  );
+  expect(ymdhis(2000, 1, 2).lastOfMonth().ymd).toBe("2000-01-31");
+  expect(ymdhis(2000, 1, 2).firstOfMonth().ymd).toBe("2000-01-01");
+  expect(ymdhis(2000, 1, 2).setDateSeparator("/").ymd).toBe("2000/01/02");
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).setTimeSeparator(".").string).toBe(
+    "2000-01-02 12.34.56"
+  );
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).setDateTimeSeparator("_").string).toBe(
+    "2000-01-02_12:34:56"
+  );
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).setAmpmSeparator("_").ahi).toBe(
+    "PM_12:34"
+  );
+  expect(ymdhis(2000, 1, 1).setDowSeparator("_").wymd).toBe(
+    "Saturday_2000-01-01"
+  );
+  expect(
+    ymdhis(2000, 1, 2, 12, 34, 56).setSeparators("/", "_", ".").string
+  ).toBe("2000/01/02_12.34.56");
+  expect(ymdhis(2000, 1, 2).setYearSuffix("Y").y).toBe("2000Y");
+  expect(ymdhis(2000, 1, 2).setMonthSuffix("M").m).toBe("01M");
+  expect(ymdhis(2000, 1, 2).setDaySuffix("D").d).toBe("02D");
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).setHourSuffix("H").h).toBe("12H");
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).setMinuteSuffix("I").i).toBe("34I");
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).setSecondSuffix("S").s).toBe("56S");
+  expect(
+    ymdhis(2000, 1, 2, 12, 34, 56).setSuffixes("Y", "M", "D", "H", "I", "S")
+      .string
+  ).toBe("2000Y-01M-02D 12H:34I:56S");
+  expect(ymdhis(2000, 1, 2, 3, 4).setAmNotation("a.m.").ahi).toBe("a.m. 03:04");
+  expect(ymdhis(2000, 1, 2, 20, 30).setPmNotation("p.m.").ahi).toBe(
+    "p.m. 08:30"
+  );
+  expect(
+    ymdhis(2000, 1, 2).setDowNotations([
+      "Sun.",
+      "Mon.",
+      "Tue.",
+      "Wed.",
+      "Thu.",
+      "Fri.",
+      "Sat.",
+    ]).ymdw
+  ).toBe("2000-01-02 Sun.");
+  expect(
+    ymdhis(2000, 1, 2).setMonthNotations(["January", "February"]).ymd
+  ).toBe("2000-January-02");
+  expect(ymdhis(2000, 1, 2).setDayNotations(["1st", "2nd"]).ymd).toBe(
+    "2000-01-2nd"
+  );
+  expect(ymdhis(2018, 1, 2).setYearAsTwoDigits().ymd).toBe("18-01-02");
+  expect(
+    ymdhis(2008, 1, 2, 3, 4, 5).setYearAsTwoDigits().clearPaddings().string
+  ).toBe("8-1-2 3:4:5");
+  expect(
+    ymdhis(2008, 1, 2, 3, 4, 5).setYearAsTwoDigits().clearDatePaddings().string
+  ).toBe("8-1-2 03:04:05");
+  expect(ymdhis(2008, 1, 2).setYearAsTwoDigits().clearYearPadding().ymd).toBe(
+    "8-01-02"
+  );
+  expect(ymdhis(2008, 1, 2).clearMonthPadding().ymd).toBe("2008-1-02");
+  expect(ymdhis(2008, 1, 2).clearDayPadding().ymd).toBe("2008-01-2");
+  expect(ymdhis(2008, 1, 2, 3, 4, 5).clearTimePaddings().string).toBe(
+    "2008-01-02 3:4:5"
+  );
+  expect(ymdhis(2008, 1, 2, 3, 4, 5).clearHourPadding().his).toBe("3:04:05");
+  expect(ymdhis(2008, 1, 2, 3, 4, 5).clearMinutePadding().his).toBe("03:4:05");
+  expect(ymdhis(2008, 1, 2, 3, 4, 5).clearSecondPadding().his).toBe("03:04:5");
+  expect(ymdhis(2018, 1, 2, 12, 34, 56).clearSeparators().string).toBe(
+    "20180102123456"
+  );
+  expect(`${ymdhis(2000, 1, 2, 12, 34, 56)}`).toBe("2000-01-02 12:34:56");
+  expect(ymdhis(2000, 1, 2) > ymdhis(1999, 1, 2)).toBe(true);
+  expect(ymdhis(2000, 1, 2, 12, 34, 56).utc().string).toBe(
+    "2000-01-02 04:34:56"
+  );
+  expect(
+    ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2, 12, 34, 56, 789).iso8601
+  ).toBe("2000-01-02T12:34:56.789Z");
+  expect(
+    ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2, 12, 34, 56).string
+  ).toBe("2000-01-02 12:34:56");
+  expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2, 12, 34).string).toBe(
+    "2000-01-02 12:34:00"
+  );
+  expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2, 12).string).toBe(
+    "2000-01-02 12:00:00"
+  );
+  expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2).string).toBe(
+    "2000-01-02 00:00:00"
+  );
+  expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1).string).toBe(
+    "2000-01-01 00:00:00"
+  );
+  expect(ymdhis().utc(0).string).toBe("1970-01-01 00:00:00");
+  expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).utc("2000-01-02 12:34:56").string).toBe(
+    "2000-01-02 12:34:56"
+  );
+  expect(ymdhis().utc(2000, 1, 2, 12, 34, 56).local().string).toBe(
+    "2000-01-02 20:34:56"
+  );
+  expect(
+    ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2, 12, 34, 56, 789).iso8601
+  ).toBe("2000-01-02T12:34:56.789+08:00");
+  expect(
+    ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2, 12, 34, 56).string
+  ).toBe("2000-01-02 12:34:56");
+  expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2, 12, 34).string).toBe(
+    "2000-01-02 12:34:00"
+  );
+  expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2, 12).string).toBe(
+    "2000-01-02 12:00:00"
+  );
+  expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2).string).toBe(
+    "2000-01-02 00:00:00"
+  );
+  expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1).string).toBe(
+    "2000-01-01 00:00:00"
+  );
+  expect(
+    ymdhis(1999, 9, 9, 9, 9, 9, 9).local("2000-01-02 12:34:56").string
+  ).toBe("2000-01-02 12:34:56");
+  expect(
+    ymdhis(1999, 9, 9, 9, 9, 9, 9).local(new Date(2000, 0, 2, 12, 34, 56))
+      .string
+  ).toBe("2000-01-02 12:34:56");
+  expect(ymdhis(1999, 9, 9).now() > ymdhis(2000, 1, 2)).toBe(true);
+});
