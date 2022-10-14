@@ -1003,13 +1003,15 @@ describe("Documentation examples", () => {
   expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1).string).toBe(
     "2000-01-01 00:00:00"
   );
-  expect(ymdhis().utc(0).string).toBe("1970-01-01 00:00:00");
+  expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(0).string).toBe(
+    "1970-01-01 00:00:00"
+  );
   expect(ymdhis(1999, 9, 9, 9, 9, 9, 9).utc("2000-01-02 12:34:56").string).toBe(
     "2000-01-02 12:34:56"
   );
-  expect(ymdhis().utc(2000, 1, 2, 12, 34, 56).local().string).toBe(
-    "2000-01-02 20:34:56"
-  );
+  expect(
+    ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2, 12, 34, 56).local().string
+  ).toBe("2000-01-02 20:34:56");
   expect(
     ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2, 12, 34, 56, 789).iso8601
   ).toBe("2000-01-02T12:34:56.789+08:00");
