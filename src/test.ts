@@ -943,15 +943,7 @@ describe("Documentation examples", () => {
     "p.m. 08:30"
   );
   expect(
-    ymdhis(2000, 1, 2).setDowNotations([
-      "Sun.",
-      "Mon.",
-      "Tue.",
-      "Wed.",
-      "Thu.",
-      "Fri.",
-      "Sat.",
-    ]).ymdw
+    ymdhis(2000, 1, 2).setDowNotations(["Sun.", "Mon.", "Tue.", "Wed."]).ymdw
   ).toBe("2000-01-02 Sun.");
   expect(
     ymdhis(2000, 1, 2).setMonthNotations(["January", "February"]).ymd
