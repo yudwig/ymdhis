@@ -1,4 +1,4 @@
-interface Props {
+interface Params {
   date: Date;
   options?: Options;
 }
@@ -39,10 +39,20 @@ interface Options {
   isUtc: boolean;
 }
 
+interface DateInputValues {
+  year: number;
+  month: number;
+  day?: number;
+  hour?: number;
+  minute?: number;
+  second?: number;
+  millisecond?: number;
+}
+
 class Ymdhis {
   readonly date: Date;
 
-  private options: Options = {
+  private readonly options: Options = {
     // Separators
     dateSeparator: "-",
     dateTimeSeparator: " ",
@@ -86,10 +96,10 @@ class Ymdhis {
     isUtc: false,
   };
 
-  constructor(props: Props) {
-    this.date = newDateWithValidate(props.date.getTime());
-    if (typeof props.options !== "undefined") {
-      this.options = Object.assign({}, props.options);
+  constructor(params: Params) {
+    this.date = CreateDate.create(params.date);
+    if (typeof params.options !== "undefined") {
+      this.options = Object.assign({}, params.options);
     }
   }
 
@@ -108,7 +118,7 @@ class Ymdhis {
    * @name month
    * @description Get the month as a number.
    * @example
-   * ymdhis(2000, 1, 2).month
+   * ymdhis(2000, 1, 2, 3, 4, 5).month
    * // 1
    */
   get month(): number {
@@ -119,7 +129,7 @@ class Ymdhis {
    * @name day
    * @description Get the day as a number.
    * @example
-   * ymdhis(2000, 1, 2).day
+   * ymdhis(2000, 1, 2, 3, 4, 5).day
    * // 2
    */
   get day(): number {
@@ -130,7 +140,7 @@ class Ymdhis {
    * @name dow
    * @description Get the day of the week as a number. (Sunday: 0, Monday: 1)
    * @example
-   * ymdhis(2000, 1, 1).dow
+   * ymdhis(2000, 1, 1, 3, 4, 5).dow
    * // 6
    */
   get dow(): number {
@@ -141,8 +151,8 @@ class Ymdhis {
    * @name hour
    * @description Get the hour as a number.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).hour
-   * // 12
+   * ymdhis(2000, 1, 2, 3, 4, 5).hour
+   * // 3
    */
   get hour(): number {
     return this.date.getHours();
@@ -152,8 +162,8 @@ class Ymdhis {
    * @name minute
    * @description Get the minute as a number.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).minute
-   * // 34
+   * ymdhis(2000, 1, 2, 3, 4, 5).minute
+   * // 4
    */
   get minute(): number {
     return this.date.getMinutes();
@@ -163,8 +173,8 @@ class Ymdhis {
    * @name second
    * @description Get the second as a number.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).second
-   * // 56
+   * ymdhis(2000, 1, 2, 3, 4, 5).second
+   * // 5
    */
   get second(): number {
     return this.date.getSeconds();
@@ -174,8 +184,8 @@ class Ymdhis {
    * @name ms
    * @description Get the millisecond as a number.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56, 789).ms
-   * // 789
+   * ymdhis(2000, 1, 2, 3, 4, 5, 6).ms
+   * // 6
    */
   get ms(): number {
     return this.date.getMilliseconds();
@@ -185,8 +195,8 @@ class Ymdhis {
    * @name ampmHour
    * @description Get the hour as a number. (on 12-hour clock)
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).ampmHour
-   * // 12
+   * ymdhis(2000, 1, 2, 20, 4, 5).ampmHour
+   * // 8
    */
   get ampmHour(): number {
     return this.date.getHours() % 12 > 0 ? this.date.getHours() % 12 : 12;
@@ -196,8 +206,8 @@ class Ymdhis {
    * @name y
    * @description Get the formatted year.
    * @example
-   * ymdhis(2000, 1, 2).y
-   * // '2000'
+   * ymdhis(2000, 1, 2, 3, 4, 5).y
+   * // "2000"
    */
   get y(): string {
     if (this.options.isYearAsFourDigits) {
@@ -221,8 +231,8 @@ class Ymdhis {
    * @name m
    * @description Get the formatted month.
    * @example
-   * ymdhis(2000, 1, 2).m
-   * // '01'
+   * ymdhis(2000, 1, 2, 3, 4, 5).m
+   * // "01"
    */
   get m(): string {
     if (this.options.monthNotations !== null) {
@@ -242,8 +252,8 @@ class Ymdhis {
    * @name d
    * @description Get the formatted day.
    * @example
-   * ymdhis(2000, 1, 2).d
-   * // '02'
+   * ymdhis(2000, 1, 2, 3, 4, 5).d
+   * // "02"
    */
   get d(): string {
     if (this.options.dayNotations !== null) {
@@ -264,7 +274,7 @@ class Ymdhis {
    * @description Get the formatted hour.
    * @example
    * ymdhis(2000, 1, 2, 3, 4, 5).h
-   * // '03'
+   * // "03"
    */
   get h(): string {
     return (
@@ -279,7 +289,7 @@ class Ymdhis {
    * @description Get the formatted minute.
    * @example
    * ymdhis(2000, 1, 2, 3, 4, 5).i
-   * // '04'
+   * // "04"
    */
   get i(): string {
     return (
@@ -294,7 +304,7 @@ class Ymdhis {
    * @description Get the formatted second.
    * @example
    * ymdhis(2000, 1, 2, 3, 4, 5).s
-   * // '05'
+   * // "05"
    */
   get s(): string {
     return (
@@ -308,8 +318,8 @@ class Ymdhis {
    * @name w
    * @description Get the formatted day of the week.
    * @example
-   * ymdhis(2000, 1, 1).w
-   * // 'Saturday'
+   * ymdhis(2000, 1, 1, 3, 4, 5).w
+   * // "Saturday"
    */
   get w(): string {
     return this.options.dowNotations.length > this.date.getDay()
@@ -322,7 +332,7 @@ class Ymdhis {
    * @description Returns AM/PM notation depending on the time.
    * @example
    * ymdhis(2000, 1, 2, 3, 4, 5).a
-   * // 'AM'
+   * // "AM"
    */
   get a(): string {
     return this.date.getHours() > 11
@@ -347,8 +357,8 @@ class Ymdhis {
    * @name ym
    * @description Get the formatted year and month.
    * @example
-   * ymdhis(2000, 1, 2).ym
-   * // '2000-01'
+   * ymdhis(2000, 1, 2, 3, 4, 5).ym
+   * // "2000-01"
    */
   get ym(): string {
     return this.y + this.options.dateSeparator + this.m;
@@ -358,8 +368,8 @@ class Ymdhis {
    * @name ymd
    * @description Get the formatted year, month and day.
    * @example
-   * ymdhis(2000, 1, 2).ymd
-   * // '2000-01-02'
+   * ymdhis(2000, 1, 2, 3, 4, 5).ymd
+   * // "2000-01-02"
    */
   get ymd(): string {
     return (
@@ -375,8 +385,8 @@ class Ymdhis {
    * @name ymdhi
    * @description Get the formatted year, month, day, hour and minute.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).ymdhi
-   * // '2000-01-02 12:34'
+   * ymdhis(2000, 1, 2, 3, 4, 5).ymdhi
+   * // "2000-01-02 03:04"
    */
   get ymdhi(): string {
     return (
@@ -396,8 +406,8 @@ class Ymdhis {
    * @name ymdhis
    * @description Get the formatted year, month, day, hour, minute and second.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).ymdhis
-   * // '2000-01-02 12:34:56'
+   * ymdhis(2000, 1, 2, 3, 4, 5).ymdhis
+   * // "2000-01-02 03:04:05"
    */
   get ymdhis(): string {
     return (
@@ -419,8 +429,8 @@ class Ymdhis {
    * @name ymdw
    * @description Get the formatted year, month, day and day of the week.
    * @example
-   * ymdhis(2000, 1, 1).ymdw
-   * // '2000-01-01 Saturday'
+   * ymdhis(2000, 1, 1, 3, 4, 5).ymdw
+   * // "2000-01-01 Saturday"
    */
   get ymdw(): string {
     return (
@@ -438,8 +448,8 @@ class Ymdhis {
    * @name wymd
    * @description Get the formatted day of the week, year, month and day.
    * @example
-   * ymdhis(2000, 1, 1).wymd
-   * // 'Saturday 2000-01-01'
+   * ymdhis(2000, 1, 1, 3, 4, 5).wymd
+   * // "Saturday 2000-01-01"
    */
   get wymd(): string {
     return (
@@ -457,8 +467,8 @@ class Ymdhis {
    * @name dmy
    * @description Get the formatted day, month and year.
    * @example
-   * ymdhis(2000, 1, 2).dmy
-   * // '02-01-2000'
+   * ymdhis(2000, 1, 2, 3, 4, 5).dmy
+   * // "02-01-2000"
    */
   get dmy(): string {
     return (
@@ -474,8 +484,8 @@ class Ymdhis {
    * @name dm
    * @description Get the formatted day and month.
    * @example
-   * ymdhis(2000, 1, 2).dm
-   * // '02-01'
+   * ymdhis(2000, 1, 2, 3, 4, 5).dm
+   * // "02-01"
    */
   get dm(): string {
     return this.d + this.options.dateSeparator + this.m;
@@ -485,8 +495,8 @@ class Ymdhis {
    * @name mdy
    * @description Get the formatted month, day and year.
    * @example
-   * ymdhis(2000, 1, 2).mdy
-   * // '01-02-2000'
+   * ymdhis(2000, 1, 2, 3, 4, 5).mdy
+   * // "01-02-2000"
    */
   get mdy(): string {
     return (
@@ -502,8 +512,8 @@ class Ymdhis {
    * @name md
    * @description Get the formatted month and day.
    * @example
-   * ymdhis(2000, 1, 2).md
-   * // '01-02'
+   * ymdhis(2000, 1, 2, 3, 4, 5).md
+   * // "01-02"
    */
   get md(): string {
     return this.m + this.options.dateSeparator + this.d;
@@ -513,8 +523,8 @@ class Ymdhis {
    * @name hi
    * @description Get the formatted hour and minute.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).hi
-   * // '12:34'
+   * ymdhis(2000, 1, 2, 3, 4, 5).hi
+   * // "03:04"
    */
   get hi(): string {
     return this.h + this.options.timeSeparator + this.i;
@@ -524,8 +534,8 @@ class Ymdhis {
    * @name his
    * @description Get the formatted hour, minute and second.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).his
-   * // '12:34:56'
+   * ymdhis(2000, 1, 2, 3, 4, 5).his
+   * // "03:04:05"
    */
   get his(): string {
     return (
@@ -541,8 +551,8 @@ class Ymdhis {
    * @name hia
    * @description Get the formatted hour (12-hour clock), minute and AM/PM notation.
    * @example
-   * ymdhis(2000, 1, 2, 20, 34, 56).hia
-   * // '08:34 PM'
+   * ymdhis(2000, 1, 2, 20, 4, 5).hia
+   * // "08:04 PM"
    */
   get hia(): string {
     return (
@@ -558,8 +568,8 @@ class Ymdhis {
    * @name hisa
    * @description Get the formatted hour (12-hour clock), minute, second and AM/PM notation.
    * @example
-   * ymdhis(2000, 1, 2, 20, 34, 56).hisa
-   * // '08:34:56 PM'
+   * ymdhis(2000, 1, 2, 20, 4, 5).hisa
+   * // "08:04:05 PM"
    */
   get hisa(): string {
     return (
@@ -577,8 +587,8 @@ class Ymdhis {
    * @name ahi
    * @description Get the formatted AM/PM notation, hour (12-hour clock) and minute.
    * @example
-   * ymdhis(2000, 1, 2, 20, 34, 56).ahi
-   * // 'PM 08:34'
+   * ymdhis(2000, 1, 2, 20, 4, 5).ahi
+   * // "PM 08:04"
    */
   get ahi(): string {
     return (
@@ -594,8 +604,8 @@ class Ymdhis {
    * @name ahis
    * @description Get the formatted AM/PM notation, hour (12-hour clock), minute and second.
    * @example
-   * ymdhis(2000, 1, 2, 20, 34, 56).ahis
-   * // 'PM 08:34:56'
+   * ymdhis(2000, 1, 2, 20, 4, 5).ahis
+   * // "PM 08:04:05"
    */
   get ahis(): string {
     return (
@@ -613,8 +623,8 @@ class Ymdhis {
    * @name number
    * @description Get the number of month, date, minute, and second in a row.
    * @example
-   * ymdhis(2018, 1, 2, 12, 34, 56).number
-   * // 20180102123456
+   * ymdhis(2018, 1, 2, 3, 4, 5).number
+   * // 20180102030405
    */
   get number(): number {
     return (
@@ -631,8 +641,8 @@ class Ymdhis {
    * @name string
    * @description Get the formatted year, month, day, hour, minute and second.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).string
-   * // '2000-01-02 12:34:56'
+   * ymdhis(2000, 1, 2, 3, 4, 5).string
+   * // "2000-01-02 03:04:05"
    */
   get string(): string {
     return this.toString();
@@ -642,7 +652,7 @@ class Ymdhis {
    * @name timestamp
    * @description Get the timestamp.
    * @example
-   * ymdhis(2000, 1, 1).timestamp
+   * ymdhis(2000, 1, 1, 0, 0, 0).timestamp
    * // 946684800000
    */
   get timestamp(): number {
@@ -653,8 +663,8 @@ class Ymdhis {
    * @name iso9075
    * @description Get the ISO9075 format string. (Not affected by formatting options)
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).iso9075
-   * // '2000-01-02 12:34:56'
+   * ymdhis(2000, 1, 2, 3, 4, 5).iso9075
+   * // "2000-01-02 03:04:05"
    */
   get iso9075(): string {
     return (
@@ -677,10 +687,22 @@ class Ymdhis {
    * @description Get the ISO8601 format string. (Not affected by formatting options)
    * @example
    * // Timezone offset +08:00
-   * ymdhis(2000, 1, 2, 12, 34, 56).iso8601
-   * // '2000-01-02T12:34:56.000+08:00'
+   * ymdhis(2000, 1, 2, 3, 4, 5).iso8601
+   * // "2000-01-02T03:04:05.000+08:00"
    */
   get iso8601(): string {
+    // istanbul ignore next
+    const sign = this.date.getTimezoneOffset() > 0 ? "-" : "+";
+    const tzd =
+      sign +
+      Math.floor(Math.abs(this.date.getTimezoneOffset()) / 60)
+        .toString()
+        .padStart(2, "0") +
+      ":" +
+      (Math.abs(this.date.getTimezoneOffset()) % 60)
+        .toString()
+        .padStart(2, "0");
+
     return (
       this.year.toString().padStart(4, "0") +
       "-" +
@@ -695,9 +717,7 @@ class Ymdhis {
       this.second.toString().padStart(2, "0") +
       "." +
       this.ms.toString().padStart(3, "0") +
-      (this.options.isUtc
-        ? "Z"
-        : offsetMinutesToTzd(-this.date.getTimezoneOffset()))
+      (this.options.isUtc ? "Z" : tzd)
     );
   }
 
@@ -705,8 +725,8 @@ class Ymdhis {
    * @name afterYears
    * @description Return a new Ymdhis object with the date after the number of years given.
    * @example
-   * ymdhis(2000, 1, 2).afterYears(10).ymd
-   * // '2010-01-02'
+   * ymdhis(2000, 1, 2, 3, 4, 5).iso8601
+   * // "2000-01-02T03:04:05.000+08:00"
    * @param years
    */
   afterYears(years: number): Ymdhis {
@@ -721,8 +741,8 @@ class Ymdhis {
    * @name afterMonths
    * @description Return a new Ymdhis object with the date after the number of months given.
    * @example
-   * ymdhis(2000, 1, 2).afterMonths(2).ymd
-   * // '2000-03-02'
+   * ymdhis(2000, 1, 2, 3, 4, 5).afterMonths(2).ymd
+   * // "2000-03-02"
    * @param months
    */
   afterMonths(months: number): Ymdhis {
@@ -737,8 +757,8 @@ class Ymdhis {
    * @name afterWeeks
    * @description Return a new Ymdhis object with the date after the number of weeks given.
    * @example
-   * ymdhis(2000, 1, 2).afterWeeks(1).ymd
-   * // '2000-01-09'
+   * ymdhis(2000, 1, 2, 3, 4, 5).afterWeeks(1).ymd
+   * // "2000-01-09"
    * @param weeks
    */
   afterWeeks(weeks: number): Ymdhis {
@@ -753,8 +773,8 @@ class Ymdhis {
    * @name afterDays
    * @description Return a new Ymdhis object with the date after the number of days given.
    * @example
-   * ymdhis(2000, 1, 2).afterDays(3).ymd
-   * // '2000-01-05'
+   * ymdhis(2000, 1, 2, 3, 4, 5).afterDays(3).ymd
+   * // "2000-01-05"
    * @param days
    */
   afterDays(days: number): Ymdhis {
@@ -770,7 +790,7 @@ class Ymdhis {
    * @description Return a new Ymdhis object with the date after the number of hours given.
    * @example
    * ymdhis(2000, 1, 2, 3, 4, 5).afterHours(10).string
-   * // '2000-01-02 13:04:05'
+   * // "2000-01-02 13:04:05"
    * @param hours
    */
   afterHours(hours: number): Ymdhis {
@@ -786,7 +806,7 @@ class Ymdhis {
    * @description Return a new Ymdhis object with the date after the number of minutes given.
    * @example
    * ymdhis(2000, 1, 2, 3, 4, 5).afterMinutes(3).string
-   * // '2000-01-02 03:07:05'
+   * // "2000-01-02 03:07:05"
    * @param minutes
    */
   afterMinutes(minutes: number): Ymdhis {
@@ -802,7 +822,7 @@ class Ymdhis {
    * @description Return a new Ymdhis object with the date after the number of seconds given.
    * @example
    * ymdhis(2000, 1, 2, 3, 4, 5).afterSeconds(5).string
-   * // '2000-01-02 03:04:10'
+   * // "2000-01-02 03:04:10"
    * @param seconds
    */
   afterSeconds(seconds: number): Ymdhis {
@@ -818,8 +838,8 @@ class Ymdhis {
    * @description Return a new Ymdhis object with the date after the number of milliseconds given.
    * @example
    * // Timezone offset +08:00
-   * ymdhis(2000, 1, 2, 3, 4, 5, 100).afterMilliseconds(50).iso8601
-   * // '2000-01-02T03:04:05.150+08:00'
+   * ymdhis(2000, 1, 2, 3, 4, 5).afterMilliseconds(25).iso8601
+   * // "2000-01-02T03:04:05.025+08:00"
    * @param ms
    */
   afterMilliseconds(ms: number): Ymdhis {
@@ -834,8 +854,8 @@ class Ymdhis {
    * @name beforeYears
    * @description Return a new Ymdhis object with the date before the number of years given.
    * @example
-   * ymdhis(2000, 1, 2).beforeYears(10).ymd
-   * // '1990-01-02'
+   * ymdhis(2000, 1, 2, 3, 4, 5).beforeYears(10).ymd
+   * // "1990-01-02"
    * @param years
    */
   beforeYears(years: number): Ymdhis {
@@ -846,8 +866,8 @@ class Ymdhis {
    * @name beforeMonths
    * @description Return a new Ymdhis object with the date before the number of months given.
    * @example
-   * ymdhis(2000, 1, 2).beforeMonths(2).ymd
-   * // '1999-11-02'
+   * ymdhis(2000, 1, 2, 3, 4, 5).beforeMonths(2).ymd
+   * // "1999-11-02"
    * @param months
    */
   beforeMonths(months: number): Ymdhis {
@@ -858,8 +878,8 @@ class Ymdhis {
    * @name beforeWeeks
    * @description Return a new Ymdhis object with the date before the number of weeks given.
    * @example
-   * ymdhis(2000, 1, 2).beforeWeeks(1).ymd
-   * // '1999-12-26'
+   * ymdhis(2000, 1, 2, 3, 4, 5).beforeWeeks(1).ymd
+   * // "1999-12-26"
    * @param weeks
    */
   beforeWeeks(weeks: number): Ymdhis {
@@ -870,8 +890,8 @@ class Ymdhis {
    * @name beforeDays
    * @description Return a new Ymdhis object with the date before the number of days given.
    * @example
-   * ymdhis(2000, 1, 2).beforeDays(3).ymd
-   * // '1999-12-30'
+   * ymdhis(2000, 1, 2, 3, 4, 5).beforeDays(3).ymd
+   * // "1999-12-30"
    * @param days
    */
   beforeDays(days: number): Ymdhis {
@@ -882,8 +902,8 @@ class Ymdhis {
    * @name beforeHours
    * @description Return a new Ymdhis object with the date before the number of hours given.
    * @example
-   * ymdhis(2000, 1, 2, 3, 4, 5).beforeHours(10).string
-   * // '2000-01-01 17:04:05'
+   * ymdhis(2000, 1, 2, 3, 4, 5).beforeHours(4).string
+   * // "2000-01-01 23:04:05"
    * @param hours
    */
   beforeHours(hours: number): Ymdhis {
@@ -895,7 +915,7 @@ class Ymdhis {
    * @description Return a new Ymdhis object with the date before the number of minutes given.
    * @example
    * ymdhis(2000, 1, 2, 3, 4, 5).beforeMinutes(3).string
-   * // '2000-01-02 03:01:05'
+   * // "2000-01-02 03:01:05"
    * @param minutes
    */
   beforeMinutes(minutes: number): Ymdhis {
@@ -907,7 +927,7 @@ class Ymdhis {
    * @description Return a new Ymdhis object with the date before the number of seconds given.
    * @example
    * ymdhis(2000, 1, 2, 3, 4, 5).beforeSeconds(5).string
-   * // '2000-01-02 03:04:00'
+   * // "2000-01-02 03:04:00"
    * @param seconds
    */
   beforeSeconds(seconds: number): Ymdhis {
@@ -919,8 +939,8 @@ class Ymdhis {
    * @description Return a new Ymdhis object with the date before the number of milliseconds given.
    * @example
    * // Timezone offset +08:00
-   * ymdhis(2000, 1, 2, 3, 4, 5, 100).beforeMilliseconds(50).iso8601
-   * // '2000-01-02T03:04:05.050+08:00'
+   * ymdhis(2000, 1, 2, 3, 4, 5).beforeMilliseconds(25).iso8601
+   * // "2000-01-02T03:04:04.975+08:00"
    * @param ms
    */
   beforeMilliseconds(ms: number): Ymdhis {
@@ -931,8 +951,8 @@ class Ymdhis {
    * @name lastOfMonth
    * @description Returns a new object with the end of month date of the current date.
    * @example
-   * ymdhis(2000, 1, 2).lastOfMonth().ymd
-   * // '2000-01-31'
+   * ymdhis(2000, 1, 2, 3, 4, 5).lastOfMonth().ymd
+   * // "2000-01-31"
    */
   lastOfMonth(): Ymdhis {
     return this.afterMonths(1).firstOfMonth().beforeDays(1);
@@ -942,8 +962,8 @@ class Ymdhis {
    * @name firstOfMonth
    * @description Returns a new object with the first of month date of the current date.
    * @example
-   * ymdhis(2000, 1, 2).firstOfMonth().ymd
-   * // '2000-01-01'
+   * ymdhis(2000, 1, 2, 3, 4, 5).firstOfMonth().ymd
+   * // "2000-01-01"
    */
   firstOfMonth(): Ymdhis {
     this.date.setDate(1);
@@ -957,8 +977,8 @@ class Ymdhis {
    * @name setSeparators
    * @description Return a new Ymdhis object with separators given.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).setSeparators(""/"", ""_"", ""."").string
-   * // '2000/01/02_12.34.56'"
+   * ymdhis(2000, 1, 2, 3, 4, 5).setDateSeparator("/").ymd
+   * // "2000/01/02"
    * @param dateSeparator
    * @param dateTimeSeparator
    * @param timeSeparator
@@ -979,8 +999,8 @@ class Ymdhis {
    * @name setDateSeparator
    * @description Return a new Ymdhis object with the date separator given.
    * @example
-   * ymdhis(2000, 1, 2).setDateSeparator(""/"").ymd
-   * // '2000/01/02'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setDateSeparator("/").ymd
+   * // "2000/01/02"
    * @param separator
    */
   setDateSeparator(separator: string): Ymdhis {
@@ -993,8 +1013,8 @@ class Ymdhis {
    * @name setTimeSeparator
    * @description Return a new Ymdhis object with the time separator given.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).setTimeSeparator(""."").string
-   * // '2000-01-02 12.34.56'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setTimeSeparator(".").string
+   * // "2000-01-02 03.04.05"
    * @param separator
    */
   setTimeSeparator(separator: string): Ymdhis {
@@ -1007,8 +1027,8 @@ class Ymdhis {
    * @name setDateTimeSeparator
    * @description Return a new Ymdhis object with the separator between date and time given.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).setDateTimeSeparator(""_"").string
-   * // '2000-01-02_12:34:56'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setDateTimeSeparator("_").string
+   * // "2000-01-02_03:04:05"
    * @param separator
    */
   setDateTimeSeparator(separator: string): Ymdhis {
@@ -1021,8 +1041,8 @@ class Ymdhis {
    * @name setAmpmSeparator
    * @description Return a new Ymdhis object with the separator between date-time and AM/PM notation given.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).setAmpmSeparator(""_"").ahi
-   * // 'PM_12:34'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setAmpmSeparator("_").ahi
+   * // "AM_03:04"
    * @param separator
    */
   setAmpmSeparator(separator: string): Ymdhis {
@@ -1035,8 +1055,8 @@ class Ymdhis {
    * @name setDowSeparator
    * @description Return a new Ymdhis object with the separator between date-time and day of the week notation given.
    * @example
-   * ymdhis(2000, 1, 1).setDowSeparator(""_"").wymd
-   * // 'Saturday_2000-01-01'
+   * ymdhis(2000, 1, 1, 3, 4, 5).setDowSeparator("_").wymd
+   * // "Saturday_2000-01-01"
    * @param separator
    */
   setDowSeparator(separator: string): Ymdhis {
@@ -1049,8 +1069,8 @@ class Ymdhis {
    * @name setSuffixes
    * @description Return a new Ymdhis object with the suffixes given.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).setSuffixes(""Y"", ""M"", ""D"", ""H"", ""I"", ""S"").string
-   * // '2000Y-01M-02D 12H:34I:56S'"
+   * ymdhis(2000, 1, 2, 3, 4, 5).setSuffixes("Y", "M", "D", "H", "I", "S").string
+   * // "2000Y-01M-02D 03H:04I:05S"
    * @param y
    * @param m
    * @param d
@@ -1080,8 +1100,8 @@ class Ymdhis {
    * @name setYearSuffix
    * @description Return a new Ymdhis object with the suffix of year given.
    * @example
-   * ymdhis(2000, 1, 2).setYearSuffix(""Y"").y
-   * // '2000Y'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setYearSuffix("Y").y
+   * // "2000Y"
    * @param suffix
    */
   setYearSuffix(suffix: string): Ymdhis {
@@ -1094,8 +1114,8 @@ class Ymdhis {
    * @name setMonthSuffix
    * @description Return a new Ymdhis object with the suffix of month given.
    * @example
-   * ymdhis(2000, 1, 2).setMonthSuffix(""M"").m
-   * // '01M'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setMonthSuffix("M").m
+   * // "01M"
    * @param suffix
    */
   setMonthSuffix(suffix: string): Ymdhis {
@@ -1108,8 +1128,8 @@ class Ymdhis {
    * @name setDaySuffix
    * @description Return a new Ymdhis object with the suffix of day given.
    * @example
-   * ymdhis(2000, 1, 2).setDaySuffix(""D"").d
-   * // '02D'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setDaySuffix("D").d
+   * // "02D"
    * @param suffix
    */
   setDaySuffix(suffix: string): Ymdhis {
@@ -1122,8 +1142,8 @@ class Ymdhis {
    * @name setHourSuffix
    * @description Return a new Ymdhis object with the suffix of hour given.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).setHourSuffix(""H"").h
-   * // '12H'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setHourSuffix("H").h
+   * // "03H"
    * @param suffix
    */
   setHourSuffix(suffix: string): Ymdhis {
@@ -1136,8 +1156,8 @@ class Ymdhis {
    * @name setMinuteSuffix
    * @description Return a new Ymdhis object with the suffix of minute given.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).setMinuteSuffix(""I"").i
-   * // '34I'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setMinuteSuffix("I").i
+   * // "04I"
    * @param suffix
    */
   setMinuteSuffix(suffix: string): Ymdhis {
@@ -1150,8 +1170,8 @@ class Ymdhis {
    * @name setSecondSuffix
    * @description Return a new Ymdhis object with the suffix of second given.
    * @example
-   * ymdhis(2000, 1, 2, 12, 34, 56).setSecondSuffix(""S"").s
-   * // '56S'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setSecondSuffix("S").s
+   * // "05S"
    * @param suffix
    */
   setSecondSuffix(suffix: string): Ymdhis {
@@ -1164,8 +1184,8 @@ class Ymdhis {
    * @name setAmNotation
    * @description Return a new Ymdhis object with the notation of AM given.
    * @example
-   * ymdhis(2000, 1, 2, 3, 4).setAmNotation(""a.m."").ahi
-   * // 'a.m. 03:04'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setAmNotation("a.m.").ahi
+   * // "a.m. 03:04"
    * @param am
    */
   setAmNotation(am: string): Ymdhis {
@@ -1178,8 +1198,8 @@ class Ymdhis {
    * @name setPmNotation
    * @description Return a new Ymdhis object with the notation of PM given.
    * @example
-   * ymdhis(2000, 1, 2, 20, 30).setPmNotation(""p.m."").ahi
-   * // 'p.m. 08:30'
+   * ymdhis(2000, 1, 2, 20, 4, 5).setPmNotation("p.m.").ahi
+   * // "p.m. 08:04"
    * @param pm
    */
   setPmNotation(pm: string): Ymdhis {
@@ -1192,8 +1212,8 @@ class Ymdhis {
    * @name setDowNotations
    * @description Return a new Ymdhis object with the notation array of day of the week given.
    * @example
-   * ymdhis(2000, 1, 2).setDowNotations([""Sun."", ""Mon."", ""Tue."", ""Wed."", ""Thu."", ""Fri."", ""Sat.""]).ymdw
-   * // '2000-01-02 Sun.'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setDowNotations(["Sun.", "Mon.", "Tue."]).ymdw
+   * // "2000-01-02 Sun."
    * @param dowList
    */
   setDowNotations(dowList: string[]): Ymdhis {
@@ -1206,8 +1226,8 @@ class Ymdhis {
    * @name setMonthNotations
    * @description Return a new Ymdhis object with the notation array of months given.
    * @example
-   * ymdhis(2000, 1, 2).setMonthNotations([""January"", ""February""]).ymd
-   * // '2000-January-02'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setMonthNotations(["January", "February"]).ymd
+   * // "2000-January-02"
    * @param monthList
    */
   setMonthNotations(monthList: string[]): Ymdhis {
@@ -1220,8 +1240,8 @@ class Ymdhis {
    * @name setDayNotations
    * @description Return a new Ymdhis object with the notation array of days given.
    * @example
-   * ymdhis(2000, 1, 2).setDayNotations([""1st"", ""2nd""]).ymd
-   * // '2000-01-2nd'
+   * ymdhis(2000, 1, 2, 3, 4, 5).setDayNotations(["1st", "2nd"]).ymd
+   * // "2000-01-2nd"
    * @param dayList
    */
   setDayNotations(dayList: string[]): Ymdhis {
@@ -1234,8 +1254,8 @@ class Ymdhis {
    * @name setYearAsTwoDigits
    * @description Return a new Ymdhis object with the year in two digits.
    * @example
-   * ymdhis(2018, 1, 2).setYearAsTwoDigits().ymd
-   * // '18-01-02'
+   * ymdhis(2018, 1, 2, 3, 4, 5).setYearAsTwoDigits().ymd
+   * // "18-01-02"
    */
   setYearAsTwoDigits(): Ymdhis {
     return this.cloneWithUpdateOptions({ isYearAsFourDigits: false });
@@ -1245,8 +1265,8 @@ class Ymdhis {
    * @name clearPaddings
    * @description Return a new Ymdhis object without all padding.
    * @example
-   * ymdhis(2008, 1, 2, 3, 4, 5).setYearAsTwoDigits().clearPaddings().string
-   * // '8-1-2 3:4:5'
+   * ymdhis(2008, 1, 2, 3, 4, 5).clearPaddings().setYearAsTwoDigits().string
+   * // "8-1-2 3:4:5"
    */
   clearPaddings(): Ymdhis {
     return this.cloneWithUpdateOptions({
@@ -1263,8 +1283,8 @@ class Ymdhis {
    * @name clearDatePaddings
    * @description Return a new Ymdhis object without year, month and day padding.
    * @example
-   * ymdhis(2008, 1, 2, 3, 4, 5).setYearAsTwoDigits().clearDatePaddings().string
-   * // '8-1-2 03:04:05'
+   * ymdhis(2008, 1, 2, 3, 4, 5).clearDatePaddings().setYearAsTwoDigits().string
+   * // "8-1-2 03:04:05"
    */
   clearDatePaddings(): Ymdhis {
     return this.cloneWithUpdateOptions({
@@ -1278,8 +1298,8 @@ class Ymdhis {
    * @name clearYearPadding
    * @description Return a new Ymdhis object without year padding.
    * @example
-   * ymdhis(2008, 1, 2).setYearAsTwoDigits().clearYearPadding().ymd
-   * // '8-01-02'
+   * ymdhis(2008, 1, 2, 3, 4, 5).clearYearPadding().setYearAsTwoDigits().ymd
+   * // "8-01-02"
    */
   clearYearPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isEnablePaddingYear: false });
@@ -1289,8 +1309,8 @@ class Ymdhis {
    * @name clearMonthPadding
    * @description Return a new Ymdhis object without month padding.
    * @example
-   * ymdhis(2008, 1, 2).clearMonthPadding().ymd
-   * // '2008-1-02'
+   * ymdhis(2008, 1, 2, 3, 4, 5).clearMonthPadding().ymd
+   * // "2008-1-02"
    */
   clearMonthPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isMonthAsTwoDigits: false });
@@ -1300,8 +1320,8 @@ class Ymdhis {
    * @name clearDayPadding
    * @description Return a new Ymdhis object without day padding.
    * @example
-   * ymdhis(2008, 1, 2).clearDayPadding().ymd
-   * // '2008-01-2'
+   * ymdhis(2008, 1, 2, 3, 4, 5).clearDayPadding().ymd
+   * // "2008-01-2"
    */
   clearDayPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isDayAsTwoDigits: false });
@@ -1312,7 +1332,7 @@ class Ymdhis {
    * @description Return a new Ymdhis object without hour, minute, second padding.
    * @example
    * ymdhis(2008, 1, 2, 3, 4, 5).clearTimePaddings().string
-   * // '2008-01-02 3:4:5'
+   * // "2008-01-02 3:4:5"
    */
   clearTimePaddings(): Ymdhis {
     return this.cloneWithUpdateOptions({
@@ -1327,7 +1347,7 @@ class Ymdhis {
    * @description Return a new Ymdhis object without hour padding.
    * @example
    * ymdhis(2008, 1, 2, 3, 4, 5).clearHourPadding().his
-   * // '3:04:05'
+   * // "3:04:05"
    */
   clearHourPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isHourAsTwoDigits: false });
@@ -1338,7 +1358,7 @@ class Ymdhis {
    * @description Return a new Ymdhis object without minute padding.
    * @example
    * ymdhis(2008, 1, 2, 3, 4, 5).clearMinutePadding().his
-   * // '03:4:05'
+   * // "03:4:05"
    */
   clearMinutePadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isMinuteAsTwoDigits: false });
@@ -1349,7 +1369,7 @@ class Ymdhis {
    * @description Return a new Ymdhis object without second padding.
    * @example
    * ymdhis(2008, 1, 2, 3, 4, 5).clearSecondPadding().his
-   * // '03:04:5'
+   * // "03:04:5"
    */
   clearSecondPadding(): Ymdhis {
     return this.cloneWithUpdateOptions({ isSecondAsTwoDigits: false });
@@ -1359,8 +1379,8 @@ class Ymdhis {
    * @name clearSeparators
    * @description Return a new Ymdhis object without all separators.
    * @example
-   * ymdhis(2018, 1, 2, 12, 34, 56).clearSeparators().string
-   * // '20180102123456'
+   * ymdhis(2018, 1, 2, 3, 4, 5).clearSeparators().string
+   * // "20180102030405"
    */
   clearSeparators(): Ymdhis {
     return this.cloneWithUpdateOptions({
@@ -1377,7 +1397,7 @@ class Ymdhis {
    * @description Get the formatted year, month, day, hour, minute and second.
    * @example
    * `${ymdhis(2000, 1, 2, 12, 34, 56)}`
-   * // '2000-01-02 12:34:56'
+   * // "2000-01-02 12:34:56"
    */
   toString(): string {
     return this.ymdhis;
@@ -1387,7 +1407,7 @@ class Ymdhis {
    * @name valueOf
    * @description Get the timestamp.
    * @example
-   * ymdhis(2000, 1, 2) > ymdhis(1999, 1, 2)
+   * ymdhis(1999, 9, 9).now() > ymdhis(2000, 1, 2)
    * // true
    */
   valueOf(): number {
@@ -1400,8 +1420,8 @@ class Ymdhis {
    *              and millisecond given and treat it as UTC time.
    * @example
    * // Timezone offset +08:00
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2, 12, 34, 56, 789).iso8601
-   * // '2000-01-02T12:34:56.789Z'
+   * ymdhis().utc(2000, 1, 2, 3, 4, 5, 6).iso8601
+   * // "2000-01-02T03:04:05.006Z"
    * @param y
    * @param m
    * @param d
@@ -1425,8 +1445,8 @@ class Ymdhis {
    * @description Return a new Ymdhis object initialized with the year, month, day, hour, minute and second given
    *              and treat it as UTC time.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2, 12, 34, 56).string
-   * // '2000-01-02 12:34:56'
+   * ymdhis().utc(2000, 1, 2, 3, 4, 5).string
+   * // "2000-01-02 03:04:05"
    * @param y
    * @param m
    * @param d
@@ -1441,8 +1461,8 @@ class Ymdhis {
    * @description Return a new Ymdhis object initialized with the year, month, day, hour and minute given
    *              and treat it as UTC time.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2, 12, 34).string
-   * // '2000-01-02 12:34:00'
+   * ymdhis().utc(2000, 1, 2, 3, 4).string
+   * // "2000-01-02 03:04:00"
    * @param y
    * @param m
    * @param d
@@ -1456,8 +1476,8 @@ class Ymdhis {
    * @description Return a new Ymdhis object initialized with the year, month, day and hour given
    *              and treat it as UTC time.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2, 12).string
-   * // '2000-01-02 12:00:00'
+   * ymdhis().utc(2000, 1, 2, 3).string
+   * // "2000-01-02 03:00:00"
    * @param y
    * @param m
    * @param d
@@ -1469,8 +1489,8 @@ class Ymdhis {
    * @name utc
    * @description Return a new Ymdhis object initialized with the year, month and day given and treat it as UTC time.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1, 2).string
-   * // '2000-01-02 00:00:00'
+   * ymdhis().utc(2000, 1, 2).string
+   * // "2000-01-02 00:00:00"
    * @param y
    * @param m
    * @param d
@@ -1481,8 +1501,8 @@ class Ymdhis {
    * @name utc
    * @description Return a new Ymdhis object initialized with the year and month given and treat it as UTC time.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(2000, 1).string
-   * // '2000-01-01 00:00:00'
+   * ymdhis().utc(2000, 1).string
+   * // "2000-01-01 00:00:00"
    * @param y
    * @param m
    */
@@ -1494,7 +1514,7 @@ class Ymdhis {
    * @example
    * // Timezone offset +08:00
    * ymdhis().utc(0).string
-   * // '1970-01-01 00:00:00'
+   * // "1970-01-01 00:00:00"
    * @param timestamp
    */
   utc(timestamp: number): Ymdhis;
@@ -1504,21 +1524,29 @@ class Ymdhis {
    * @description Return a new Ymdhis object initialized with the ISO9075-based string given
    *              and treat it as UTC time.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).utc(""2000-01-02 12:34:56"").string
-   * // '2000-01-02 12:34:56'
+   * ymdhis().utc("2000-01-02 12:34:56").string
+   * // "2000-01-02 12:34:56"
    * @param str
    */
   utc(str: string): Ymdhis;
 
+  /**
+   * @name utc
+   * @description Return a new Ymdhis object initialized with the Date object given
+   *              and treat it as UTC time.
+   * @example
+   * ymdhis().utc(new Date(2000, 0, 2, 10, 4, 5)).string
+   * // "2000-01-02 02:04:05"
+   * @param date
+   */
   utc(date: Date): Ymdhis;
 
   /**
    * @name utc
    * @description Return a new Ymdhis object converted from local time to UTC time.
    * @example
-   * // Local time: +08:00
-   * ymdhis(2000, 1, 2, 12, 34, 56).utc().string
-   * // '2000-01-02 04:34:56'
+   * ymdhis(2000, 1, 2, 10, 4, 5).utc().string
+   * // "2000-01-02 02:04:05"
    */
   utc(): Ymdhis;
 
@@ -1553,18 +1581,20 @@ class Ymdhis {
         return this.afterMinutes(this.date.getTimezoneOffset());
       case "string":
         this.options.isUtc = true;
-        return this.cloneWithNewDate(iso9075toDate(arg1));
+        return this.cloneWithNewDate(CreateDate.create(arg1));
       case "object":
         this.options.isUtc = false;
-        return this.cloneWithNewDate(newDateWithValidate(arg1.getTime())).utc();
+        return this.cloneWithNewDate(CreateDate.create(arg1)).utc();
       case "number":
         // create from timestamp
         if (typeof m === "undefined") {
           this.options.isUtc = false;
-          return this.cloneWithNewDate(newDateWithValidate(arg1)).utc();
+          return this.cloneWithNewDate(CreateDate.create(arg1)).utc();
         }
         this.options.isUtc = true;
-        return this.cloneWithNewDate(numbersToDate(arg1, m, d, h, i, s, ms));
+        return this.cloneWithNewDate(
+          CreateDate.create(arg1, m, d, h, i, s, ms)
+        );
     }
   }
 
@@ -1574,8 +1604,8 @@ class Ymdhis {
    *              and millisecond given.
    * @example
    * // Timezone offset +08:00
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2, 12, 34, 56, 789).iso8601
-   * // '2000-01-02T12:34:56.789+08:00'
+   * ymdhis().local(2000, 1, 2, 3, 4, 5, 6).iso8601
+   * // "2000-01-02T03:04:05.006+08:00"
    * @param y
    * @param m
    * @param d
@@ -1598,8 +1628,8 @@ class Ymdhis {
    * @name local
    * @description Return a new Ymdhis object initialized with the year, month, day, hour, minute and second given.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2, 12, 34, 56).string
-   * // '2000-01-02 12:34:56'
+   * ymdhis().local(2000, 1, 2, 3, 4, 5).string
+   * // "2000-01-02 03:04:05"
    * @param y
    * @param m
    * @param d
@@ -1620,8 +1650,8 @@ class Ymdhis {
    * @name local
    * @description Return a new Ymdhis object initialized with the year, month, day, hour and minute given.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2, 12, 34).string
-   * // '2000-01-02 12:34:00'
+   * ymdhis().local(2000, 1, 2, 3, 4).string
+   * // "2000-01-02 03:04:00"
    * @param y
    * @param m
    * @param d
@@ -1634,8 +1664,8 @@ class Ymdhis {
    * @name local
    * @description Return a new Ymdhis object initialized with the year, month, day and hour given.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2, 12).string
-   * // '2000-01-02 12:00:00'
+   * ymdhis().local(2000, 1, 2, 3).string
+   * // "2000-01-02 03:00:00"
    * @param y
    * @param m
    * @param d
@@ -1647,8 +1677,8 @@ class Ymdhis {
    * @name local
    * @description Return a new Ymdhis object initialized with the year, month and day given.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1, 2).string
-   * // '2000-01-02 00:00:00'
+   * ymdhis().local(2000, 1, 2).string
+   * // "2000-01-02 00:00:00"
    * @param y
    * @param m
    * @param d
@@ -1659,8 +1689,8 @@ class Ymdhis {
    * @name local
    * @description Return a new Ymdhis object initialized with the year and month given.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).local(2000, 1).string
-   * // '2000-01-01 00:00:00'
+   * ymdhis().local(2000, 1).string
+   * // "2000-01-01 00:00:00"
    * @param y
    * @param m
    */
@@ -1670,8 +1700,8 @@ class Ymdhis {
    * @name local
    * @description Return a new Ymdhis object initialized with the ISO9075-based string given.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).local(""2000-01-02 12:34:56"").string
-   * // '2000-01-02 12:34:56'
+   * ymdhis().local("2000-01-02 03:04:05").string
+   * // "2000-01-02 03:04:05"
    * @param str
    */
   local(str: string): Ymdhis;
@@ -1680,8 +1710,8 @@ class Ymdhis {
    * @name local
    * @description Return a new Ymdhis object initialized with the Date object given.
    * @example
-   * ymdhis(1999, 9, 9, 9, 9, 9, 9).local(new Date(2000, 0, 2, 12, 34, 56)).string
-   * // '2000-01-02 12:34:56'
+   * ymdhis().local(new Date(2000,  0,  2,  3,  4,  5)).string
+   * // "2000-01-02 03:04:05"
    * @param date
    */
   local(date: Date): Ymdhis;
@@ -1691,8 +1721,8 @@ class Ymdhis {
    * @description Return a new Ymdhis object converted from UTC time to local time.
    * @example
    * // Timezone offset +08:00
-   * ymdhis().utc(2000, 1, 2, 12, 34, 56).local().string
-   * // '2000-01-02 20:34:56'
+   * ymdhis().utc(2000, 1, 2, 3, 4, 5).local().string
+   * // "2000-01-02 11:04:05"
    */
   local(): Ymdhis;
 
@@ -1725,7 +1755,8 @@ class Ymdhis {
       return this.cloneWithNewDate(this.date);
     }
     this.options.isUtc = false;
-    return this.cloneWithNewDate(createLocalDate(arg1, m, d, h, i, s, ms));
+    CreateDate.validateLocalDateCreateArgs(arg1, m);
+    return this.cloneWithNewDate(CreateDate.create(arg1, m, d, h, i, s, ms));
   }
 
   /**
@@ -1736,7 +1767,7 @@ class Ymdhis {
    * // true
    */
   now(): Ymdhis {
-    return this.cloneWithNewDate(newDateWithValidate());
+    return this.cloneWithNewDate(CreateDate.create());
   }
 
   /**
@@ -1766,240 +1797,201 @@ class Ymdhis {
   }
 }
 
-function extractIso9075(str: string): string[] {
-  const msg = `Invalid date format: ${str}`;
-  if (str.match(/[^\d\s.:-]/)) {
-    throw new Error(msg);
-  }
-  const dt = str.trim().split(" ");
-  if (dt.length > 2) {
-    throw new Error(msg);
-  }
-  const res: string[] = [];
+/**
+ * Private helper class for Date object creation
+ */
+class CreateDate {
+  static readonly exDateTime =
+    /^(\d{1,4})(-(\d{1,2}))(-(\d{1,2})(\s(\d{1,2}):(\d{1,2})(:(\d{1,2})(\.(\d{1,3}))?)?)?)?$/;
 
-  // extract y-m-d
-  const ymd = dt[0].match(/^(\d{1,4})-(\d{1,2})(-(\d{1,2}))?$/);
-  if (!ymd) {
-    throw new Error(msg);
-  }
-  res.push(ymd[1], ymd[2]);
-  if (ymd[4] !== undefined) {
-    res.push(ymd[4]);
-  }
-  if (dt.length === 1) {
-    return res;
-  }
-  // extract ms
-  const tm = dt[1].split(".");
-  if (tm.length > 2) {
-    throw new Error(msg);
-  }
-  // extract h:i:s
-  const his = tm[0].match(/^(\d{1,2}):(\d{1,2})(:(\d{1,2}))?$/);
-  if (!his) {
-    throw new Error(msg);
-  }
-  res.push(his[1], his[2]);
-  if (his[4] !== undefined) {
-    res.push(his[4]);
-  }
-  if (tm.length === 1) {
-    return res;
-  }
-  // check ms
-  if (tm[1].match(/^\d{1,3}$/)) {
-    res.push(tm[1]);
-    return res;
-  } else {
-    throw new Error(msg);
-  }
-}
+  static readonly exIso8601 =
+    /^(\d{4})-(\d{2})-(\d{2})[Tt](\d{2}):(\d{2}):(\d{2})(\.(\d{3}))?([Zz+-])((\d{2}):(\d{2}))?$/;
 
-function iso9075toDate(str: string): Date {
-  const msg = `Invalid date format: ${str}`;
-  const nums = extractIso9075(str).map((s) => parseInt(s, 10));
-  // istanbul ignore next
-  if (nums.some((n) => isNaN(n))) {
-    throw new Error(msg);
-  }
-  switch (nums.length) {
-    case 2:
-      return numbersToDate(nums[0], nums[1]);
-    case 3:
-      return numbersToDate(nums[0], nums[1], nums[2]);
-    case 5:
-      return numbersToDate(nums[0], nums[1], nums[2], nums[3], nums[4]);
-    case 6:
-      return numbersToDate(
-        nums[0],
-        nums[1],
-        nums[2],
-        nums[3],
-        nums[4],
-        nums[5]
-      );
-    case 7:
-      return numbersToDate(
-        nums[0],
-        nums[1],
-        nums[2],
-        nums[3],
-        nums[4],
-        nums[5],
-        nums[6]
-      );
-    // istanbul ignore next
-    default:
-      throw new Error(msg);
-  }
-}
-
-function validateDateRange(dt: Date): void {
-  if (dt.getFullYear() < 0 || dt.getFullYear() > 9999) {
-    throw new Error(`Out of range. date: ${dt.toString()}`);
-  }
-}
-
-function validateDateItems(
-  y: number,
-  m?: number,
-  d?: number,
-  h?: number,
-  i?: number,
-  s?: number,
-  ms?: number
-): void {
-  if (y < 0 || y > 9999) {
-    throw new Error(`Invalid year: ${y}`);
-  }
-  if (typeof m !== "undefined") {
-    if (m < 1 || m > 12) {
-      throw new Error(`Invalid month: ${m}`);
-    }
-  }
-  if (typeof d !== "undefined") {
-    if (d < 1 || d > 31) {
-      throw new Error(`Invalid day: ${d}`);
-    }
-  }
-  if (typeof h !== "undefined") {
-    if (h < 0 || h > 23) {
-      throw new Error(`Invalid hour: ${h}`);
-    }
-  }
-  if (typeof i !== "undefined") {
-    if (i < 0 || i > 59) {
-      throw new Error(`Invalid minute: ${h}`);
-    }
-  }
-  if (typeof s !== "undefined") {
-    if (s < 0 || s > 59) {
-      throw new Error(`Invalid second: ${s}`);
-    }
-  }
-  if (typeof ms !== "undefined") {
-    if (ms < 0 || ms > 999) {
-      throw new Error(`Invalid Millisecond: ${ms}`);
-    }
-  }
-}
-
-function numbersToDate(
-  arg1: number,
-  m: number,
-  d?: number,
-  h?: number,
-  i?: number,
-  s?: number,
-  ms?: number
-): Date {
-  validateDateItems(arg1, m, d, h, i, s, ms);
-  const date = new Date(0, 1, 1, 0, 0, 0, 0);
-  date.setFullYear(arg1);
-  if (typeof d === "undefined") {
-    date.setMonth(m - 1);
-  } else if (typeof h === "undefined") {
-    date.setMonth(m - 1);
-    date.setDate(d);
-  } else if (typeof i === "undefined") {
-    date.setMonth(m - 1);
-    date.setDate(d);
-    date.setHours(h);
-  } else if (typeof s === "undefined") {
-    date.setMonth(m - 1);
-    date.setDate(d);
-    date.setHours(h);
-    date.setMinutes(i);
-  } else if (typeof ms === "undefined") {
-    date.setMonth(m - 1);
-    date.setDate(d);
-    date.setHours(h);
-    date.setMinutes(i);
-    date.setSeconds(s);
-  } else {
-    date.setMonth(m - 1);
-    date.setDate(d);
-    date.setHours(h);
-    date.setMinutes(i);
-    date.setSeconds(s);
-    date.setMilliseconds(ms);
-  }
-  validateDateRange(date);
-  return date;
-}
-
-function newDateWithValidate(): Date;
-
-function newDateWithValidate(timestamp: number): Date;
-
-function newDateWithValidate(timestamp?: number): Date {
-  let date: Date;
-  if (typeof timestamp === "undefined") {
-    date = new Date();
-  } else {
-    date = new Date(timestamp);
-  }
-  validateDateRange(date);
-  return date;
-}
-
-function createLocalDate(
-  arg1?: number | string | Date,
-  m?: number,
-  d?: number,
-  h?: number,
-  i?: number,
-  s?: number,
-  ms?: number
-): Date {
-  switch (typeof arg1) {
-    case "undefined":
-      return newDateWithValidate();
-    case "string":
-      return iso9075toDate(arg1);
-    case "object":
-      return newDateWithValidate(arg1.getTime());
-    case "number":
-      // istanbul ignore next
-      if (typeof m === "undefined") {
-        throw new Error("Invalid arguments. Input month.");
+  static create(
+    arg1?: number | string | Date,
+    m?: number,
+    d?: number,
+    h?: number,
+    i?: number,
+    s?: number,
+    ms?: number
+  ): Date {
+    const date = ((): Date => {
+      switch (typeof arg1) {
+        case "undefined":
+          return new Date();
+        case "string":
+          return this.parse(arg1);
+        case "object":
+          return new Date(arg1.getTime());
+        case "number":
+          if (typeof m === "undefined") {
+            return new Date(arg1);
+          } else {
+            return this.valuesToDate({
+              year: arg1,
+              month: m,
+              day: d,
+              hour: h,
+              minute: i,
+              second: s,
+              millisecond: ms,
+            });
+          }
       }
-      return numbersToDate(arg1, m, d, h, i, s, ms);
+    })();
+    this.validateDateRange(date);
+    return date;
   }
-}
 
-function offsetMinutesToTzd(i: number): string {
-  // istanbul ignore next
-  const sign = i < 0 ? "-" : "+";
+  static validateLocalDateCreateArgs(
+    arg1?: number | string | Date,
+    m?: number
+  ) {
+    switch (typeof arg1) {
+      case "string":
+        if (arg1.match(this.exIso8601)) {
+          throw new Error(
+            "Not support ISO8601 format string. Use utc() method instead."
+          );
+        }
+        break;
+      case "number":
+        // istanbul ignore next
+        if (typeof m === "undefined") {
+          throw new Error("Invalid arguments. Input month.");
+        }
+        break;
+      case "object":
+        return;
+    }
+  }
 
-  return (
-    sign +
-    Math.floor(Math.abs(i) / 60)
-      .toString()
-      .padStart(2, "0") +
-    ":" +
-    (Math.abs(i) % 60).toString().padStart(2, "0")
-  );
+  private static validateDateRange(date: Date) {
+    this.validateValuesRange({
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+    });
+  }
+
+  private static validateValuesRange(values: DateInputValues) {
+    this.checkRange(values.year, "year", 0, 9999);
+    if (typeof values.month !== "undefined") {
+      this.checkRange(values.month, "month", 1, 12);
+    }
+    if (typeof values.day !== "undefined") {
+      this.checkRange(values.day, "day", 1, 31);
+    }
+    if (typeof values.hour !== "undefined") {
+      this.checkRange(values.hour, "hour", 0, 23);
+    }
+    if (typeof values.minute !== "undefined") {
+      this.checkRange(values.minute, "minute", 0, 59);
+    }
+    if (typeof values.second !== "undefined") {
+      this.checkRange(values.second, "second", 0, 59);
+    }
+    if (typeof values.millisecond !== "undefined") {
+      this.checkRange(values.millisecond, "millisecond", 0, 999);
+    }
+  }
+
+  private static checkRange(
+    value: number,
+    name: string,
+    min: number,
+    max: number
+  ) {
+    if (value < min || value > max) {
+      throw new Error(`Date range error. Invalid ${name}: ${value}`);
+    }
+  }
+
+  private static toInt(str: string): number {
+    return parseInt(str, 10);
+  }
+
+  private static valuesToDate(values: DateInputValues): Date {
+    this.validateValuesRange(values);
+    const date = new Date(0, 1, 1, 0, 0, 0, 0);
+    // avoid: new Date(99,0) -> "1999-01-01"
+    date.setFullYear(values.year);
+    if (typeof values.day === "undefined") {
+      date.setMonth(values.month - 1);
+    } else if (typeof values.hour === "undefined") {
+      date.setMonth(values.month - 1);
+      date.setDate(values.day);
+    } else if (typeof values.minute === "undefined") {
+      date.setMonth(values.month - 1);
+      date.setDate(values.day);
+      date.setHours(values.hour);
+    } else if (typeof values.second === "undefined") {
+      date.setMonth(values.month - 1);
+      date.setDate(values.day);
+      date.setHours(values.hour);
+      date.setMinutes(values.minute);
+    } else if (typeof values.millisecond === "undefined") {
+      date.setMonth(values.month - 1);
+      date.setDate(values.day);
+      date.setHours(values.hour);
+      date.setMinutes(values.minute);
+      date.setSeconds(values.second);
+    } else {
+      date.setMonth(values.month - 1);
+      date.setDate(values.day);
+      date.setHours(values.hour);
+      date.setMinutes(values.minute);
+      date.setSeconds(values.second);
+      date.setMilliseconds(values.millisecond);
+    }
+    return date;
+  }
+
+  private static parse(str: string): Date {
+    return str.indexOf("t") >= 0 || str.indexOf("T") >= 0
+      ? this.iso8601StringToUtcDate(str)
+      : this.dateTimeStringToDate(str);
+  }
+
+  private static iso8601StringToUtcDate(str: string): Date {
+    const m = str.match(this.exIso8601);
+    if (m === null) {
+      throw new Error(`Invalid date format: ${str}`);
+    }
+    const date = this.valuesToDate({
+      year: this.toInt(m[1]),
+      month: this.toInt(m[2]),
+      day: this.toInt(m[3]),
+      hour: this.toInt(m[4]),
+      minute: this.toInt(m[5]),
+      second: this.toInt(m[6]),
+      millisecond: m[8] === undefined ? undefined : this.toInt(m[8]),
+    });
+    const offset =
+      m[9] === "Z" || m[9] === "z"
+        ? 0
+        : (this.toInt(m[11]) * 60 + this.toInt(m[12])) *
+          (m[9] === "+" ? 1 : -1);
+    this.checkRange(offset, "TZD [min]", -23 * 60 + 59, 23 * 60 + 59);
+    date.setMinutes(date.getMinutes() - offset);
+    return date;
+  }
+
+  private static dateTimeStringToDate(str: string): Date {
+    const m = str.match(this.exDateTime);
+    if (m === null) {
+      throw new Error(`Invalid date format: ${str}`);
+    }
+    return this.valuesToDate({
+      year: this.toInt(m[1]),
+      month: this.toInt(m[3]),
+      day: m[5] === undefined ? undefined : this.toInt(m[5]),
+      hour: m[7] === undefined ? undefined : this.toInt(m[7]),
+      minute: m[8] === undefined ? undefined : this.toInt(m[8]),
+      second: m[10] === undefined ? undefined : this.toInt(m[10]),
+      millisecond: m[12] === undefined ? undefined : this.toInt(m[12]),
+    });
+  }
 }
 
 /**
@@ -2127,7 +2119,6 @@ export function ymdhis(
   s?: number,
   ms?: number
 ): Ymdhis {
-  return new Ymdhis({
-    date: createLocalDate(arg1, m, d, h, i, s, ms),
-  });
+  CreateDate.validateLocalDateCreateArgs(arg1, m);
+  return new Ymdhis({ date: CreateDate.create(arg1, m, d, h, i, s, ms) });
 }
