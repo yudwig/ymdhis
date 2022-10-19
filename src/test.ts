@@ -984,6 +984,9 @@ describe("Documentation examples", () => {
   expect(ymdhis().utc("2000-01-02 12:34:56").string).toBe(
     "2000-01-02 12:34:56"
   );
+  expect(ymdhis().utc(new Date(2000, 0, 2, 10, 4, 5)).string).toBe(
+    "2000-01-02 02:04:05"
+  );
   expect(ymdhis().utc(2000, 1, 2, 3, 4, 5).local().string).toBe(
     "2000-01-02 11:04:05"
   );
@@ -1000,7 +1003,7 @@ describe("Documentation examples", () => {
   expect(ymdhis().local("2000-01-02 03:04:05").string).toBe(
     "2000-01-02 03:04:05"
   );
-  expect(ymdhis().local(2000, 1, 2, 3, 4, 5).string).toBe(
+  expect(ymdhis().local(new Date(2000, 0, 2, 3, 4, 5)).string).toBe(
     "2000-01-02 03:04:05"
   );
   expect(ymdhis(1999, 9, 9).now() > ymdhis(2000, 1, 2)).toBe(true);
