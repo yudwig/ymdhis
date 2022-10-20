@@ -1524,8 +1524,13 @@ class Ymdhis {
    * @description Return a new Ymdhis object initialized with the ISO9075-based string given
    *              and treat it as UTC time.
    * @example
-   * ymdhis().utc("2000-01-02 12:34:56").string
-   * // "2000-01-02 12:34:56"
+   * ymdhis().utc("2000-01-02 03:04:05").string         // "2000-01-02 03:04:05"
+   * ymdhis().utc("2000-01-02 03:04").string            // "2000-01-02 03:04:00"
+   * ymdhis().utc("2000-01-02").string                  // "2000-01-02 00:00:00"
+   * ymdhis().utc("2000-01").string                     // "2000-01-01 00:00:00"
+   * ymdhis().utc("999-1-2 3:4:5").string               // "0999-01-02 03:04:05"
+   * ymdhis().utc("2000-01-02T03:04:05Z").string        // "2000-01-02 03:04:05"
+   * ymdhis().utc("2000-01-02T03:04:05+02:00").string   // "2000-01-02 01:04:05"
    * @param str
    */
   utc(str: string): Ymdhis;
@@ -1998,6 +2003,9 @@ class CreateDate {
  * @name ymdhis
  * @description Return a new Ymdhis object initialized with the year, month, day, hour, minute, second
  *              and millisecond given.
+ * @example
+ * ymdhis(2000, 1, 2, 3, 4, 5, 6).iso8601
+ * // "2000-01-02T03:04:05.006+08:00"
  * @param y
  * @param m
  * @param d
@@ -2019,6 +2027,9 @@ export function ymdhis(
 /**
  * @name ymdhis
  * @description Return a new Ymdhis object initialized with the year, month, day, hour, minute and second given.
+ * @example
+ * ymdhis(2000, 1, 2, 3, 4, 5).string
+ * // 2000-01-02 03:04:05"
  * @param y
  * @param m
  * @param d
@@ -2038,6 +2049,9 @@ export function ymdhis(
 /**
  * @name ymdhis
  * @description Return a new Ymdhis object initialized with the year, month, day, hour and minute given.
+ * @example
+ * ymdhis(2000, 1, 2, 3, 4).string
+ * // "2000-01-02 03:04:00"
  * @param y
  * @param m
  * @param d
@@ -2055,6 +2069,9 @@ export function ymdhis(
 /**
  * @name ymdhis
  * @description Return a new Ymdhis object initialized with the year, month, day and hour given.
+ * @example
+ * ymdhis(2000, 1, 2, 3).string
+ * // "2000-01-02 03:00:00"
  * @param y
  * @param m
  * @param d
@@ -2065,6 +2082,9 @@ export function ymdhis(y: number, m: number, d: number, h: number): Ymdhis;
 /**
  * @name ymdhis
  * @description Return a new Ymdhis object initialized with the year, month and day given.
+ * @example
+ * ymdhis(2000, 1, 2).string
+ * // "2000-01-02 00:00:00"
  * @param y
  * @param m
  * @param d
@@ -2074,6 +2094,9 @@ export function ymdhis(y: number, m: number, d: number): Ymdhis;
 /**
  * @name ymdhis
  * @description Return a new Ymdhis object initialized with the year and month given.
+ * @example
+ * ymdhis(2000, 1).string
+ * // "2000-01-01 00:00:00"
  * @param y
  * @param m
  */
@@ -2082,6 +2105,12 @@ export function ymdhis(y: number, m: number): Ymdhis;
 /**
  * @name ymdhis
  * @description Return a new Ymdhis object initialized with the ISO9075-based string given.
+ * @example
+ * ymdhis("2000-01-02 03:04:05").string  // "2000-01-02 03:04:05"
+ * ymdhis("2000-01-02 03:04").string     // "2000-01-02 03:04:00"
+ * ymdhis("2000-01-02").string           // "2000-01-02 00:00:00"
+ * ymdhis("2000-01").string              // "2000-01-01 00:00:00"
+ * ymdhis("999-1-2 3:4:5").string        // "0999-01-02 03:04:05"
  * @param str
  */
 export function ymdhis(str: string): Ymdhis;
@@ -2089,6 +2118,9 @@ export function ymdhis(str: string): Ymdhis;
 /**
  * @name ymdhis
  * @description Return a new Ymdhis object initialized with the Date object given.
+ * @example
+ * ymdhis(new Date(2000, 0, 2, 3, 4, 5)).string
+ * // "2000-01-02 03:04:05"
  * @param date
  */
 export function ymdhis(date: Date): Ymdhis;
@@ -2096,12 +2128,16 @@ export function ymdhis(date: Date): Ymdhis;
 /**
  * @name ymdhis
  * @description Return a new Ymdhis object initialized with now date time.
+ * @example
  */
 export function ymdhis(): Ymdhis;
 
 /**
  * @name ymdhis
  * @description Return a new Ymdhis object initialized with numbers or string or Date object given.
+ * @example
+ * ymdhis().string
+ * // "2000-01-02 03:04:05" (now local datetime)
  * @param arg1
  * @param m
  * @param d
