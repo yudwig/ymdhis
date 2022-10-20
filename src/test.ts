@@ -1038,4 +1038,16 @@ describe("Documentation examples", () => {
   expect(ymdhis(new Date(2000, 0, 2, 3, 4, 5)).string).toBe(
     "2000-01-02 03:04:05"
   );
+  expect(ymdhis(2001, 8, 24).string).toBe("2001-08-24 00:00:00");
+  expect(ymdhis(2001, 8, 24).ymd).toBe("2001-08-24");
+  expect(ymdhis(2001, 8, 24).setDateSeparator(".").dmy).toBe("24.08.2001");
+  expect(ymdhis(2001, 8, 24).setDateSeparator("/").dmy).toBe("24/08/2001");
+  expect(
+    ymdhis(2001, 8, 24).setYearAsTwoDigits().setDateSeparator("/").dmy
+  ).toBe("24/08/01");
+  expect(ymdhis(2001, 8, 24).setYearAsTwoDigits().dmy).toBe("24-08-01");
+  expect(ymdhis(2001, 8, 24).setYearAsTwoDigits().mdy).toBe("08-24-01");
+  const date = ymdhis().setYearAsTwoDigits();
+  expect(date.local(2001, 6, 14).dmy).toBe("14-06-01");
+  expect(date.local(2001, 6, 15).dmy).toBe("15-06-01");
 });
