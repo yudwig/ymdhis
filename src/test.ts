@@ -1008,4 +1008,34 @@ describe("Documentation examples", () => {
   );
   expect(ymdhis(1999, 9, 9).now() > ymdhis(2000, 1, 2)).toBe(true);
   expect(`${ymdhis(2000, 1, 2, 12, 34, 56)}`).toBe("2000-01-02 12:34:56");
+  expect(ymdhis("2000-01-02 03:04:05").string).toBe("2000-01-02 03:04:05");
+  expect(ymdhis("2000-01-02 03:04").string).toBe("2000-01-02 03:04:00");
+  expect(ymdhis("2000-01-02").string).toBe("2000-01-02 00:00:00");
+  expect(ymdhis("2000-01").string).toBe("2000-01-01 00:00:00");
+  expect(ymdhis("999-1-2 3:4:5").string).toBe("0999-01-02 03:04:05");
+  expect(ymdhis().utc("2000-01-02 03:04:05").string).toBe(
+    "2000-01-02 03:04:05"
+  );
+  expect(ymdhis().utc("2000-01-02 03:04").string).toBe("2000-01-02 03:04:00");
+  expect(ymdhis().utc("2000-01-02").string).toBe("2000-01-02 00:00:00");
+  expect(ymdhis().utc("2000-01").string).toBe("2000-01-01 00:00:00");
+  expect(ymdhis().utc("999-1-2 3:4:5").string).toBe("0999-01-02 03:04:05");
+  expect(ymdhis().utc("2000-01-02T03:04:05Z").string).toBe(
+    "2000-01-02 03:04:05"
+  );
+  expect(ymdhis().utc("2000-01-02T03:04:05+02:00").string).toBe(
+    "2000-01-02 01:04:05"
+  );
+  expect(ymdhis(2000, 1, 2, 3, 4, 5, 6).iso8601).toBe(
+    "2000-01-02T03:04:05.006+08:00"
+  );
+  expect(ymdhis(2000, 1, 2, 3, 4, 5).string).toBe("2000-01-02 03:04:05");
+  expect(ymdhis(2000, 1, 2, 3, 4).string).toBe("2000-01-02 03:04:00");
+  expect(ymdhis(2000, 1, 2, 3).string).toBe("2000-01-02 03:00:00");
+  expect(ymdhis(2000, 1, 2).string).toBe("2000-01-02 00:00:00");
+  expect(ymdhis(2000, 1).string).toBe("2000-01-01 00:00:00");
+  expect(ymdhis("2000-01-02 03:04:05").string).toBe("2000-01-02 03:04:05");
+  expect(ymdhis(new Date(2000, 0, 2, 3, 4, 5)).string).toBe(
+    "2000-01-02 03:04:05"
+  );
 });
