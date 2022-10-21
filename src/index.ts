@@ -1097,6 +1097,40 @@ class Ymdhis {
   }
 
   /**
+   * @name setDateSuffixes
+   * @description Return a new Ymdhis object with the date suffixes given.
+   * @example
+   *
+   * @param y
+   * @param m
+   * @param d
+   */
+  setDateSuffixes(y: string, m: string, d: string): Ymdhis {
+    return this.cloneWithUpdateOptions({
+      yearSuffix: y,
+      monthSuffix: m,
+      daySuffix: d,
+    });
+  }
+
+  /**
+   * @name setTimeSuffixes
+   * @description Return a new Ymdhis object with the time suffixes given.
+   * @example
+   *
+   * @param h
+   * @param i
+   * @param s
+   */
+  setTimeSuffixes(h: string, i: string, s: string): Ymdhis {
+    return this.cloneWithUpdateOptions({
+      hourSuffix: h,
+      minuteSuffix: i,
+      secondSuffix: s,
+    });
+  }
+
+  /**
    * @name setYearSuffix
    * @description Return a new Ymdhis object with the suffix of year given.
    * @example
