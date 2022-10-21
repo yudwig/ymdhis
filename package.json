@@ -1,7 +1,7 @@
 {
   "name": "ymdhis",
-  "version": "0.0.1",
-  "description": "Minimal JavaScript date functions library",
+  "version": "0.1.0",
+  "description": "A date time library for TypeScript / JavaScript.",
   "main": "lib/index.js",
   "files": [
     "lib",
