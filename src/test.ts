@@ -476,6 +476,20 @@ describe("Suffix and Notations", () => {
         .setSuffixes("Y", "M", "D", "H", "I", "S").string
     ).toBe("2000Y01M02D12H34I56S");
   });
+  it("setDateSuffixes", () => {
+    expect(
+      ymdhis(2000, 1, 2, 12, 34, 56)
+        .clearSeparators()
+        .setDateSuffixes("Y", "M", "D").string
+    ).toBe("2000Y01M02D123456");
+  });
+  it("setTimeSuffixes", () => {
+    expect(
+      ymdhis(2000, 1, 2, 12, 34, 56)
+        .clearSeparators()
+        .setTimeSuffixes("H", "I", "S").string
+    ).toBe("2000010212H34I56S");
+  });
   it("setAmNotation", () => {
     expect(ymdhis(2000, 1, 1, 0, 0).a).toBe("AM");
     expect(ymdhis(2000, 1, 1, 0, 0).setAmNotation("a.m.").a).toBe("a.m.");
@@ -1050,4 +1064,7 @@ describe("Documentation examples", () => {
   const date = ymdhis().setYearAsTwoDigits();
   expect(date.local(2001, 6, 14).dmy).toBe("14-06-01");
   expect(date.local(2001, 6, 15).dmy).toBe("15-06-01");
+  expect(
+    ymdhis(2001, 8, 24).clearSeparators().setDateSuffixes("年", "月", "日").ymd
+  ).toBe("2001年08月24日");
 });
